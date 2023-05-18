@@ -1,3 +1,11 @@
+-- Constraint
+
+-- Unique measurement per day
+ALTER TABLE Measurements
+ADD UNIQUE(PatientId, RevisionDate);
+
+-- Foreign Keys
+
 -- Product-ProductRecipe
 ALTER TABLE ProductRecipe
 ADD CONSTRAINT ProductRecipe_Barcode

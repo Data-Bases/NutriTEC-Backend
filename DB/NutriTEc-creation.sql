@@ -37,7 +37,7 @@ CREATE TABLE Product
     Protein FLOAT NOT NULL,
     Calcium FLOAT NOT NULL,
     Iron FLOAT NOT NULL,
-    IsAddress BOOLEAN,
+    IsApproved BOOLEAN,
 
 	PRIMARY KEY (Barcode)
 );
@@ -54,7 +54,6 @@ CREATE TABLE Patient
 	Age INT NOT NULL,
     BirthDate DATE NOT NULL,
 	Password VARCHAR(100) NOT NULL,
-	CardNumber INT NOT NULL,
 	Country VARCHAR(100) NOT NULL,
 	CaloriesIntake INT NOT NULL,
 
@@ -103,7 +102,7 @@ CREATE TABLE Administrator
 CREATE TABLE ChargeType
 (
 	Id SERIAL NOT NULL,
-	Nombre VARCHAR(100) NOT NULL,
+	Nombre VARCHAR(100) UNIQUE NOT NULL,
 
 	PRIMARY KEY (Id)
 );
@@ -120,7 +119,7 @@ CREATE TABLE Measurements
     Waist INT NOT NULL,
     Neck INT NOT NULL,
     Hips INT NOT NULL,
-    ConsumeDate DATE NOT NULL,
+    RevisionDate DATE NOT NULL,
 
 	PRIMARY KEY (Id)
 );
