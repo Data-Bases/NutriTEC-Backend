@@ -15,6 +15,13 @@ namespace NutriTEc_Backend.Controllers
            _repository = repository;
         }
 
+        /// <summary>
+        /// Get vitamins information
+        /// </summary>
+        /// <returns>
+        /// Vitamin name
+        /// Vitamin Id
+        /// </returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

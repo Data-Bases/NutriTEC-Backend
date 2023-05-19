@@ -16,6 +16,8 @@ namespace NutriTEc_Backend.Repository
         {
             _context = context;
         }
+
+
         public List<VitaminDto> GetAllVitamins()
         {
 
