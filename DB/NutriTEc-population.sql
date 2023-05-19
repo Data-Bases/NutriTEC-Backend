@@ -33,7 +33,7 @@ INSERT INTO Measurements(PatientId, Height, FatPercentage, MusclePercentage, Wei
 (10, 160, 28, 28, 65, 78, 34, 88, '2023-05-01');
 
 -- Vitamin
-INSERT INTO Vitamin (Nombre, Amount) VALUES
+INSERT INTO Vitamin (Name, Amount) VALUES
 ('Vitamin C', 50),
 ('Vitamin D', 10),
 ('Vitamin B12', 2),
