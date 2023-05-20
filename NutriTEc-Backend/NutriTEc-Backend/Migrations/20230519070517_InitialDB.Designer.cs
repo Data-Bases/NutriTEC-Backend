@@ -5,12 +5,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using NutriTEc_Backend.Repository;
+using NutriTEc_Backend.Repository.DataModel;
 
 #nullable disable
 
 namespace NutriTEc_Backend.Migrations
 {
-    [DbContext(typeof(NutriTEcDataContext))]
+    [DbContext(typeof(NutriTecContext))]
     [Migration("20230519070517_InitialDB")]
     partial class InitialDB
     {

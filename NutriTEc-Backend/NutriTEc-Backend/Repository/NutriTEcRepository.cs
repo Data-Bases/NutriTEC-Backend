@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using NutriTEc_Backend.Dtos;
 using NutriTEc_Backend.Models;
+using NutriTEc_Backend.Repository.DataModel;
 using NutriTEc_Backend.Repository.Interface;
 using System.Collections.Generic;
 
@@ -10,9 +11,9 @@ namespace NutriTEc_Backend.Repository
 {
     public class NutriTEcRepository : INutriTEcRepository
     {
-        private readonly NutriTEcDataContext _context;
+        private readonly NutriTecContext _context;
 
-        public NutriTEcRepository(NutriTEcDataContext context)
+        public NutriTEcRepository(NutriTecContext context)
         {
             _context = context;
         }

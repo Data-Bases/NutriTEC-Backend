@@ -4,12 +4,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using NutriTEc_Backend.Repository;
+using NutriTEc_Backend.Repository.DataModel;
 
 #nullable disable
 
 namespace NutriTEc_Backend.Migrations
 {
-    [DbContext(typeof(NutriTEcDataContext))]
+    [DbContext(typeof(NutriTecContext))]
     partial class NutriTEcDataContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

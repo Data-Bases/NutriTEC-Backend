@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using NutriTEc_Backend.Repository;
 using Microsoft.EntityFrameworkCore;
 using NutriTEc_Backend.Repository.Interface;
+using NutriTEc_Backend.Repository.DataModel;
 
 namespace NutriTEc_Backend
 {
@@ -24,7 +25,7 @@ namespace NutriTEc_Backend
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
             services.AddScoped<INutriTEcRepository, NutriTEcRepository>(); 
-            services.AddDbContext<NutriTEcDataContext>(o => o.UseNpgsql(configRoot.GetConnectionString("NutriTEc")));
+            services.AddDbContext<NutriTecContext>(o => o.UseNpgsql(configRoot.GetConnectionString("NutriTEc")));
 
         }
         public void Configure(WebApplication app, IWebHostEnvironment env)
