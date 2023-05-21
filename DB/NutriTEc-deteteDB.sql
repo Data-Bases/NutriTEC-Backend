@@ -25,6 +25,7 @@ ALTER TABLE PatientProduct DROP CONSTRAINT PatientProduct_PatientId;
 ALTER TABLE Nutritionist DROP CONSTRAINT Nutritionist_AdminEmail;
 ALTER TABLE Nutritionist DROP CONSTRAINT Nutritionist_ChargeTypeId;
 
+DROP VIEW IF EXISTS UserCredentials;
 DROP TABLE Nutritionist;
 DROP TABLE Product;
 DROP TABLE Patient;
@@ -40,3 +41,4 @@ DROP TABLE ProductRecipe;
 DROP TABLE PlanProduct;
 DROP TABLE ProductVitamin;
 DROP TABLE PatientProduct;
+

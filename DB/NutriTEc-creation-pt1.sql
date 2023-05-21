@@ -17,7 +17,7 @@ CREATE TABLE Nutritionist
 	Canton VARCHAR(100) NOT NULL,
 	District VARCHAR(100) NOT NULL,
 	Picture VARCHAR(100) NOT NULL,
-	AdminEmail VARCHAR(100) NOT NULL,
+	AdminId INT NOT NULL,
 	ChargeTypeId INT NOT NULL,
 
 	PRIMARY KEY (Id)
@@ -92,10 +92,11 @@ CREATE TABLE Vitamin
 -- Admin
 CREATE TABLE Administrator
 (
-	Email VARCHAR(100) NOT NULL,
+	Id SERIAL NOT NULL,
+	Email VARCHAR(100) UNIQUE NOT NULL,
 	Password VARCHAR(100) NOT NULL,
 
-	PRIMARY KEY (Email)
+	PRIMARY KEY (Id)
 );
 
 -- ChargeType

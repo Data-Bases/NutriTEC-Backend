@@ -81,10 +81,26 @@ ALTER TABLE PatientProduct
 ADD CONSTRAINT PatientProduct_PatientId
 FOREIGN KEY (PatientId) REFERENCES  Patient (Id);
 
+--Nutritionist-Admin
 ALTER TABLE Nutritionist
 ADD CONSTRAINT Nutritionist_AdminEmail
-FOREIGN KEY (AdminEmail) REFERENCES Administrator(Email);
+FOREIGN KEY (AdminId) REFERENCES Administrator(Id);
 
+--Nutritionist-ChargeType
 ALTER TABLE Nutritionist
 ADD CONSTRAINT Nutritionist_ChargeTypeId
 FOREIGN KEY (ChargeTypeId) REFERENCES ChargeType(Id);
+
+-- Views
+CREATE VIEW UserCredentials AS
+SELECT Id, Email, Password, 'Patient' AS UserType FROM Patient
+UNION ALL
+SELECT Id, Email, Password, 'Nutritionist' AS UserType FROM Nutritionist
+UNION ALL
+SELECT Id, Email, Password, 'Administrator' AS UserType FROM Administrator;
+
+
+-- Triggers
+
+
+-- Fuctions

@@ -9,12 +9,12 @@ INSERT INTO ChargeType (Nombre) VALUES
 ('Anual');
 
 -- Nutritionist
-INSERT INTO Nutritionist (Id, Email, Password, Name, LastName1, LastName2, Age, BirthDate, Weight, IMC, NutritionistCode, CardNumber, Province, Canton, District, Picture, AdminEmail, ChargeTypeId) VALUES
-(1, 'diana@example.com', md5('pepe'), 'Diana', 'Mejias', 'Hernandez', 21, '2001-08-08', 60, 23, 12345, 123456, 'Puntarenas', 'Buenos Aires', 'Buenos Aires', 'picture.jpg', 'admin@example.com', 1),
-(2, 'geo@example.com', md5('pepe'), 'Geovanny', 'Garcia', 'Downing', 21, '2001-12-07', 60, 25, 67890, 321654, 'Guanacaste', 'Liberia', 'Liberia', 'avatar.jpg', 'admin@example.com', 2),
-(3, 'vale@example.com',md5('pepe'), 'Valesska', 'Blanco', 'Montoya', 22, '2001-05-22', 60, 20, 54321, 147258, 'Cartago', 'Cartago', 'Oriental', 'photo.jpg', 'admin@example.com', 3),
-(4, 'ram@example.com', md5('pepe'), 'Ramses', 'Gutierrez', null, 20, '2003-04-08', 60, 20, 98765, 963852, 'San Jose', 'Perez Zeledon', 'Centro', 'headshot.jpg', 'admin@example.com', 2),
-(5, 'martinez@example.com', md5('pepe'), 'Andres', 'Martinez', null, 22, '2001-04-25', 60, 21, 24680, 987654, 'Cartago', 'Cartago', 'Cartago', 'profile.jpg', 'admin@example.com', 1);
+INSERT INTO Nutritionist (Id, Email, Password, Name, LastName1, LastName2, Age, BirthDate, Weight, IMC, NutritionistCode, CardNumber, Province, Canton, District, Picture, AdminId, ChargeTypeId) VALUES
+(1, 'diana@example.com', md5('pepe'), 'Diana', 'Mejias', 'Hernandez', 21, '2001-08-08', 60, 23, 12345, 123456, 'Puntarenas', 'Buenos Aires', 'Buenos Aires', 'picture.jpg', 1, 1),
+(2, 'geo@example.com', md5('pepe'), 'Geovanny', 'Garcia', 'Downing', 21, '2001-12-07', 60, 25, 67890, 321654, 'Guanacaste', 'Liberia', 'Liberia', 'avatar.jpg', 1, 2),
+(3, 'vale@example.com',md5('pepe'), 'Valesska', 'Blanco', 'Montoya', 22, '2001-05-22', 60, 20, 54321, 147258, 'Cartago', 'Cartago', 'Oriental', 'photo.jpg', 1, 3),
+(4, 'ram@example.com', md5('pepe'), 'Ramses', 'Gutierrez', null, 20, '2003-04-08', 60, 20, 98765, 963852, 'San Jose', 'Perez Zeledon', 'Centro', 'headshot.jpg', 1, 2),
+(5, 'martinez@example.com', md5('pepe'), 'Andres', 'Martinez', null, 22, '2001-04-25', 60, 21, 24680, 987654, 'Cartago', 'Cartago', 'Cartago', 'profile.jpg', 1, 1);
 
 -- Patients
 INSERT INTO Patient (Id, NutriId, Email, Name, LastName1, LastName2, Age, BirthDate, Password, Country, CaloriesIntake) VALUES
