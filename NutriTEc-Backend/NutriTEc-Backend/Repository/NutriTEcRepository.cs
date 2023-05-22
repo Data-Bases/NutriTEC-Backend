@@ -80,7 +80,7 @@ namespace NutriTEc_Backend.Repository
          * Admin
          */
 
-        public Result AdminSignUp(AdminDto admin)
+        public Result AdminSignUp (AdminDto admin)
         {
             admin.Password = PassowordHelper.EncodePasswordMD5(admin.Password).ToLower();
 
@@ -99,6 +99,87 @@ namespace NutriTEc_Backend.Repository
 
 
             }catch (Exception ex)
+            {
+                return Result.Error;
+            }
+        }
+
+        /*
+         * Nutri
+         */
+
+        public Result NutriSignUp (NutriDto nutri)
+        {
+            nutri.Password = PassowordHelper.EncodePasswordMD5(nutri.Password).ToLower();
+
+            var nutriToInsert = new Nutritionist()
+            {
+                Email = nutri.Email,
+                Password = nutri.Password,
+                Name = nutri.Name,
+                Lastname1 = nutri.Lastname1,
+                Lastname2 = (string.IsNullOrEmpty(nutri.Lastname2)) ? null : nutri.Lastname2,
+                Age = nutri.Age,
+                Birthdate = nutri.Birthdate,
+                Weight = (nutri.Weight == null ) ? null : nutri.Weight,
+                Imc = (nutri.Imc == null) ? null : nutri.Imc,
+                Nutritionistcode = nutri.Nutritionistcode,
+                Cardnumber = (nutri.Cardnumber == null) ? 0 : nutri.Cardnumber,
+                Province = nutri.Province,
+                Canton = nutri.Canton,
+                District = nutri.District,
+                Picture = nutri.Picture,
+                Adminid = nutri.Adminid,
+                Chargetypeid = nutri.Chargetypeid,
+            };
+
+            try
+            {
+                _context.Nutritionists.Add(nutriToInsert);
+
+                _context.SaveChanges();
+                return Result.Created;
+
+
+            }
+            catch (Exception ex)
+            {
+                return Result.Error;
+            }
+        }
+
+        /*
+         * Patient
+         */
+
+        public Result PatientSignUp (PatientDto patient)
+        {
+            patient.Password = PassowordHelper.EncodePasswordMD5(patient.Password).ToLower();
+
+            var patientToInsert = new Patient()
+            {
+                Name = patient.Name,
+                Email = patient.Email,
+                Lastname1 = patient.Lastname1,
+                Lastname2 = patient.Lastname2,
+                Age = patient.Age,
+                Birthdate = patient.Birthdate,
+                Password = patient.Password,
+                Country = patient.Country,
+                Caloriesintake = (patient.Caloriesintake == null) ? null : patient.Caloriesintake, 
+                Nutriid = (patient.Nutriid == null) ? null : patient.Nutriid,
+            };
+
+            try
+            {
+                _context.Patients.Add(patientToInsert);
+
+                _context.SaveChanges();
+                return Result.Created;
+
+
+            }
+            catch (Exception ex)
             {
                 return Result.Error;
             }

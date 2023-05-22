@@ -26,7 +26,7 @@ public partial class Patient
 
     public string Country { get; set; } = null!;
 
-    public int Caloriesintake { get; set; }
+    public int? Caloriesintake { get; set; }
 
     public virtual ICollection<Measurement> Measurements { get; set; } = new List<Measurement>();
 

@@ -11,7 +11,7 @@ CREATE TABLE Nutritionist
     BirthDate DATE NOT NULL,
 	Weight INT,
 	IMC INT,
-	NutritionistCode INT,
+	NutritionistCode INT NOT NULL,
 	CardNumber INT,
 	Province VARCHAR(100) NOT NULL,
 	Canton VARCHAR(100) NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE Patient
     BirthDate DATE NOT NULL,
 	Password VARCHAR(100) NOT NULL,
 	Country VARCHAR(100) NOT NULL,
-	CaloriesIntake INT NOT NULL,
+	CaloriesIntake INT,
 
 	PRIMARY KEY (Id)
 );

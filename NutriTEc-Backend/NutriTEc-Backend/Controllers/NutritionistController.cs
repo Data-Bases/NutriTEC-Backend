@@ -9,25 +9,25 @@ namespace NutriTEc_Backend.Controllers
 {
     [ApiController]
     [Route("nutritec/admin")]
-    public class AdminController : ControllerBase
+    public class NutritionistController : ControllerBase
     {
         private readonly INutriTEcRepository _repository;
-        public AdminController(INutriTEcRepository repository)
+        public NutritionistController(INutriTEcRepository repository)
         {
             _repository = repository;
         }
 
         /// <summary>
-        /// Admin sign up
+        /// Nutritionist sign up
         /// </summary>
-        /// <param name="admin"></param>
+        /// <param name="nutri"></param>
         /// <returns>Result</returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [HttpPost("AdminSignUp", Name = "AdminSignUp")]
-        public ActionResult<Result> AdminSignUp(AdminDto admin)
+        [HttpPost("NutritionistSignUp", Name = "NutritionistSignUp")]
+        public ActionResult<Result> NutritionistSignUp(NutriDto nutri)
         {
 
             if (!ModelState.IsValid)
@@ -35,7 +35,7 @@ namespace NutriTEc_Backend.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = _repository.AdminSignUp(admin);
+            var result = _repository.NutriSignUp(nutri);
 
             if(result == Result.Error)
             {

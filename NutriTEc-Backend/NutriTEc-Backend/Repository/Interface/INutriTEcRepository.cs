@@ -31,5 +31,26 @@ namespace NutriTEc_Backend.Repository.Interface
         /// <returns></returns>
         Result AdminSignUp(AdminDto admin);
 
+        /*
+         * Nutri
+         */
+
+        /// <summary>
+        /// Nutri sign up
+        /// </summary>
+        /// <param name="nutri"></param>
+        /// <returns>Result</returns>
+        Result NutriSignUp(NutriDto nutri);
+
+        /*
+         * Patient
+         */
+
+        /// <summary>
+        /// Patient sign up
+        /// </summary>
+        /// <param name="patient"></param>
+        /// <returns>Result</returns>
+        Result PatientSignUp(PatientDto patient);
     }
 }
