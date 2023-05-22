@@ -25,7 +25,7 @@ public partial class Nutritionist
 
     public int? Imc { get; set; }
 
-    public int? Nutritionistcode { get; set; }
+    public int Nutritionistcode { get; set; }
 
     public int? Cardnumber { get; set; }
 
