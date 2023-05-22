@@ -43,6 +43,8 @@ public partial class NutriTecContext : DbContext
 
     public virtual DbSet<Recipe> Recipes { get; set; }
 
+    public virtual DbSet<Usercredential> Usercredentials { get; set; }
+
     public virtual DbSet<Vitamin> Vitamins { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -53,10 +55,13 @@ public partial class NutriTecContext : DbContext
     {
         modelBuilder.Entity<Administrator>(entity =>
         {
-            entity.HasKey(e => e.Email).HasName("administrator_pkey");
+            entity.HasKey(e => e.Id).HasName("administrator_pkey");
 
             entity.ToTable("administrator");
 
+            entity.HasIndex(e => e.Email, "administrator_email_key").IsUnique();
+
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Email)
                 .HasMaxLength(100)
                 .HasColumnName("email");
@@ -115,9 +120,7 @@ public partial class NutriTecContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("id");
-            entity.Property(e => e.Adminemail)
-                .HasMaxLength(100)
-                .HasColumnName("adminemail");
+            entity.Property(e => e.Adminid).HasColumnName("adminid");
             entity.Property(e => e.Age).HasColumnName("age");
             entity.Property(e => e.Birthdate).HasColumnName("birthdate");
             entity.Property(e => e.Canton)
@@ -153,8 +156,8 @@ public partial class NutriTecContext : DbContext
                 .HasColumnName("province");
             entity.Property(e => e.Weight).HasColumnName("weight");
 
-            entity.HasOne(d => d.AdminemailNavigation).WithMany(p => p.Nutritionists)
-                .HasForeignKey(d => d.Adminemail)
+            entity.HasOne(d => d.Admin).WithMany(p => p.Nutritionists)
+                .HasForeignKey(d => d.Adminid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("nutritionist_adminemail");
 
@@ -200,7 +203,6 @@ public partial class NutriTecContext : DbContext
 
             entity.HasOne(d => d.Nutri).WithMany(p => p.Patients)
                 .HasForeignKey(d => d.Nutriid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("patient_nutriid");
         });
 
@@ -402,6 +404,22 @@ public partial class NutriTecContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(100)
                 .HasColumnName("name");
+        });
+
+        modelBuilder.Entity<Usercredential>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("usercredentials");
+
+            entity.Property(e => e.Email)
+                .HasMaxLength(100)
+                .HasColumnName("email");
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Password)
+                .HasMaxLength(100)
+                .HasColumnName("password");
+            entity.Property(e => e.Usertype).HasColumnName("usertype");
         });
 
         modelBuilder.Entity<Vitamin>(entity =>

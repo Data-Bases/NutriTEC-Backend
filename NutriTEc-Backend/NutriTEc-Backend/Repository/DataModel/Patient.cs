@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NutriTEc_Backend.Repository.DataModel;
 
 namespace NutriTEc_Backend.Repository.DataModel;
 
@@ -7,7 +8,7 @@ public partial class Patient
 {
     public int Id { get; set; }
 
-    public int Nutriid { get; set; }
+    public int? Nutriid { get; set; }
 
     public string Email { get; set; } = null!;
 
@@ -29,7 +30,7 @@ public partial class Patient
 
     public virtual ICollection<Measurement> Measurements { get; set; } = new List<Measurement>();
 
-    public virtual Nutritionist Nutri { get; set; } = null!;
+    public virtual Nutritionist? Nutri { get; set; }
 
     public virtual ICollection<Patientproduct> Patientproducts { get; set; } = new List<Patientproduct>();
 

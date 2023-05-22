@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NutriTEc_Backend.Repository.DataModel;
 
 namespace NutriTEc_Backend.Repository.DataModel;
 

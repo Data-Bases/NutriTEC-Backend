@@ -37,11 +37,11 @@ public partial class Nutritionist
 
     public string Picture { get; set; } = null!;
 
-    public string Adminemail { get; set; } = null!;
+    public int Adminid { get; set; }
 
     public int Chargetypeid { get; set; }
 
-    public virtual Administrator AdminemailNavigation { get; set; } = null!;
+    public virtual Administrator Admin { get; set; } = null!;
 
     public virtual Chargetype Chargetype { get; set; } = null!;
 

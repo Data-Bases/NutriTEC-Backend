@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using NutriTEc_Backend.Models;
+using NutriTEc_Backend.Dtos;
 using NutriTEc_Backend.Repository.Interface;
 using System.ComponentModel.DataAnnotations;
 
@@ -27,7 +27,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("GetVitamins", Name = "GetVitamins")]
-        public ActionResult<Vitamin> GetVitamins()
+        public ActionResult<VitaminDto> GetVitamins()
         {
 
             if (!ModelState.IsValid)
