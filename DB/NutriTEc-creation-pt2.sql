@@ -93,11 +93,11 @@ FOREIGN KEY (ChargeTypeId) REFERENCES ChargeType(Id);
 
 -- Views
 CREATE VIEW UserCredentials AS
-SELECT Id, Email, Password, 'Patient' AS UserType FROM Patient
+SELECT Id, Email, Password, 'P' AS UserType FROM Patient
 UNION ALL
-SELECT Id, Email, Password, 'Nutritionist' AS UserType FROM Nutritionist
+SELECT Id, Email, Password, 'N' AS UserType FROM Nutritionist
 UNION ALL
-SELECT Id, Email, Password, 'Administrator' AS UserType FROM Administrator;
+SELECT Id, Email, Password, 'A' AS UserType FROM Administrator;
 
 
 -- Triggers
