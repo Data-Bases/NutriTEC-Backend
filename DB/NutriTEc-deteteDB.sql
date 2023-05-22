@@ -26,6 +26,11 @@ ALTER TABLE Nutritionist DROP CONSTRAINT Nutritionist_AdminEmail;
 ALTER TABLE Nutritionist DROP CONSTRAINT Nutritionist_ChargeTypeId;
 
 DROP VIEW IF EXISTS UserCredentials;
+DROP TRIGGER CheckEmailExistsInAdministrator ON Administrator;
+DROP TRIGGER CheckEmailExistsInPatient ON Patient;
+DROP TRIGGER CheckEmailExistsInNutritionist ON Nutritionist;
+DROP FUNCTION IF EXISTS check_email_exists();
+
 DROP TABLE Nutritionist;
 DROP TABLE Product;
 DROP TABLE Patient;

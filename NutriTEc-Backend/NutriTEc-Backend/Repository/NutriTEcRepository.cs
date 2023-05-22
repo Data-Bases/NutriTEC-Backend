@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Nest;
 using NutriTEc_Backend.Dtos;
+using NutriTEc_Backend.Helpers;
 using NutriTEc_Backend.Repository.DataModel;
 using NutriTEc_Backend.Repository.Interface;
 using System.Collections.Generic;
@@ -11,10 +13,12 @@ namespace NutriTEc_Backend.Repository
     public class NutriTEcRepository : INutriTEcRepository
     {
         private readonly NutriTecContext _context;
+        private readonly IMapper _mapper;
 
-        public NutriTEcRepository(NutriTecContext context)
+        public NutriTEcRepository(NutriTecContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
 
@@ -33,6 +37,10 @@ namespace NutriTEc_Backend.Repository
 
             return vitaminsDto;
         }
+
+        /*
+         * Credentials
+         */
 
         public UserCredentialsDto GetUserByEmail(string email)
         {
@@ -66,6 +74,34 @@ namespace NutriTEc_Backend.Repository
             };
 
             return userDto;
+        }
+
+        /*
+         * Admin
+         */
+
+        public Result AdminSignUp(AdminDto admin)
+        {
+            admin.Password = PassowordHelper.EncodePasswordMD5(admin.Password).ToLower();
+
+            var adminUserToInsert = new Administrator()
+            {
+                Email = admin.Email,
+                Password = admin.Password,
+            };
+
+            try
+            {
+                _context.Administrators.Add(adminUserToInsert);
+
+                _context.SaveChanges();
+                return Result.Created;
+
+
+            }catch (Exception ex)
+            {
+                return Result.Error;
+            }
         }
     }
 }

@@ -18,12 +18,11 @@ namespace NutriTEc_Backend.Controllers
         }
 
         /// <summary>
-        /// Get vitamins information
+        /// Log in to all users
         /// </summary>
-        /// <returns>
-        /// Vitamin name
-        /// Vitamin Id
-        /// </returns>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

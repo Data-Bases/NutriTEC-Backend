@@ -1,4 +1,4 @@
--- Nutricionist
+-- Nutritionist
 CREATE TABLE Nutritionist
 (
 	Id INT NOT NULL,

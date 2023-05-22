@@ -26,7 +26,7 @@ ALTER TABLE PatientRecipe
 ADD CONSTRAINT PatientRecipe_RecipeId
 FOREIGN KEY (RecipeId) REFERENCES Patient (Id);
 
--- Patient-Nutricionist
+-- Patient-Nutritionist
 ALTER TABLE Patient
 ADD CONSTRAINT Patient_NutriId
 FOREIGN KEY (NutriId) REFERENCES Nutritionist (Id);
@@ -46,7 +46,7 @@ ALTER TABLE Measurements
 ADD CONSTRAINT Measurements_PatientId
 FOREIGN KEY (PatientId) REFERENCES Patient (Id);
 
--- Plan-Nutricionist
+-- Plan-Nutritionist
 ALTER TABLE Plan
 ADD CONSTRAINT Plan_NutriId
 FOREIGN KEY (NutriId) REFERENCES Nutritionist (Id);
@@ -100,7 +100,33 @@ UNION ALL
 SELECT Id, Email, Password, 'A' AS UserType FROM Administrator;
 
 
--- Triggers
+-- Triggers and Fuctions
+CREATE OR REPLACE FUNCTION check_email_exists()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM UserCredentials
+        WHERE Email = NEW.Email
+    ) THEN
+        RAISE EXCEPTION 'Email already exists in UserCredentials view.';
+    END IF;
 
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
--- Fuctions
+CREATE TRIGGER CheckEmailExistsInAdministrator
+BEFORE INSERT ON Administrator
+FOR EACH ROW
+EXECUTE FUNCTION check_email_exists();
+
+CREATE TRIGGER CheckEmailExistsInPatient
+BEFORE INSERT ON Patient
+FOR EACH ROW
+EXECUTE FUNCTION check_email_exists();
+
+CREATE TRIGGER CheckEmailExistsInNutritionist
+BEFORE INSERT ON Nutritionist
+FOR EACH ROW
+EXECUTE FUNCTION check_email_exists();

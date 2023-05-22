@@ -53,6 +53,8 @@ public partial class NutriTecContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.UseSerialColumns();
+
         modelBuilder.Entity<Administrator>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("administrator_pkey");
