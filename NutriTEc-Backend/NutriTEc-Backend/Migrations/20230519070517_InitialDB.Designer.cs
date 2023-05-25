@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using NutriTEc_Backend.Repository;
-using NutriTEc_Backend.Repository.DataModel;
+using NutriTEc_Backend.DataModel;
 
 #nullable disable
 

@@ -52,5 +52,21 @@ namespace NutriTEc_Backend.Repository.Interface
         /// <param name="patient"></param>
         /// <returns>Result</returns>
         Result PatientSignUp(PatientDto patient);
+
+        /*
+         * Recipe
+         */
+        /// <summary>
+        /// Create recipe name with products
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>Result</returns>
+        Result CreateRecipe(RecipeXProductsDto recipe);
+
+        /// <summary>
+        /// Get all recipes from DB
+        /// </summary>
+        /// <returns>A list of names and ids</returns>
+        List<RecipeDto> GetRecipes();
     }
 }

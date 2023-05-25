@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using NutriTEc_Backend.Repository;
 using Microsoft.EntityFrameworkCore;
 using NutriTEc_Backend.Repository.Interface;
-using NutriTEc_Backend.Repository.DataModel;
+using NutriTEc_Backend.DataModel;
 using AutoMapper;
 
 namespace NutriTEc_Backend

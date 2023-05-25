@@ -4,9 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Nest;
 using NutriTEc_Backend.Dtos;
 using NutriTEc_Backend.Helpers;
-using NutriTEc_Backend.Repository.DataModel;
+using NutriTEc_Backend.DataModel;
 using NutriTEc_Backend.Repository.Interface;
 using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
+using Npgsql;
 
 namespace NutriTEc_Backend.Repository
 {
@@ -182,6 +184,68 @@ namespace NutriTEc_Backend.Repository
             catch (Exception ex)
             {
                 return Result.Error;
+            }
+        }
+
+        /*
+         * Recipe
+         */
+
+        public Result CreateRecipe(RecipeXProductsDto recipe)
+        {
+            var productsToInsert = new List<Productrecipe>();
+            try
+            {
+                var recipeNameParam = new NpgsqlParameter("@recipeName", recipe.RecipeName);
+
+                _context.Recipes.Add(new Recipe { Name = recipe.RecipeName });
+
+                _context.SaveChanges();
+
+                var recipeId = _context.Recipes.Where(x => x.Name == recipe.RecipeName).FirstOrDefault().Id;
+
+                _context.SaveChanges();
+
+                foreach (var product in recipe.Products)
+                {
+                    productsToInsert.Add(new Productrecipe
+                    {
+                        Productbarcode = product.Id,
+                        Recipeid = recipeId,
+                        Servings = product.Servings,
+                    });
+                }
+
+                _context.Productrecipes.AddRange(productsToInsert);
+
+                _context.SaveChanges();
+
+                return Result.Created;
+
+            }
+            catch (Exception ex)
+            {
+                return Result.Error;
+            }
+        }
+
+        public List<RecipeDto> GetRecipes()
+        {
+            var recipes = new List<RecipeDto>();
+            try
+            {
+                var recipesFromDb = _context.Recipes.FromSqlRaw("Select * from recipe").ToList();
+                recipesFromDb.ForEach(x => recipes.Add(
+                    new RecipeDto
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                    }) );
+                return recipes;
+            }
+            catch (Exception ex)
+            {
+                return new List<RecipeDto>();
             }
         }
     }

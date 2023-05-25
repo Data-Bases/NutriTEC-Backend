@@ -130,3 +130,4 @@ CREATE TRIGGER CheckEmailExistsInNutritionist
 BEFORE INSERT ON Nutritionist
 FOR EACH ROW
 EXECUTE FUNCTION check_email_exists();
+

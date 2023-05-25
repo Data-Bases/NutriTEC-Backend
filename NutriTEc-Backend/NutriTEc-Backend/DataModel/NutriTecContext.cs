@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace NutriTEc_Backend.Repository.DataModel;
+namespace NutriTEc_Backend.DataModel;
 
 public partial class NutriTecContext : DbContext
 {
@@ -47,14 +47,14 @@ public partial class NutriTecContext : DbContext
 
     public virtual DbSet<Vitamin> Vitamins { get; set; }
 
+    public virtual DbSet<FunctionCreateRecipe> FunctionCreateRecipes { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Server=computines.postgres.database.azure.com;Database= NutriTEc;Port=5432;User Id=diani;Password=Pepe!bobby;Ssl Mode=Require; Trust Server Certificate=true;");
+        => optionsBuilder.UseNpgsql("Server=nutritecdb.cwhaztqkgbgr.us-east-2.rds.amazonaws.com;Database= NutriTEc;Port=5432;User Id=diani;Password=Pepe!bobby;Ssl Mode=Require; Trust Server Certificate=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.UseSerialColumns();
-
         modelBuilder.Entity<Administrator>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("administrator_pkey");
@@ -396,16 +396,21 @@ public partial class NutriTecContext : DbContext
                 .HasConstraintName("productvitamin_vitamin");
         });
 
+        modelBuilder.Entity <FunctionCreateRecipe>().HasNoKey().ToView(null);
+
         modelBuilder.Entity<Recipe>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("recipe_pkey");
 
             entity.ToTable("recipe");
 
+            entity.HasIndex(e => e.Name, "recipe_name_key").IsUnique();
+
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Name)
                 .HasMaxLength(100)
                 .HasColumnName("name");
+            entity.Property(e => e.Totalcalories).HasColumnName("totalcalories");
         });
 
         modelBuilder.Entity<Usercredential>(entity =>
@@ -439,6 +444,5 @@ public partial class NutriTecContext : DbContext
 
         OnModelCreatingPartial(modelBuilder);
     }
-
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
