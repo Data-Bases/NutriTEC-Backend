@@ -30,7 +30,6 @@ DROP TRIGGER CheckEmailExistsInAdministrator ON Administrator;
 DROP TRIGGER CheckEmailExistsInPatient ON Patient;
 DROP TRIGGER CheckEmailExistsInNutritionist ON Nutritionist;
 DROP FUNCTION IF EXISTS check_email_exists();
-DROP FUNCTION IF EXISTS create_recipe();
 
 DROP TABLE Nutritionist;
 DROP TABLE Product;
