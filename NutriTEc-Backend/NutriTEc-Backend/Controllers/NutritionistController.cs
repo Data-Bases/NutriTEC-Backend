@@ -45,5 +45,23 @@ namespace NutriTEc_Backend.Controllers
             return Ok();
             
         }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet("GetPatientsByNutriId", Name = "GetPatientsByNutriId")]
+        public ActionResult<ProductDto> GetPatientsByNutriId(int nutriId)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var products = _repository.GetPatientsByNutriId(nutriId);
+
+            return Ok(products);  
+        }
     }
 }

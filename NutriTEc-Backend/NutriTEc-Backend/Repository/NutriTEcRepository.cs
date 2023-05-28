@@ -7,6 +7,8 @@ using NutriTEc_Backend.Helpers;
 using NutriTEc_Backend.Repository.DataModel;
 using NutriTEc_Backend.Repository.Interface;
 using System.Collections.Generic;
+using Npgsql;
+using System;
 
 namespace NutriTEc_Backend.Repository
 {
@@ -148,6 +150,20 @@ namespace NutriTEc_Backend.Repository
             }
         }
 
+        public List<PatientIdDto> GetPatientsByNutriId(int nutriId)
+        {
+            var patientsDto = _context.Patients
+                .Where(p => p.Nutriid == nutriId)
+                .Select(p => new PatientIdDto
+                {
+                    Id = p.Id,
+                    Name = p.Name
+                })
+                .ToList();
+
+            return patientsDto;
+        }
+
         /*
          * Patient
          */
@@ -184,5 +200,95 @@ namespace NutriTEc_Backend.Repository
                 return Result.Error;
             }
         }
+
+        /*
+         * Product 
+         */
+        public List<ProductDto> GetAllProducts()
+        {
+            var productsDto = _context.Products
+                .Select(p => new ProductDto
+                {
+                    Barcode = p.Barcode,
+                    Name = p.Name
+                })
+                .ToList();
+
+            return productsDto;
+        }
+
+        public ProductInformationDto GetProductByBarcode(int barcode)
+        {
+            var product = _context.Products
+                .FirstOrDefault(p => p.Barcode == barcode);
+
+            if (product == null)
+            {
+                return null;
+            }
+
+            var productInformationDto = new ProductInformationDto
+            {
+                Barcode = product.Barcode,
+                Name = product.Name,
+                Description = product.Descripcion, // creo que en la DB está mal escrito
+                PortionSize = product.Portionsize,
+                Energy = product.Energy,
+                Fat = product.Fat,
+                Sodium = product.Sodium,
+                Carbs = product.Carbs,
+                Protein = product.Protein,
+                Calcium = product.Calcium,
+                Iron = product.Iron,
+                IsApproved = (product.Isapproved == null) ? null : product.Isapproved
+            };
+
+            return productInformationDto;
+        }
+
+        public Result AddNewProduct(ProductInformationDto productInformationDto)
+        {
+            var newProduct = new Product
+            {
+                Barcode = productInformationDto.Barcode,
+                Name = productInformationDto.Name,
+                Descripcion = productInformationDto.Description,
+                Portionsize = productInformationDto.PortionSize,
+                Energy = productInformationDto.Energy,
+                Fat = productInformationDto.Fat,
+                Sodium = productInformationDto.Sodium,
+                Carbs = productInformationDto.Carbs,
+                Protein = productInformationDto.Protein,
+                Calcium = productInformationDto.Calcium,
+                Iron = productInformationDto.Iron,
+                Isapproved = false
+            };
+
+            try
+            {
+                _context.Products.Add(newProduct);
+                _context.SaveChanges();
+                return Result.Created;
+            }
+            catch (Exception ex)
+            {
+                return Result.Error;
+            }
+        }
+
+        public List<ProductDto> GetUnapprovedProducts()
+        {
+            var unapprovedProductsDto = _context.Products
+                .Where(p => p.Isapproved == false)
+                .Select(p => new ProductDto
+                {
+                    Barcode = p.Barcode,
+                    Name = p.Name
+                })
+                .ToList();
+
+            return unapprovedProductsDto;
+        }
     }
+
 }
