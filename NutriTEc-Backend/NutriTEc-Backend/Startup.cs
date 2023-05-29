@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using NutriTEc_Backend.Repository.Interface;
 using NutriTEc_Backend.DataModel;
 using AutoMapper;
+using Microsoft.Extensions.Options;
+using NutriTEc_Backend.Entities;
 
 namespace NutriTEc_Backend
 {
@@ -25,10 +27,17 @@ namespace NutriTEc_Backend
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+            services.Configure<ForumDatabaseSettings>(
+                configRoot.GetSection(nameof(ForumDatabaseSettings)));
+            services.AddSingleton<ICommentsDatabaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<ForumDatabaseSettings>>().Value);
             services.AddScoped<INutriTEcRepository, NutriTEcRepository>();
+            services.AddScoped<IForumRepository, ForumRepository>();
             services.AddDbContext<NutriTecContext>(o => o.UseNpgsql(configRoot.GetConnectionString("NutriTEc")));
             services.AddAutoMapper(typeof(Startup));
             services.AddControllersWithViews();
+
+
 
         }
         public void Configure(WebApplication app, IWebHostEnvironment env)
