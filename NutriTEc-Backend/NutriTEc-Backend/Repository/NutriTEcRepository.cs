@@ -109,6 +109,50 @@ namespace NutriTEc_Backend.Repository
             }
         }
 
+        public Result ApproveProduct(int id)
+        {
+            try
+            {
+                var product = _context.Products.Where(x => x.Barcode == id).FirstOrDefault();
+                if (product == null)
+                {
+                    return Result.NotFound;
+                }
+
+                product.Isapproved = true;
+
+                _context.SaveChanges();
+
+                return Result.Created;
+
+            }
+            catch (Exception ex)
+            {
+                return Result.Error;
+            }
+        }
+
+        public List<PayrollReport> GetPayrollReport(int id)
+        {
+            try
+            {
+                var payroll = _context.PayrollReports.FromSqlRaw($"SELECT chargetype, nutriemail, fullname, cardnumber, totalamount, discount, chargeamount from payroll({id});").ToList();
+
+                if (payroll == null)
+                {
+                    return new List<PayrollReport>();
+
+                }
+
+                return payroll;
+            }
+            catch (Exception ex)
+            {
+                return new List<PayrollReport>();
+            }
+
+        }
+
         /*
          * Nutri
          */

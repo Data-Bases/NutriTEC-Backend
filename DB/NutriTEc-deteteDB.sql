@@ -35,7 +35,9 @@ DROP TRIGGER CheckEmailExistsInNutritionist ON Nutritionist;
 DROP FUNCTION IF EXISTS check_email_exists();
 DROP FUNCTION create_recipe(character varying);
 DROP FUNCTION calculate_recipe_nutrients(int);
-
+DROP FUNCTION get_total_patients;
+DROP FUNCTION amount_to_charge;
+DROP FUNCTION payroll;
 
 DROP TABLE Nutritionist;
 DROP TABLE Product;

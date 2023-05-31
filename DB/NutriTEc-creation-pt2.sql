@@ -174,6 +174,72 @@ END; $$
 LANGUAGE 'plpgsql';
 
 
+CREATE OR REPLACE FUNCTION payroll(admin_id int)
+    RETURNS TABLE (
+		ChargeType int,
+		NutriEmail varchar(100), 
+		FullName text,
+		CardNumer int,
+		TotalAmount int,
+		Discount float,
+        ChargeAmount float
+) 
+AS $$
+DECLARE 
+	total_patients int;
+BEGIN
+    RETURN QUERY SELECT
+		N.ChargeTypeId,
+		N.Email,
+		CONCAT(N.Name,' ', N.LastName1, ' ', N.LastName2),
+		N.CardNumber, 
+		get_total_patients(N.Id),
+    	(
+        SELECT discounted_amount
+        FROM amount_to_charge(get_total_patients(N.Id), N.ChargeTypeId)
+    	),
+		(
+        SELECT charge_amount
+        FROM amount_to_charge(get_total_patients(N.Id), N.ChargeTypeId)
+    	)
+    FROM administrator as A 
+	JOIN nutritionist as N on N.AdminId = A.Id
+	WHERE A.Id = admin_id;
+END; $$ 
+LANGUAGE 'plpgsql';
+
+
+CREATE OR REPLACE FUNCTION amount_to_charge(total_patients int, charge_type int, OUT charge_amount float, OUT discounted_amount float)
+    AS $$
+BEGIN
+    IF charge_type = 1 THEN
+        charge_amount := total_patients;
+		discounted_amount := 0;
+    ELSIF charge_type = 2 THEN
+        charge_amount := 0.95 * total_patients;
+		discounted_amount := 5;
+    ELSIF charge_type = 3 THEN
+        charge_amount := 0.9 * total_patients;
+		discounted_amount := 10;
+    ELSE 
+        charge_amount := 0;
+    END IF;  
+END; 
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION get_total_patients(nutri_id int)
+    RETURNS int AS $$
+DECLARE
+	total_patients int;
+BEGIN
+	SELECT COUNT(P.Id) INTO total_patients
+	FROM nutritionist as N JOIN patient as P on P.NutriId = N.Id
+	WHERE N.Id = nutri_id;
+	
+	RETURN total_patients;
+END; $$ 
+LANGUAGE 'plpgsql';
 
 CREATE TRIGGER CheckEmailExistsInAdministrator
 BEFORE INSERT ON Administrator

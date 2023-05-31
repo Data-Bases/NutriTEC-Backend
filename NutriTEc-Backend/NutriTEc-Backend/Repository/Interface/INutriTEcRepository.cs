@@ -1,5 +1,6 @@
 ﻿using Nest;
 using NutriTEc_Backend.Dtos;
+using NutriTEc_Backend.Models;
 
 namespace NutriTEc_Backend.Repository.Interface
 {
@@ -75,5 +76,23 @@ namespace NutriTEc_Backend.Repository.Interface
         /// <param name="id"></param>
         /// <returns></returns>
         RecipeInfoDto GetRecipeById(int id);
+
+        /*
+         * Administrator
+         */
+
+        /// <summary>
+        /// It update IsAprrove record in Product Relation
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Result</returns>
+        Result ApproveProduct(int id);
+
+        /// <summary>
+        /// Get payroll report for admin id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Payroll report info</returns>
+        List<PayrollReport> GetPayrollReport(int id);
     }
 }
