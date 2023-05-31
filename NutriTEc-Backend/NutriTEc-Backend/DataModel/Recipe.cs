@@ -9,7 +9,5 @@ public partial class Recipe
 
     public string Name { get; set; } = null!;
 
-    public double? Totalcalories { get; set; }
-
     public virtual ICollection<Productrecipe> Productrecipes { get; set; } = new List<Productrecipe>();
 }

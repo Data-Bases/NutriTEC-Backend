@@ -3,6 +3,6 @@
     public class ProductInRecipeDto
     {
         public int Id { get; set; }
-        public int Servings { get; set; }
+        public double Servings { get; set; }
     }
 }

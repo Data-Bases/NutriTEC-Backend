@@ -68,5 +68,12 @@ namespace NutriTEc_Backend.Repository.Interface
         /// </summary>
         /// <returns>A list of names and ids</returns>
         List<RecipeDto> GetRecipes();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        RecipeInfoDto GetRecipeById(int id);
     }
 }

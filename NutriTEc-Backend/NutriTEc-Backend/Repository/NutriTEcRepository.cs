@@ -9,6 +9,9 @@ using NutriTEc_Backend.Repository.Interface;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using Npgsql;
+using System.Linq;
+using NutriTEc_Backend.Models;
+using Microsoft.IdentityModel.Tokens;
 
 namespace NutriTEc_Backend.Repository
 {
@@ -196,13 +199,12 @@ namespace NutriTEc_Backend.Repository
             var productsToInsert = new List<Productrecipe>();
             try
             {
-                var recipeNameParam = new NpgsqlParameter("@recipeName", recipe.RecipeName);
+                if (recipe.Products.IsNullOrEmpty())
+                {
+                    return Result.Error;
+                }
 
-                _context.Recipes.Add(new Recipe { Name = recipe.RecipeName });
-
-                _context.SaveChanges();
-
-                var recipeId = _context.Recipes.Where(x => x.Name == recipe.RecipeName).FirstOrDefault().Id;
+                var recipeId = _context.RecipeIds.FromSqlRaw($"SELECT * FROM  create_recipe('{recipe.RecipeName}')").FirstOrDefault();
 
                 _context.SaveChanges();
 
@@ -211,7 +213,7 @@ namespace NutriTEc_Backend.Repository
                     productsToInsert.Add(new Productrecipe
                     {
                         Productbarcode = product.Id,
-                        Recipeid = recipeId,
+                        Recipeid = recipeId.create_recipe,
                         Servings = product.Servings,
                     });
                 }
@@ -234,7 +236,7 @@ namespace NutriTEc_Backend.Repository
             var recipes = new List<RecipeDto>();
             try
             {
-                var recipesFromDb = _context.Recipes.FromSqlRaw("Select * from recipe").ToList();
+                var recipesFromDb = _context.Recipes.ToList();
                 recipesFromDb.ForEach(x => recipes.Add(
                     new RecipeDto
                     {
@@ -248,5 +250,61 @@ namespace NutriTEc_Backend.Repository
                 return new List<RecipeDto>();
             }
         }
+
+        public RecipeInfoDto GetRecipeById(int id)
+        { 
+            try
+            {
+                var recipeNutrients = _context.RecipeNutrients.FromSqlRaw($"SELECT totalenergy, totalsodium, totalcarbs, totalprotein, totalcalcium, totalfat, totaliron  FROM calculate_recipe_nutrients({id});").AsEnumerable().FirstOrDefault();
+
+                var productsInRecipe = _context.ProductRecipeNutrients.FromSqlRaw($"SELECT recipename, recipeid, productname, portionsize, servings, energy, fat, sodium, carbs, protein, calcium, iron FROM products_in_recipe WHERE recipeid = {id};").ToList();
+
+                return ParseTotalNutrients(recipeNutrients, productsInRecipe);
+            }
+            catch (Exception ex)
+            {
+                return new RecipeInfoDto();
+            }
+        }
+
+        private RecipeInfoDto ParseTotalNutrients(RecipeNutrients recipe,  List<ProductRecipeNutrients> productRecipes)
+        {
+            var productsInRecipeToReturn = new List<ProductTotalInfoDto>();
+
+            foreach (var product in productRecipes)
+            {
+                var productToReturn = new ProductTotalInfoDto()
+                {
+                    Name = product.ProductName,
+                    Portionsize = product.PortionSize,
+                    Servings = product.Servings,
+                    Energy = product.Energy,
+                    Fat = product.Fat,
+                    Sodium = product.Sodium,
+                    Carbs = product.Carbs,
+                    Protein = product.Protein,
+                    Calcium = product.Calcium,
+                    Iron = product.Iron,
+                };
+
+                productsInRecipeToReturn.Add(productToReturn);
+                    
+            }
+
+            var recipeToReturn = new RecipeInfoDto
+            {
+                RecipeName = productRecipes[0].RecipeName,
+                Energy = recipe.Totalenergy,
+                Fat = recipe.Totalfat,
+                Sodium = recipe.Totalsodium,
+                Carbs = recipe.Totalcarbs,
+                Calcium = recipe.Totalcalcium,
+                Iron = recipe.Totaliron,
+                Protein = recipe.Totalprotein,
+                Products = productsInRecipeToReturn,
+            };
+            return recipeToReturn;
+        }
+
     }
 }

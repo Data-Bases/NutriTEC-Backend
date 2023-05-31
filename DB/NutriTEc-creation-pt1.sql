@@ -65,7 +65,6 @@ CREATE TABLE Recipe
 (
 	Id SERIAL NOT NULL,
 	Name VARCHAR(100) UNIQUE NOT NULL,
-	TotalCalories FLOAT,
 
 	PRIMARY KEY (Id)
 );
