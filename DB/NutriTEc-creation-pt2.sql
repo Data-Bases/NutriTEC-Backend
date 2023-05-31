@@ -144,15 +144,8 @@ $$
 LANGUAGE plpgsql;
 
 
-create procedure calculate_recipe_nutrients(recipe_id int)
-language plpgsql
-as $$
-declare
--- variable declaration
-begin
-	create table temp_recipe
-	(
-		RecipeName varchar(100),
+CREATE OR REPLACE FUNCTION calculate_recipe_nutrients(recipe_id int)
+    RETURNS TABLE (
 		TotalEnergy float, 
 		TotalSodium float,
 		TotalCarbs float,
@@ -160,11 +153,10 @@ begin
 		TotalCalcium float,
         TotalFat float,
 		TotalIron float
-	);
-	
-	insert into temp_recipe
-		select
-			recipename,
+) 
+AS $$
+BEGIN
+    RETURN QUERY SELECT
 			SUM(PR.energy),
 			SUM(PR.sodium),
 			SUM(PR.carbs),
@@ -172,14 +164,14 @@ begin
 			SUM(PR.calcium),
             SUM(PR.fat),
 			SUM(PR.iron)
-		from products_in_recipe as PR
-		where PR.recipeid = recipe_id
-		group by recipename;
-		
-	PERFORM  * from temp_recipe;
-	
-	drop table temp_recipe;
-end; $$
+    FROM
+        products_in_recipe as PR
+    WHERE
+        PR.recipeid = recipe_id
+		GROUP BY recipename;
+END; $$ 
+
+LANGUAGE 'plpgsql';
 
 
 
