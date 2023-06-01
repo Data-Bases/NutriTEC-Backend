@@ -49,11 +49,13 @@ public partial class NutriTecContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Server=computines.postgres.database.azure.com;Database= NutriTEc;Port=5432;User Id=diani;Password=Pepe!bobby;Ssl Mode=Require; Trust Server Certificate=true;");
+        => optionsBuilder.UseNpgsql("Server=nutritec.postgres.database.azure.com;Database= NutriTEc;Port=5432;User Id=diani@nutritec;Password=Pepe!bobby;Ssl Mode=Require; Trust Server Certificate=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.UseSerialColumns();
+        modelBuilder
+            .HasPostgresExtension("pg_buffercache")
+            .HasPostgresExtension("pg_stat_statements");
 
         modelBuilder.Entity<Administrator>(entity =>
         {
