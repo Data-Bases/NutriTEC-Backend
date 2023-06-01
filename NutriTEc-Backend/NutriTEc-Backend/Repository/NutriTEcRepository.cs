@@ -249,13 +249,6 @@ namespace NutriTEc_Backend.Repository
             return productInformationDto;
         }
 
-            }
-            catch (Exception ex)
-            {
-                return Result.Error;
-            }
-        }
-
         /*
          * Recipe
          */
@@ -289,9 +282,14 @@ namespace NutriTEc_Backend.Repository
                 _context.SaveChanges();
 
                 return Result.Created;
-
+                
             }
-        public Result AddNewProduct(ProductInformationDto productInformationDto)
+            catch (Exception ex)
+            {
+                return Result.Error;
+            }
+}
+public Result AddNewProduct(ProductInformationDto productInformationDto)
         {
             var newProduct = new Product
             {
@@ -321,7 +319,21 @@ namespace NutriTEc_Backend.Repository
             }
         }
 
-        public List<RecipeDto> GetRecipes()
+        public List<ProductDto> GetUnapprovedProducts()
+        {
+            var unapprovedProductsDto = _context.Products
+                .Where(p => p.Isapproved == false)
+                .Select(p => new ProductDto
+                {
+                    Barcode = p.Barcode,
+                    Name = p.Name
+                })
+                .ToList();
+
+            return unapprovedProductsDto;
+        }
+
+    public List<RecipeDto> GetRecipes()
         {
             var recipes = new List<RecipeDto>();
             try
@@ -394,20 +406,6 @@ namespace NutriTEc_Backend.Repository
                 Products = productsInRecipeToReturn,
             };
             return recipeToReturn;
-        }
-
-        public List<ProductDto> GetUnapprovedProducts()
-        {
-            var unapprovedProductsDto = _context.Products
-                .Where(p => p.Isapproved == false)
-                .Select(p => new ProductDto
-                {
-                    Barcode = p.Barcode,
-                    Name = p.Name
-                })
-                .ToList();
-
-            return unapprovedProductsDto;
         }
 
     }
