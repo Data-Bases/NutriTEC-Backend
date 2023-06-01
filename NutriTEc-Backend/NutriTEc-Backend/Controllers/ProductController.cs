@@ -50,8 +50,8 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [HttpGet("GetProductByBarcode", Name = "GetProductByBarcode")]
-        public ActionResult<ProductInformationDto> GetProductByBarcode(int barcode)
+        [HttpGet("GetProductById", Name = "GetProductById")]
+        public ActionResult<ProductInformationDto> GetProductById(int id)
         {
 
             if (!ModelState.IsValid)
@@ -59,7 +59,7 @@ namespace NutriTEc_Backend.Controllers
                 return BadRequest(ModelState);
             }
 
-            var product = _repository.GetProductByBarcode(barcode);
+            var product = _repository.GetProductById(id);
 
             return Ok(product);
         }

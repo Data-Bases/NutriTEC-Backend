@@ -97,7 +97,7 @@ namespace NutriTEc_Backend.Repository.Interface
         /// </summary>
         /// <param name="barcode"></param>
         /// <returns>ProductInformationDto</returns>
-        ProductInformationDto GetProductByBarcode(int barcode);
+        ProductInformationDto GetProductById(int id);
 
         /// <summary>
         /// Create a New Product
