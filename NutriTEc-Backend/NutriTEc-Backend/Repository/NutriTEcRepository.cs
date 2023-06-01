@@ -249,47 +249,7 @@ namespace NutriTEc_Backend.Repository
             return productInformationDto;
         }
 
-        /*
-         * Recipe
-         */
-
-        public Result CreateRecipe(RecipeXProductsDto recipe)
-        {
-            var productsToInsert = new List<Productrecipe>();
-            try
-            {
-                if (recipe.Products.IsNullOrEmpty())
-                {
-                    return Result.Error;
-                }
-
-                var recipeId = _context.RecipeIds.FromSqlRaw($"SELECT * FROM  create_recipe('{recipe.RecipeName}')").FirstOrDefault();
-
-                _context.SaveChanges();
-
-                foreach (var product in recipe.Products)
-                {
-                    productsToInsert.Add(new Productrecipe
-                    {
-                        Productbarcode = product.Id,
-                        Recipeid = recipeId.create_recipe,
-                        Servings = product.Servings,
-                    });
-                }
-
-                _context.Productrecipes.AddRange(productsToInsert);
-
-                _context.SaveChanges();
-
-                return Result.Created;
-                
-            }
-            catch (Exception ex)
-            {
-                return Result.Error;
-            }
-}
-public Result AddNewProduct(ProductInformationDto productInformationDto)
+        public Result AddNewProduct(ProductInformationDto productInformationDto)
         {
             var newProduct = new Product
             {
@@ -333,7 +293,48 @@ public Result AddNewProduct(ProductInformationDto productInformationDto)
             return unapprovedProductsDto;
         }
 
-    public List<RecipeDto> GetRecipes()
+        /*
+         * Recipe
+         */
+
+        public Result CreateRecipe(RecipeXProductsDto recipe)
+        {
+            var productsToInsert = new List<Productrecipe>();
+            try
+            {
+                if (recipe.Products.IsNullOrEmpty())
+                {
+                    return Result.Error;
+                }
+
+                var recipeId = _context.RecipeIds.FromSqlRaw($"SELECT * FROM  create_recipe('{recipe.RecipeName}')").FirstOrDefault();
+
+                _context.SaveChanges();
+
+                foreach (var product in recipe.Products)
+                {
+                    productsToInsert.Add(new Productrecipe
+                    {
+                        Productbarcode = product.Id,
+                        Recipeid = recipeId.create_recipe,
+                        Servings = product.Servings,
+                    });
+                }
+
+                _context.Productrecipes.AddRange(productsToInsert);
+
+                _context.SaveChanges();
+
+                return Result.Created;
+                
+            }
+            catch (Exception ex)
+            {
+                return Result.Error;
+            }
+        }   
+
+        public List<RecipeDto> GetRecipes()
         {
             var recipes = new List<RecipeDto>();
             try
