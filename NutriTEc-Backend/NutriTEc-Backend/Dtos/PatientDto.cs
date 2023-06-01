@@ -14,7 +14,7 @@
 
         public int Age { get; set; }
 
-        public DateOnly Birthdate { get; set; }
+        public DateTime Birthdate { get; set; }
 
         public string Password { get; set; } = null!;
 

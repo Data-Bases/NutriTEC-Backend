@@ -54,6 +54,19 @@ INSERT INTO Product (Barcode, Name, Descripcion, PortionSize, Energy, Fat, Sodiu
 (44444, 'Yogurt', 'Low-fat strawberry yogurt', 150, 120, 1.5, 95, 20, 5, 200, 0.1, false),
 (55555, 'Salmon', 'Grilled salmon fillet', 1, 150, 275, 15, 55, 0, 30, 0.6, false);
 
+
+-- Recipe
+INSERT INTO Recipe(Id, Name) VALUES (1, 'Pollo a la manzana'), (2, 'Salmon a la manzana'), (3, 'Yogurt con manzana');
+
+-- ProductRecipe 
+INSERT INTO ProductRecipe(ProductBarcode, RecipeId, Servings) VALUES (33333, 1, 2.5), 
+                                                                    (22222, 1, 0.5), 
+                                                                    (11111, 1, 2),
+                                                                    (55555, 2, 1),
+                                                                    (11111, 2, 2),
+                                                                    (44444, 3, 1.5),
+                                                                    (11111, 3, 1);
+
 -- ProductVitamin
 INSERT INTO ProductVitamin (ProductBarcode, VitaminId) VALUES
 (11111, 1),

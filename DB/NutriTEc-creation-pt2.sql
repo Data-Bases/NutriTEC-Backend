@@ -179,7 +179,7 @@ CREATE OR REPLACE FUNCTION payroll(admin_id int)
 		ChargeType int,
 		NutriEmail varchar(100), 
 		FullName text,
-		CardNumer int,
+		CardNumber int,
 		TotalAmount int,
 		Discount float,
         ChargeAmount float

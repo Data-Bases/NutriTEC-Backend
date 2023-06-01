@@ -12,6 +12,7 @@ using Npgsql;
 using System.Linq;
 using NutriTEc_Backend.Models;
 using Microsoft.IdentityModel.Tokens;
+using System;
 
 namespace NutriTEc_Backend.Repository
 {
@@ -169,7 +170,7 @@ namespace NutriTEc_Backend.Repository
                 Lastname1 = nutri.Lastname1,
                 Lastname2 = (string.IsNullOrEmpty(nutri.Lastname2)) ? null : nutri.Lastname2,
                 Age = nutri.Age,
-                Birthdate = nutri.Birthdate,
+                Birthdate = DateOnly.FromDateTime(nutri.Birthdate),
                 Weight = (nutri.Weight == null ) ? null : nutri.Weight,
                 Imc = (nutri.Imc == null) ? null : nutri.Imc,
                 Nutritionistcode = nutri.Nutritionistcode,
@@ -212,7 +213,7 @@ namespace NutriTEc_Backend.Repository
                 Lastname1 = patient.Lastname1,
                 Lastname2 = patient.Lastname2,
                 Age = patient.Age,
-                Birthdate = patient.Birthdate,
+                Birthdate = DateOnly.FromDateTime(patient.Birthdate),
                 Password = patient.Password,
                 Country = patient.Country,
                 Caloriesintake = (patient.Caloriesintake == null) ? null : patient.Caloriesintake, 

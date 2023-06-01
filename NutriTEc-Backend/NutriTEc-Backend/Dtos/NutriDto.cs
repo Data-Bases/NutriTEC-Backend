@@ -1,6 +1,4 @@
-﻿using NutriTEc_Backend.DataModel;
-
-namespace NutriTEc_Backend.Dtos
+﻿namespace NutriTEc_Backend.Dtos
 {
     public class NutriDto
     {
@@ -16,7 +14,7 @@ namespace NutriTEc_Backend.Dtos
 
         public int Age { get; set; }
 
-        public DateOnly Birthdate { get; set; }
+        public DateTime Birthdate { get; set; }
 
         public int? Weight { get; set; }
 
