@@ -22,7 +22,13 @@ INSERT INTO Patient (Id, NutriId, Email, Name, LastName1, LastName2, Age, BirthD
 (7, 2, 'reii@example.com', 'Rashell', 'Aguilar', 'Caballero', 21, '2001-07-10', md5('pepe'), 'United States', 2000),
 (8, 3, 'bobby@example.com', 'Bobby', 'Mejias', 'Hernandez', 17, '2006-12-28', md5('pepe'), 'Mexico', 1600),
 (9, 4, 'chloe@example.com', 'Chloe', 'Mejias', 'Hernandez', 12, '2011-11-20', md5('pepe'), 'Canada', 1800),
-(10, 5, 'pepe@example.com', 'Pepe', 'Blanco', 'Montoya', 10, '2013-04-12', md5('pepe'), 'Canada', 1500);
+(10, 5, 'pepe@example.com', 'Pepe', 'Blanco', 'Montoya', 10, '2013-04-12', md5('pepe'), 'Canada', 1500),
+(11, 1, 'will@example.com', 'Wilberth', 'Mejias', 'Cruz', 52, '1972-12-31', md5('pepe'), 'Costa Rica', 1800),
+(12, 2, 'anna@example.com', 'Anna', 'Barrrantes', 'Leiva', 32, '1995-01-20', md5('pepe'), 'Costa Rica', 1800),
+(13, 3, 'katia@example.com', 'Katia', 'Navarro', 'Hernandez', 52, '1970-10-23', md5('pepe'), 'Costa Rica', 1800),
+(14, 4, 'raquel@example.com', 'Raquel', 'Navarro', 'Navarro', 25, '1990-05-20', md5('pepe'), 'Berlin', 1800),
+(15, 5, 'meli@example.com', 'Meli', 'Hernandez', 'Ovares', 30, '1996-11-20', md5('pepe'), 'Costa Rica', 1800),
+(16, 1, 'pri@example.com', 'Pri', 'Sanchez', 'Hernandez', 18, '2005-08-13', md5('pepe'), 'Costa Rica', 1800);
 
 -- Measurements
 INSERT INTO Measurements(PatientId, Height, FatPercentage, MusclePercentage, Weight, Waist, Neck, Hips, RevisionDate) VALUES
@@ -47,6 +53,19 @@ INSERT INTO Product (Barcode, Name, Descripcion, PortionSize, Energy, Fat, Sodiu
 (33333, 'Chicken', 'Grilled chicken breast', 1, 100, 165, 3.6, 66, 0, 31, 0.01, false),
 (44444, 'Yogurt', 'Low-fat strawberry yogurt', 150, 120, 1.5, 95, 20, 5, 200, 0.1, false),
 (55555, 'Salmon', 'Grilled salmon fillet', 1, 150, 275, 15, 55, 0, 30, 0.6, false);
+
+
+-- Recipe
+INSERT INTO Recipe(Id, Name) VALUES (1, 'Pollo a la manzana'), (2, 'Salmon a la manzana'), (3, 'Yogurt con manzana');
+
+-- ProductRecipe 
+INSERT INTO ProductRecipe(ProductBarcode, RecipeId, Servings) VALUES (33333, 1, 2.5), 
+                                                                    (22222, 1, 0.5), 
+                                                                    (11111, 1, 2),
+                                                                    (55555, 2, 1),
+                                                                    (11111, 2, 2),
+                                                                    (44444, 3, 1.5),
+                                                                    (11111, 3, 1);
 
 -- ProductVitamin
 INSERT INTO ProductVitamin (ProductBarcode, VitaminId) VALUES

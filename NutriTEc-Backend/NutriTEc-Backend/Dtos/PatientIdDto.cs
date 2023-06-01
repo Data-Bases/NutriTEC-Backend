@@ -1,25 +1,9 @@
 ﻿namespace NutriTEc_Backend.Dtos
 {
-    public class PatientDto
+    public class PatientIdDto
     {
-        public int? Nutriid { get; set; }
-
-        public string Email { get; set; } = null!;
+        public int Id { get; set; }
 
         public string Name { get; set; } = null!;
-
-        public string Lastname1 { get; set; } = null!;
-
-        public string? Lastname2 { get; set; }
-
-        public int Age { get; set; }
-
-        public DateOnly Birthdate { get; set; }
-
-        public string Password { get; set; } = null!;
-
-        public string Country { get; set; } = null!;
-
-        public int? Caloriesintake { get; set; }
     }
 }
