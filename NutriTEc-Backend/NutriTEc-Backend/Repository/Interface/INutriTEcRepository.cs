@@ -68,6 +68,30 @@ namespace NutriTEc_Backend.Repository.Interface
         /// <returns>Result</returns>
         Result AddProductToPatient(PatientProductDto patientProductDto);
 
+        /// <summary>
+        /// 
+        /// Adding a recipe to a patient
+        /// </summary>
+        /// <param name="patientRecipeDto"></param>
+        /// <returns>Result</returns>
+        Result AddRecipeToPatient(PatientRecipeDto patientRecipeDto);
+
+        /// <summary>
+        /// Registers Patient Measurements
+        /// </summary>
+        /// <param name="patientId"></param>
+        /// <param name="measurementDto"></param>
+        /// <param name="revisionDate"></param>
+        /// <returns>Result</returns>
+        Result RegisterPatientMeasurements(int patientId, MeasurementDto measurementDto, DateTime revisionDate);
+
+        /// <summary>
+        /// Getting a patients nutricionist id and name
+        /// </summary>
+        /// <param name="patientId"></param>
+        /// <returns>The id and name of the nutricionist</returns>
+        NutriIdDto GetPatientsNutritionist(int patientId);
+
         /*
          * Recipe
          */

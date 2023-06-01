@@ -45,7 +45,11 @@ namespace NutriTEc_Backend.Controllers
             return Ok();
             
         }
-
+        /// <summary>
+        /// Adding a Product to a patient
+        /// </summary>
+        /// <param name="patientProductDto"></param>
+        /// <returns>Result</returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -68,6 +72,88 @@ namespace NutriTEc_Backend.Controllers
 
             return Ok();
 
+        }
+        /// <summary>
+        /// Adding a Recipe to a patient
+        /// </summary>
+        /// <param name="patientRecipeDto"></param>
+        /// <returns>Result</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpPost("AddRecipeToPatient", Name = "AddRecipeToPatient")]
+        public ActionResult<Result> AddRecipeToPatient(PatientRecipeDto patientRecipeDto)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = _repository.AddRecipeToPatient(patientRecipeDto);
+
+            if (result == Result.Error)
+            {
+                return Unauthorized();
+            }
+
+            return Ok();
+
+        }
+
+        /// <summary>
+        /// Registering a patient's measurements on an specific date
+        /// </summary>
+        /// <param name="patientId"></param>
+        /// <param name="measurementDto"></param>
+        /// <param name="revisionDate"></param>
+        /// <returns>Result</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpPost("RegisterPatientMeasurements", Name = "RegisterPatientMeasurements")]
+        public ActionResult<Result> RegisterPatientMeasurements(int patientId, MeasurementDto measurementDto, DateTime revisionDate)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = _repository.RegisterPatientMeasurements(patientId, measurementDto, revisionDate);
+
+            if (result == Result.Error)
+            {
+                return Unauthorized();
+            }
+
+            return Ok();
+
+        }
+
+        /// <summary>
+        /// Getting a patients nutricionist id and name
+        /// </summary>
+        /// <param name="patientId"></param>
+        /// <returns>The id and name of the nutricionist</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet("GetPatientsNutritionist", Name = "GetPatientsNutritionist")]
+        public ActionResult<NutriIdDto> GetPatientsNutritionist(int patientId)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var products = _repository.GetPatientsNutritionist(patientId);
+
+            return Ok(products);
         }
     }
 }

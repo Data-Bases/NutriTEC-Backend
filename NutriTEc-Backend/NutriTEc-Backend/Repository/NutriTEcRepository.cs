@@ -272,6 +272,69 @@ namespace NutriTEc_Backend.Repository
             }
         }
 
+        public Result AddRecipeToPatient(PatientRecipeDto patientRecipeDto)
+        {
+            var newPatientRecipe = new Patientrecipe
+            {
+                Recipeid = patientRecipeDto.Recipeid,
+                Patientid = patientRecipeDto.Patientid,
+                Mealtime = patientRecipeDto.Mealtime,
+                Consumedate = DateOnly.FromDateTime(patientRecipeDto.Consumedate)
+            };
+
+            try
+            {
+                _context.Patientrecipes.Add(newPatientRecipe);
+                _context.SaveChanges();
+                return Result.Created;
+            }
+            catch
+            {
+                return Result.Error;
+            }
+        }
+
+        public Result RegisterPatientMeasurements(int patientId, MeasurementDto measurementDto, DateTime revisionDate)
+        {
+            var newPatientMeasurements = new Measurement
+            {
+                Patientid = patientId,
+                Height = measurementDto.Height,
+                Fatpercentage = measurementDto.Fatpercentage,
+                Musclepercentage = measurementDto.Musclepercentage,
+                Weight = measurementDto.Weight,
+                Waist = measurementDto.Waist,
+                Neck = measurementDto.Neck,
+                Hips = measurementDto.Hips,
+                Revisiondate = DateOnly.FromDateTime(revisionDate)
+            };
+
+            try
+            {
+                _context.Measurements.Add(newPatientMeasurements);
+                _context.SaveChanges();
+                return Result.Created;
+            }
+            catch
+            {
+                return Result.Error;
+            }
+        }
+
+        public NutriIdDto GetPatientsNutritionist(int patientId)
+        {
+            var patient = _context.Patients.FirstOrDefault(p => p.Id == patientId);
+            var nutritionist = _context.Nutritionists.FirstOrDefault(n => n.Id == patient.Nutriid);
+
+            var nutriIdDto = new NutriIdDto
+            {
+                Id = nutritionist.Id,
+                Name = nutritionist.Name
+            };
+
+            return nutriIdDto;
+        }
+
         /*
          * Product 
          */

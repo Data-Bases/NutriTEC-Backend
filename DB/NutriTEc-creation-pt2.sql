@@ -126,6 +126,37 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION check_patient_exists()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM Patient
+        WHERE Id = NEW.PatientId
+    ) THEN
+        RAISE EXCEPTION 'Patient with ID % does not exist.', NEW.PatientId;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER check_patient_exists_measurements_trigger
+BEFORE INSERT ON Measurements
+FOR EACH ROW
+EXECUTE FUNCTION check_patient_exists();
+
+CREATE TRIGGER check_patient_exists_patientrecipe_trigger
+BEFORE INSERT ON PatientRecipe
+FOR EACH ROW
+EXECUTE FUNCTION check_patient_exists();
+
+
+CREATE TRIGGER check_patient_exists_patientproduct_trigger
+BEFORE INSERT ON PatientProduct
+FOR EACH ROW
+EXECUTE FUNCTION check_patient_exists();
+
 
 CREATE OR REPLACE FUNCTION create_recipe(recipe_name varchar(100))
 RETURNS int AS
