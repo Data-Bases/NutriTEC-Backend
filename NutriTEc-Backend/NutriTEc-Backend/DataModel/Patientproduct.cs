@@ -18,4 +18,5 @@ public partial class Patientproduct
     public virtual Patient Patient { get; set; } = null!;
 
     public virtual Product ProductbarcodeNavigation { get; set; } = null!;
+
 }

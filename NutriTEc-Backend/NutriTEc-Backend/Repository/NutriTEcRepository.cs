@@ -13,6 +13,7 @@ using System.Linq;
 using NutriTEc_Backend.Models;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using static Nest.JoinField;
 
 namespace NutriTEc_Backend.Repository
 {
@@ -244,6 +245,28 @@ namespace NutriTEc_Backend.Repository
 
             }
             catch (Exception ex)
+            {
+                return Result.Error;
+            }
+        }
+
+        public Result AddProductToPatient(PatientProductDto patientProductDto)
+        {
+            var newPatientProduct = new Patientproduct
+            {
+                Productbarcode = patientProductDto.ProductId,
+                Patientid = patientProductDto.PatientId,
+                Mealtime = patientProductDto.Mealtime,
+                Consumedate = DateOnly.FromDateTime(patientProductDto.Consumedate)
+            };
+
+            try
+            {
+                _context.Patientproducts.Add(newPatientProduct);
+                _context.SaveChanges();
+                return Result.Created;
+            }
+            catch
             {
                 return Result.Error;
             }

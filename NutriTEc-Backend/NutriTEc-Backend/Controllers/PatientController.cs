@@ -45,5 +45,29 @@ namespace NutriTEc_Backend.Controllers
             return Ok();
             
         }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpPost("AddProductToPatient", Name = "AddProductToPatient")]
+        public ActionResult<Result> AddProductToPatient(PatientProductDto patientProductDto)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = _repository.AddProductToPatient(patientProductDto);
+
+            if (result == Result.Error)
+            {
+                return Unauthorized();
+            }
+
+            return Ok();
+
+        }
     }
 }

@@ -61,6 +61,13 @@ namespace NutriTEc_Backend.Repository.Interface
         /// <returns>Result</returns>
         Result PatientSignUp(PatientDto patient);
 
+        /// <summary>
+        /// Adding a product asociated to a patient
+        /// </summary>
+        /// <param name="patientProductDto"></param>
+        /// <returns>Result</returns>
+        Result AddProductToPatient(PatientProductDto patientProductDto);
+
         /*
          * Recipe
          */
@@ -131,4 +138,5 @@ namespace NutriTEc_Backend.Repository.Interface
         /// <returns>Payroll report info</returns>
         List<PayrollReport> GetPayrollReport(int id);
     }
+
 }
