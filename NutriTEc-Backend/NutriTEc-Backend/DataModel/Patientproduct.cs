@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NutriTEc_Backend.Repository.DataModel;
+namespace NutriTEc_Backend.DataModel;
 
 public partial class Patientproduct
 {

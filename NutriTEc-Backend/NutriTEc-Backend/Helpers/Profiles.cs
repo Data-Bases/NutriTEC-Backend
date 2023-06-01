@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using NutriTEc_Backend.Dtos;
-using NutriTEc_Backend.Repository.DataModel;
+using NutriTEc_Backend.DataModel;
 
 namespace NutriTEc_Backend.Helpers
 {

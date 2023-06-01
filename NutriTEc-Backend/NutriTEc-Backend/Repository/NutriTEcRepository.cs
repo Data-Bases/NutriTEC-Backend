@@ -4,11 +4,19 @@ using Microsoft.EntityFrameworkCore;
 using Nest;
 using NutriTEc_Backend.Dtos;
 using NutriTEc_Backend.Helpers;
-using NutriTEc_Backend.Repository.DataModel;
+using NutriTEc_Backend.DataModel;
 using NutriTEc_Backend.Repository.Interface;
 using System.Collections.Generic;
+<<<<<<< HEAD
 using Npgsql;
 using System;
+=======
+using Microsoft.Data.SqlClient;
+using Npgsql;
+using System.Linq;
+using NutriTEc_Backend.Models;
+using Microsoft.IdentityModel.Tokens;
+>>>>>>> f62ae96398460b5c584351073b6fdd8c8edd2f77
 
 namespace NutriTEc_Backend.Repository
 {
@@ -202,6 +210,7 @@ namespace NutriTEc_Backend.Repository
         }
 
         /*
+<<<<<<< HEAD
          * Product 
          */
         public List<ProductDto> GetAllProducts()
@@ -269,6 +278,41 @@ namespace NutriTEc_Backend.Repository
                 _context.Products.Add(newProduct);
                 _context.SaveChanges();
                 return Result.Created;
+=======
+         * Recipe
+         */
+
+        public Result CreateRecipe(RecipeXProductsDto recipe)
+        {
+            var productsToInsert = new List<Productrecipe>();
+            try
+            {
+                if (recipe.Products.IsNullOrEmpty())
+                {
+                    return Result.Error;
+                }
+
+                var recipeId = _context.RecipeIds.FromSqlRaw($"SELECT * FROM  create_recipe('{recipe.RecipeName}')").FirstOrDefault();
+
+                _context.SaveChanges();
+
+                foreach (var product in recipe.Products)
+                {
+                    productsToInsert.Add(new Productrecipe
+                    {
+                        Productbarcode = product.Id,
+                        Recipeid = recipeId.create_recipe,
+                        Servings = product.Servings,
+                    });
+                }
+
+                _context.Productrecipes.AddRange(productsToInsert);
+
+                _context.SaveChanges();
+
+                return Result.Created;
+
+>>>>>>> f62ae96398460b5c584351073b6fdd8c8edd2f77
             }
             catch (Exception ex)
             {
@@ -276,6 +320,7 @@ namespace NutriTEc_Backend.Repository
             }
         }
 
+<<<<<<< HEAD
         public List<ProductDto> GetUnapprovedProducts()
         {
             var unapprovedProductsDto = _context.Products
@@ -289,6 +334,83 @@ namespace NutriTEc_Backend.Repository
 
             return unapprovedProductsDto;
         }
+=======
+        public List<RecipeDto> GetRecipes()
+        {
+            var recipes = new List<RecipeDto>();
+            try
+            {
+                var recipesFromDb = _context.Recipes.ToList();
+                recipesFromDb.ForEach(x => recipes.Add(
+                    new RecipeDto
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                    }) );
+                return recipes;
+            }
+            catch (Exception ex)
+            {
+                return new List<RecipeDto>();
+            }
+        }
+
+        public RecipeInfoDto GetRecipeById(int id)
+        { 
+            try
+            {
+                var recipeNutrients = _context.RecipeNutrients.FromSqlRaw($"SELECT totalenergy, totalsodium, totalcarbs, totalprotein, totalcalcium, totalfat, totaliron  FROM calculate_recipe_nutrients({id});").AsEnumerable().FirstOrDefault();
+
+                var productsInRecipe = _context.ProductRecipeNutrients.FromSqlRaw($"SELECT recipename, recipeid, productname, portionsize, servings, energy, fat, sodium, carbs, protein, calcium, iron FROM products_in_recipe WHERE recipeid = {id};").ToList();
+
+                return ParseTotalNutrients(recipeNutrients, productsInRecipe);
+            }
+            catch (Exception ex)
+            {
+                return new RecipeInfoDto();
+            }
+        }
+
+        private RecipeInfoDto ParseTotalNutrients(RecipeNutrients recipe,  List<ProductRecipeNutrients> productRecipes)
+        {
+            var productsInRecipeToReturn = new List<ProductTotalInfoDto>();
+
+            foreach (var product in productRecipes)
+            {
+                var productToReturn = new ProductTotalInfoDto()
+                {
+                    Name = product.ProductName,
+                    Portionsize = product.PortionSize,
+                    Servings = product.Servings,
+                    Energy = product.Energy,
+                    Fat = product.Fat,
+                    Sodium = product.Sodium,
+                    Carbs = product.Carbs,
+                    Protein = product.Protein,
+                    Calcium = product.Calcium,
+                    Iron = product.Iron,
+                };
+
+                productsInRecipeToReturn.Add(productToReturn);
+                    
+            }
+
+            var recipeToReturn = new RecipeInfoDto
+            {
+                RecipeName = productRecipes[0].RecipeName,
+                Energy = recipe.Totalenergy,
+                Fat = recipe.Totalfat,
+                Sodium = recipe.Totalsodium,
+                Carbs = recipe.Totalcarbs,
+                Calcium = recipe.Totalcalcium,
+                Iron = recipe.Totaliron,
+                Protein = recipe.Totalprotein,
+                Products = productsInRecipeToReturn,
+            };
+            return recipeToReturn;
+        }
+
+>>>>>>> f62ae96398460b5c584351073b6fdd8c8edd2f77
     }
 
 }

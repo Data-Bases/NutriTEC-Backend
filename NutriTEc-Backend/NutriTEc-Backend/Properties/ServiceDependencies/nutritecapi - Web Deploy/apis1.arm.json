@@ -36,7 +36,7 @@
     },
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "[concat(parameters('resourceGroupName'), 'Deployment', uniqueString(concat('nutritec', subscription().subscriptionId)))]",
+      "name": "[concat(parameters('resourceGroupName'), 'Deployment', uniqueString(concat('example', subscription().subscriptionId)))]",
       "resourceGroup": "[parameters('resourceGroupName')]",
       "apiVersion": "2019-10-01",
       "dependsOn": [
@@ -49,17 +49,17 @@
           "contentVersion": "1.0.0.0",
           "resources": [
             {
-              "name": "NutriTEc-api",
+              "name": "nutritecapi",
               "type": "Microsoft.ApiManagement/service",
               "location": "[parameters('resourceLocation')]",
               "properties": {
                 "publisherEmail": "dmejias08@estudiantec.cr",
-                "publisherName": "MEJIAS HERNANDEZ DIANA PAOLA",
+                "publisherName": "Computines",
                 "notificationSenderEmail": "apimgmt-noreply@mail.windowsazure.com",
                 "hostnameConfigurations": [
                   {
                     "type": "Proxy",
-                    "hostName": "nutritec-api.azure-api.net",
+                    "hostName": "nutritecapi.azure-api.net",
                     "encodedCertificate": null,
                     "keyVaultId": null,
                     "certificatePassword": null,
@@ -72,7 +72,14 @@
                 "privateIPAddresses": null,
                 "additionalLocations": null,
                 "virtualNetworkConfiguration": null,
-                "customProperties": null,
+                "customProperties": {
+                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Tls11": "true",
+                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Tls10": "true",
+                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Tls11": "true",
+                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Tls10": "true",
+                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Ssl30": "true",
+                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Protocols.Server.Http2": "true"
+                },
                 "virtualNetworkType": "None",
                 "certificates": null,
                 "disableGateway": false,
@@ -88,14 +95,14 @@
             },
             {
               "type": "Microsoft.ApiManagement/service/apis",
-              "name": "NutriTEc-api/nutritec",
+              "name": "nutritecapi/example",
               "properties": {
-                "displayName": "nutritec",
+                "displayName": "example",
                 "apiRevision": "1",
-                "description": null,
+                "description": "",
                 "subscriptionRequired": true,
-                "serviceUrl": null,
-                "path": "nutritec",
+                "serviceUrl": "https://nutritecapi.azurewebsites.net",
+                "path": "",
                 "protocols": [
                   "https"
                 ],
@@ -111,7 +118,7 @@
               },
               "apiVersion": "2019-12-01",
               "dependsOn": [
-                "NutriTEc-api"
+                "nutritecapi"
               ]
             }
           ]

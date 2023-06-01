@@ -61,6 +61,7 @@ namespace NutriTEc_Backend.Repository.Interface
         Result PatientSignUp(PatientDto patient);
 
         /*
+<<<<<<< HEAD
          * Product
          */
         /// <summary>
@@ -88,5 +89,28 @@ namespace NutriTEc_Backend.Repository.Interface
         /// </summary>
         /// <returns>List<ProductDto></returns>
         List<ProductDto> GetUnapprovedProducts();
+=======
+         * Recipe
+         */
+        /// <summary>
+        /// Create recipe name with products
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>Result</returns>
+        Result CreateRecipe(RecipeXProductsDto recipe);
+
+        /// <summary>
+        /// Get all recipes from DB
+        /// </summary>
+        /// <returns>A list of names and ids</returns>
+        List<RecipeDto> GetRecipes();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        RecipeInfoDto GetRecipeById(int id);
+>>>>>>> f62ae96398460b5c584351073b6fdd8c8edd2f77
     }
 }

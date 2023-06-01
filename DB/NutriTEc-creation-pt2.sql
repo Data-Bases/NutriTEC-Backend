@@ -100,6 +100,16 @@ UNION ALL
 SELECT Id, Email, Password, 'A' AS UserType FROM Administrator;
 
 
+CREATE OR REPLACE VIEW products_in_recipe AS
+SELECT R.name as recipename, R.Id as recipeid, P.name as productname, 
+P.portionsize as portionsize, PR.servings as servings, P.energy * PR.servings as energy, 
+P.Fat * PR.servings as fat, P.Sodium * PR.servings as sodium, 
+P.Carbs* PR.servings as carbs, P.Protein * PR.servings as protein, 
+P.Calcium * PR.servings as calcium, P.Iron * PR.servings as iron
+FROM (recipe as R  join productrecipe as PR on R.Id = PR.recipeid) join product as P on P.barcode = PR.productbarcode;
+
+
+
 -- Triggers and Fuctions
 CREATE OR REPLACE FUNCTION check_email_exists()
 RETURNS TRIGGER AS $$
@@ -116,6 +126,55 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION create_recipe(recipe_name varchar(100))
+RETURNS int AS
+$$
+DECLARE
+    recipe_id int;
+BEGIN
+    -- Insert the recipe
+    INSERT INTO recipe (name)
+    VALUES (recipe_name)
+	
+	RETURNING id INTO recipe_id;
+    RETURN recipe_id;
+END;
+$$
+LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION calculate_recipe_nutrients(recipe_id int)
+    RETURNS TABLE (
+		TotalEnergy float, 
+		TotalSodium float,
+		TotalCarbs float,
+		TotalProtein float,
+		TotalCalcium float,
+        TotalFat float,
+		TotalIron float
+) 
+AS $$
+BEGIN
+    RETURN QUERY SELECT
+			SUM(PR.energy),
+			SUM(PR.sodium),
+			SUM(PR.carbs),
+			SUM(PR.protein),
+			SUM(PR.calcium),
+            SUM(PR.fat),
+			SUM(PR.iron)
+    FROM
+        products_in_recipe as PR
+    WHERE
+        PR.recipeid = recipe_id
+		GROUP BY recipename;
+END; $$ 
+
+LANGUAGE 'plpgsql';
+
+
+
 CREATE TRIGGER CheckEmailExistsInAdministrator
 BEFORE INSERT ON Administrator
 FOR EACH ROW
@@ -130,3 +189,4 @@ CREATE TRIGGER CheckEmailExistsInNutritionist
 BEFORE INSERT ON Nutritionist
 FOR EACH ROW
 EXECUTE FUNCTION check_email_exists();
+

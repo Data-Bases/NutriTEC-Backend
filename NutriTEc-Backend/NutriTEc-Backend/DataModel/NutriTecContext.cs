@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using NutriTEc_Backend.Models;
 
-namespace NutriTEc_Backend.Repository.DataModel;
+namespace NutriTEc_Backend.DataModel;
 
 public partial class NutriTecContext : DbContext
 {
@@ -47,12 +48,24 @@ public partial class NutriTecContext : DbContext
 
     public virtual DbSet<Vitamin> Vitamins { get; set; }
 
+    public virtual DbSet<RecipeId> RecipeIds { get; set; }
+    public virtual DbSet<RecipeNutrients> RecipeNutrients { get; set; }
+    public virtual DbSet<ProductRecipeNutrients> ProductRecipeNutrients { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseNpgsql("Server=nutritec.postgres.database.azure.com;Database= NutriTEc;Port=5432;User Id=diani@nutritec;Password=Pepe!bobby;Ssl Mode=Require; Trust Server Certificate=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+<<<<<<< HEAD:NutriTEc-Backend/NutriTEc-Backend/Repository/DataModel/NutriTecContext.cs
+=======
+
+        modelBuilder.Entity<RecipeId>().HasNoKey();
+        modelBuilder.Entity<RecipeNutrients>().HasNoKey();
+        modelBuilder.Entity<ProductRecipeNutrients>().HasNoKey();
+
+>>>>>>> f62ae96398460b5c584351073b6fdd8c8edd2f77:NutriTEc-Backend/NutriTEc-Backend/DataModel/NutriTecContext.cs
         modelBuilder
             .HasPostgresExtension("pg_buffercache")
             .HasPostgresExtension("pg_stat_statements");
@@ -438,6 +451,7 @@ public partial class NutriTecContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("name");
         });
+
 
         OnModelCreatingPartial(modelBuilder);
     }
