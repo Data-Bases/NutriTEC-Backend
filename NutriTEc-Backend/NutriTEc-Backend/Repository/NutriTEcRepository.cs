@@ -12,6 +12,7 @@ using Npgsql;
 using System.Linq;
 using NutriTEc_Backend.Models;
 using Microsoft.IdentityModel.Tokens;
+using System;
 
 namespace NutriTEc_Backend.Repository
 {
@@ -109,6 +110,50 @@ namespace NutriTEc_Backend.Repository
             }
         }
 
+        public Result ApproveProduct(int id)
+        {
+            try
+            {
+                var product = _context.Products.Where(x => x.Barcode == id).FirstOrDefault();
+                if (product == null)
+                {
+                    return Result.NotFound;
+                }
+
+                product.Isapproved = true;
+
+                _context.SaveChanges();
+
+                return Result.Created;
+
+            }
+            catch (Exception ex)
+            {
+                return Result.Error;
+            }
+        }
+
+        public List<PayrollReport> GetPayrollReport(int id)
+        {
+            try
+            {
+                var payroll = _context.PayrollReports.FromSqlRaw($"SELECT chargetype, nutriemail, fullname, cardnumber, totalamount, discount, chargeamount from payroll({id});").ToList();
+
+                if (payroll == null)
+                {
+                    return new List<PayrollReport>();
+
+                }
+
+                return payroll;
+            }
+            catch (Exception ex)
+            {
+                return new List<PayrollReport>();
+            }
+
+        }
+
         /*
          * Nutri
          */
@@ -125,7 +170,7 @@ namespace NutriTEc_Backend.Repository
                 Lastname1 = nutri.Lastname1,
                 Lastname2 = (string.IsNullOrEmpty(nutri.Lastname2)) ? null : nutri.Lastname2,
                 Age = nutri.Age,
-                Birthdate = nutri.Birthdate,
+                Birthdate = DateOnly.FromDateTime(nutri.Birthdate),
                 Weight = (nutri.Weight == null ) ? null : nutri.Weight,
                 Imc = (nutri.Imc == null) ? null : nutri.Imc,
                 Nutritionistcode = nutri.Nutritionistcode,
@@ -182,7 +227,7 @@ namespace NutriTEc_Backend.Repository
                 Lastname1 = patient.Lastname1,
                 Lastname2 = patient.Lastname2,
                 Age = patient.Age,
-                Birthdate = patient.Birthdate,
+                Birthdate = DateOnly.FromDateTime(patient.Birthdate),
                 Password = patient.Password,
                 Country = patient.Country,
                 Caloriesintake = (patient.Caloriesintake == null) ? null : patient.Caloriesintake, 
