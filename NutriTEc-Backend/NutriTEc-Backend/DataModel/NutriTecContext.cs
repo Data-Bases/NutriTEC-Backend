@@ -58,14 +58,11 @@ public partial class NutriTecContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-<<<<<<< HEAD:NutriTEc-Backend/NutriTEc-Backend/Repository/DataModel/NutriTecContext.cs
-=======
 
         modelBuilder.Entity<RecipeId>().HasNoKey();
         modelBuilder.Entity<RecipeNutrients>().HasNoKey();
         modelBuilder.Entity<ProductRecipeNutrients>().HasNoKey();
 
->>>>>>> f62ae96398460b5c584351073b6fdd8c8edd2f77:NutriTEc-Backend/NutriTEc-Backend/DataModel/NutriTecContext.cs
         modelBuilder
             .HasPostgresExtension("pg_buffercache")
             .HasPostgresExtension("pg_stat_statements");

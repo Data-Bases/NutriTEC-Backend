@@ -7,16 +7,11 @@ using NutriTEc_Backend.Helpers;
 using NutriTEc_Backend.DataModel;
 using NutriTEc_Backend.Repository.Interface;
 using System.Collections.Generic;
-<<<<<<< HEAD
-using Npgsql;
-using System;
-=======
 using Microsoft.Data.SqlClient;
 using Npgsql;
 using System.Linq;
 using NutriTEc_Backend.Models;
 using Microsoft.IdentityModel.Tokens;
->>>>>>> f62ae96398460b5c584351073b6fdd8c8edd2f77
 
 namespace NutriTEc_Backend.Repository
 {
@@ -210,7 +205,6 @@ namespace NutriTEc_Backend.Repository
         }
 
         /*
-<<<<<<< HEAD
          * Product 
          */
         public List<ProductDto> GetAllProducts()
@@ -255,30 +249,14 @@ namespace NutriTEc_Backend.Repository
             return productInformationDto;
         }
 
-        public Result AddNewProduct(ProductInformationDto productInformationDto)
-        {
-            var newProduct = new Product
+            }
+            catch (Exception ex)
             {
-                Barcode = productInformationDto.Barcode,
-                Name = productInformationDto.Name,
-                Descripcion = productInformationDto.Description,
-                Portionsize = productInformationDto.PortionSize,
-                Energy = productInformationDto.Energy,
-                Fat = productInformationDto.Fat,
-                Sodium = productInformationDto.Sodium,
-                Carbs = productInformationDto.Carbs,
-                Protein = productInformationDto.Protein,
-                Calcium = productInformationDto.Calcium,
-                Iron = productInformationDto.Iron,
-                Isapproved = false
-            };
+                return Result.Error;
+            }
+        }
 
-            try
-            {
-                _context.Products.Add(newProduct);
-                _context.SaveChanges();
-                return Result.Created;
-=======
+        /*
          * Recipe
          */
 
@@ -312,7 +290,30 @@ namespace NutriTEc_Backend.Repository
 
                 return Result.Created;
 
->>>>>>> f62ae96398460b5c584351073b6fdd8c8edd2f77
+            }
+        public Result AddNewProduct(ProductInformationDto productInformationDto)
+        {
+            var newProduct = new Product
+            {
+                Barcode = productInformationDto.Barcode,
+                Name = productInformationDto.Name,
+                Descripcion = productInformationDto.Description,
+                Portionsize = productInformationDto.PortionSize,
+                Energy = productInformationDto.Energy,
+                Fat = productInformationDto.Fat,
+                Sodium = productInformationDto.Sodium,
+                Carbs = productInformationDto.Carbs,
+                Protein = productInformationDto.Protein,
+                Calcium = productInformationDto.Calcium,
+                Iron = productInformationDto.Iron,
+                Isapproved = false
+            };
+
+            try
+            {
+                _context.Products.Add(newProduct);
+                _context.SaveChanges();
+                return Result.Created;
             }
             catch (Exception ex)
             {
@@ -320,21 +321,6 @@ namespace NutriTEc_Backend.Repository
             }
         }
 
-<<<<<<< HEAD
-        public List<ProductDto> GetUnapprovedProducts()
-        {
-            var unapprovedProductsDto = _context.Products
-                .Where(p => p.Isapproved == false)
-                .Select(p => new ProductDto
-                {
-                    Barcode = p.Barcode,
-                    Name = p.Name
-                })
-                .ToList();
-
-            return unapprovedProductsDto;
-        }
-=======
         public List<RecipeDto> GetRecipes()
         {
             var recipes = new List<RecipeDto>();
@@ -410,7 +396,20 @@ namespace NutriTEc_Backend.Repository
             return recipeToReturn;
         }
 
->>>>>>> f62ae96398460b5c584351073b6fdd8c8edd2f77
+        public List<ProductDto> GetUnapprovedProducts()
+        {
+            var unapprovedProductsDto = _context.Products
+                .Where(p => p.Isapproved == false)
+                .Select(p => new ProductDto
+                {
+                    Barcode = p.Barcode,
+                    Name = p.Name
+                })
+                .ToList();
+
+            return unapprovedProductsDto;
+        }
+
     }
 
 }
