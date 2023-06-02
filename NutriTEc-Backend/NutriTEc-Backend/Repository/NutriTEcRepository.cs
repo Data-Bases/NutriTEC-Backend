@@ -257,7 +257,7 @@ namespace NutriTEc_Backend.Repository
             var productsDto = _context.Products
                 .Select(p => new ProductDto
                 {
-                    Barcode = p.Barcode,
+                    Id = p.Barcode,
                     Name = p.Name
                 })
                 .ToList();
@@ -277,7 +277,7 @@ namespace NutriTEc_Backend.Repository
 
             var productInformationDto = new ProductInformationDto
             {
-                Barcode = product.Barcode,
+                Id = product.Barcode,
                 Name = product.Name,
                 Description = product.Descripcion, // creo que en la DB está mal escrito
                 PortionSize = product.Portionsize,
@@ -298,7 +298,7 @@ namespace NutriTEc_Backend.Repository
         {
             var newProduct = new Product
             {
-                Barcode = productInformationDto.Barcode,
+                Barcode = productInformationDto.Id,
                 Name = productInformationDto.Name,
                 Descripcion = productInformationDto.Description,
                 Portionsize = productInformationDto.PortionSize,
@@ -330,7 +330,7 @@ namespace NutriTEc_Backend.Repository
                 .Where(p => p.Isapproved == false)
                 .Select(p => new ProductDto
                 {
-                    Barcode = p.Barcode,
+                    Id = p.Barcode,
                     Name = p.Name
                 })
                 .ToList();

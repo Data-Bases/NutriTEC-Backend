@@ -51,7 +51,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("GetProductByBarcode", Name = "GetProductByBarcode")]
-        public ActionResult<ProductInformationDto> GetProductByBarcode(int barcode)
+        public ActionResult<ProductInformationDto> GetProductByBarcode([Required] int barcode)
         {
 
             if (!ModelState.IsValid)

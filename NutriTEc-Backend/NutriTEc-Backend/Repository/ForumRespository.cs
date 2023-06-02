@@ -11,6 +11,8 @@ using Microsoft.Data.SqlClient;
 using Npgsql;
 using MongoDB.Driver;
 using NutriTEc_Backend.Entities;
+using NutriTEc_Backend.Models;
+using static Nest.JoinField;
 
 namespace NutriTEc_Backend.Repository
 {
@@ -28,20 +30,39 @@ namespace NutriTEc_Backend.Repository
         }
 
         public List<Comment> GetAll()
-        {
+          {
             var comments = new List<Comment>();
             comments = _comments.Find(comment => true).ToList();
             return comments;
 
         }
 
-        public List<Comment> GetFilteredComments(int patientId) =>
-            _comments.Find(comment => comment.PatientId == patientId).ToList();
-
-        public Comment Create(Comment comment)
+        public List<Comment> GetFilteredComments(int patientId, DateTime dateTime, string meal)
         {
-            _comments.InsertOne(comment);
-            return comment;
+            var comments = _comments.Find(comment => comment.PatientId == patientId && comment.Date == dateTime.ToString("yyyy-MM-dd") && comment.Meal == meal).ToList();
+            return comments;
+        }
+
+        public Result Create(CommentDto comment)
+        {
+            try
+            {
+                var commentToInsert = new Comment()
+                {
+                    CommentText = comment.CommentText,
+                    Date = DateOnly.FromDateTime(comment.Date).ToString("yyyy-MM-dd"),
+                    Meal = comment.Meal,
+                    NutritionistId = comment.NutritionistId,
+                    PatientId = comment.PatientId
+                };
+
+                _comments.InsertOne(commentToInsert);
+                return Result.Created;
+            }
+            catch (Exception ex)
+            {
+                return Result.Error;
+            }
         }
         
     }
