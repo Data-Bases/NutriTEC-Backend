@@ -265,10 +265,10 @@ namespace NutriTEc_Backend.Repository
             return productsDto;
         }
 
-        public ProductInformationDto GetProductByBarcode(int barcode)
+        public ProductInformationDto GetProductById(int id)
         {
             var product = _context.Products
-                .FirstOrDefault(p => p.Barcode == barcode);
+                .FirstOrDefault(p => p.Barcode == id);
 
             if (product == null)
             {
@@ -279,7 +279,7 @@ namespace NutriTEc_Backend.Repository
             {
                 Id = product.Barcode,
                 Name = product.Name,
-                Description = product.Descripcion, // creo que en la DB está mal escrito
+                Description = product.Descripcion,
                 PortionSize = product.Portionsize,
                 Energy = product.Energy,
                 Fat = product.Fat,
