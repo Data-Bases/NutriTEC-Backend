@@ -39,6 +39,8 @@ DROP FUNCTION get_total_patients;
 DROP FUNCTION amount_to_charge;
 DROP FUNCTION payroll;
 
+DROP PROCEDURE register_measurements;
+
 DROP TABLE Nutritionist;
 DROP TABLE Product;
 DROP TABLE Patient;

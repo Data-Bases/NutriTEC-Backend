@@ -279,7 +279,8 @@ namespace NutriTEc_Backend.Repository
                 Recipeid = patientRecipeDto.Recipeid,
                 Patientid = patientRecipeDto.Patientid,
                 Mealtime = patientRecipeDto.Mealtime,
-                Consumedate = DateOnly.FromDateTime(patientRecipeDto.Consumedate)
+                Consumedate = DateOnly.FromDateTime(patientRecipeDto.Consumedate),
+                Servings = patientRecipeDto.Servings,
             };
 
             try
@@ -474,7 +475,7 @@ namespace NutriTEc_Backend.Repository
             }
         }
 
-        public RecipeInfoDto GetRecipeById(int id)
+        public RecipeInfoDto GetRecipeById(int id, int recipeServings)
         { 
             try
             {
@@ -482,7 +483,7 @@ namespace NutriTEc_Backend.Repository
 
                 var productsInRecipe = _context.ProductRecipeNutrients.FromSqlRaw($"SELECT recipename, recipeid, productname, portionsize, servings, energy, fat, sodium, carbs, protein, calcium, iron FROM products_in_recipe WHERE recipeid = {id};").ToList();
 
-                return ParseTotalNutrients(recipeNutrients, productsInRecipe);
+                return ParseTotalNutrients(recipeNutrients, productsInRecipe, recipeServings);
             }
             catch (Exception ex)
             {
@@ -490,7 +491,7 @@ namespace NutriTEc_Backend.Repository
             }
         }
 
-        private RecipeInfoDto ParseTotalNutrients(RecipeNutrients recipe,  List<ProductRecipeNutrients> productRecipes)
+        private RecipeInfoDto ParseTotalNutrients(RecipeNutrients recipe,  List<ProductRecipeNutrients> productRecipes, int recipeServings)
         {
             var productsInRecipeToReturn = new List<ProductTotalInfoDto>();
 
@@ -499,15 +500,15 @@ namespace NutriTEc_Backend.Repository
                 var productToReturn = new ProductTotalInfoDto()
                 {
                     Name = product.ProductName,
-                    Portionsize = product.PortionSize,
-                    Servings = product.Servings,
-                    Energy = product.Energy,
-                    Fat = product.Fat,
-                    Sodium = product.Sodium,
-                    Carbs = product.Carbs,
-                    Protein = product.Protein,
-                    Calcium = product.Calcium,
-                    Iron = product.Iron,
+                    Portionsize = recipeServings * product.PortionSize,
+                    Servings = recipeServings * product.Servings,
+                    Energy = recipeServings * product.Energy,
+                    Fat = recipeServings * product.Fat,
+                    Sodium = recipeServings * product.Sodium,
+                    Carbs = recipeServings * product.Carbs,
+                    Protein = recipeServings * product.Protein,
+                    Calcium = recipeServings * product.Calcium,
+                    Iron = recipeServings * product.Iron,
                 };
 
                 productsInRecipeToReturn.Add(productToReturn);
@@ -517,13 +518,13 @@ namespace NutriTEc_Backend.Repository
             var recipeToReturn = new RecipeInfoDto
             {
                 RecipeName = productRecipes[0].RecipeName,
-                Energy = recipe.Totalenergy,
-                Fat = recipe.Totalfat,
-                Sodium = recipe.Totalsodium,
-                Carbs = recipe.Totalcarbs,
-                Calcium = recipe.Totalcalcium,
-                Iron = recipe.Totaliron,
-                Protein = recipe.Totalprotein,
+                Energy = recipeServings * recipe.Totalenergy,
+                Fat = recipeServings * recipe.Totalfat,
+                Sodium = recipeServings * recipe.Totalsodium,
+                Carbs = recipeServings * recipe.Totalcarbs,
+                Calcium = recipeServings * recipe.Totalcalcium,
+                Iron = recipeServings * recipe.Totaliron,
+                Protein = recipeServings * recipe.Totalprotein,
                 Products = productsInRecipeToReturn,
             };
             return recipeToReturn;

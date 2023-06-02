@@ -9,19 +9,19 @@ public partial class Measurement
 
     public int Patientid { get; set; }
 
-    public int Height { get; set; }
+    public double Height { get; set; }
 
-    public int Fatpercentage { get; set; }
+    public double Fatpercentage { get; set; }
 
-    public int Musclepercentage { get; set; }
+    public double Musclepercentage { get; set; }
 
-    public int Weight { get; set; }
+    public double Weight { get; set; }
 
-    public int Waist { get; set; }
+    public double Waist { get; set; }
 
-    public int Neck { get; set; }
+    public double Neck { get; set; }
 
-    public int Hips { get; set; }
+    public double Hips { get; set; }
 
     public DateOnly Revisiondate { get; set; }
 

@@ -113,13 +113,13 @@ CREATE TABLE Measurements
 (
 	Id SERIAL NOT NULL,
 	PatientId INT NOT NULL,
-	Height INT NOT NULL,
-    FatPercentage INT NOT NULL,
-    MusclePercentage INT NOT NULL,
-	Weight INT NOT NULL,
-    Waist INT NOT NULL,
-    Neck INT NOT NULL,
-    Hips INT NOT NULL,
+	Height FLOAT NOT NULL,
+    FatPercentage FLOAT NOT NULL,
+    MusclePercentage FLOAT NOT NULL,
+	Weight FLOAT NOT NULL,
+    Waist FLOAT NOT NULL,
+    Neck FLOAT NOT NULL,
+    Hips FLOAT NOT NULL,
     RevisionDate DATE NOT NULL,
 
 	PRIMARY KEY (Id)

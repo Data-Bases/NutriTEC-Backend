@@ -9,5 +9,7 @@
         public string Mealtime { get; set; } = null!;
 
         public DateTime Consumedate { get; set; }
+
+        public double Servings { get; set; }
     }
 }

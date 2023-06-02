@@ -50,7 +50,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [HttpGet("GetProductById", Name = "GetProductById")]
+        [HttpGet("GetProductById/{id}", Name = "GetProductById/{id}")]
         public ActionResult<ProductInformationDto> GetProductById(int id)
         {
 
@@ -60,6 +60,11 @@ namespace NutriTEc_Backend.Controllers
             }
 
             var product = _repository.GetProductById(id);
+
+            if(product == null)
+            {
+                return NotFound();
+            }
 
             return Ok(product);
         }

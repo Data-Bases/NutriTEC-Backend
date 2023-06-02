@@ -141,23 +141,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER check_patient_exists_measurements_trigger
-BEFORE INSERT ON Measurements
-FOR EACH ROW
-EXECUTE FUNCTION check_patient_exists();
-
-CREATE TRIGGER check_patient_exists_patientrecipe_trigger
-BEFORE INSERT ON PatientRecipe
-FOR EACH ROW
-EXECUTE FUNCTION check_patient_exists();
-
-
-CREATE TRIGGER check_patient_exists_patientproduct_trigger
-BEFORE INSERT ON PatientProduct
-FOR EACH ROW
-EXECUTE FUNCTION check_patient_exists();
-
-
 CREATE OR REPLACE FUNCTION create_recipe(recipe_name varchar(100))
 RETURNS int AS
 $$
@@ -271,6 +254,33 @@ BEGIN
 	RETURN total_patients;
 END; $$ 
 LANGUAGE 'plpgsql';
+
+CREATE PROCEDURE register_measurements(patient_id int, height float, fat_percentage float, muscle_percentage float, weight float, waist float, neck float, hips float, revision_date date)
+
+LANGUAGE SQL
+
+AS $$
+
+INSERT INTO Measurements (PatientId, Height, FatPercentage, MusclePercentage, Weight, Waist, Neck, Hips, RevisionDate)
+VALUES (patient_id, height, fat_percentage, muscle_percentage, weight, waist, neck, hips, revision_date);
+
+$$;
+
+CREATE TRIGGER check_patient_exists_measurements_trigger
+BEFORE INSERT ON Measurements
+FOR EACH ROW
+EXECUTE FUNCTION check_patient_exists();
+
+CREATE TRIGGER check_patient_exists_patientrecipe_trigger
+BEFORE INSERT ON PatientRecipe
+FOR EACH ROW
+EXECUTE FUNCTION check_patient_exists();
+
+
+CREATE TRIGGER check_patient_exists_patientproduct_trigger
+BEFORE INSERT ON PatientProduct
+FOR EACH ROW
+EXECUTE FUNCTION check_patient_exists();
 
 CREATE TRIGGER CheckEmailExistsInAdministrator
 BEFORE INSERT ON Administrator

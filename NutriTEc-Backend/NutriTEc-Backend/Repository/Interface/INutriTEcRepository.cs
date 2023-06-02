@@ -113,7 +113,7 @@ namespace NutriTEc_Backend.Repository.Interface
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        RecipeInfoDto GetRecipeById(int id);
+        RecipeInfoDto GetRecipeById(int id, int recipeServings);
 
         /*
          * Product
