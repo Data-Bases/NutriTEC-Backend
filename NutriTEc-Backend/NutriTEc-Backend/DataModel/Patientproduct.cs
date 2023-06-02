@@ -15,8 +15,9 @@ public partial class Patientproduct
 
     public DateOnly Consumedate { get; set; }
 
+    public double Servings { get; set; }
+
     public virtual Patient Patient { get; set; } = null!;
 
     public virtual Product ProductbarcodeNavigation { get; set; } = null!;
-
 }

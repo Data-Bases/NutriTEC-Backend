@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 namespace NutriTEc_Backend.Controllers
 {
     [ApiController]
-    [Route("nutritec/admin")]
+    [Route("nutritec/nutritionist")]
     public class NutritionistController : ControllerBase
     {
         private readonly INutriTEcRepository _repository;

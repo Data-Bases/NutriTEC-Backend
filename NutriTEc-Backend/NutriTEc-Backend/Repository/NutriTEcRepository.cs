@@ -294,25 +294,14 @@ namespace NutriTEc_Backend.Repository
             }
         }
 
-        public Result RegisterPatientMeasurements(int patientId, MeasurementDto measurementDto, DateTime revisionDate)
+        public Result RegisterPatientMeasurements(int patientId, MeasurementDto measurementDto)
         {
-            var newPatientMeasurements = new Measurement
-            {
-                Patientid = patientId,
-                Height = measurementDto.Height,
-                Fatpercentage = measurementDto.Fatpercentage,
-                Musclepercentage = measurementDto.Musclepercentage,
-                Weight = measurementDto.Weight,
-                Waist = measurementDto.Waist,
-                Neck = measurementDto.Neck,
-                Hips = measurementDto.Hips,
-                Revisiondate = DateOnly.FromDateTime(revisionDate)
-            };
-
             try
             {
-                _context.Measurements.Add(newPatientMeasurements);
+                _context.Database.ExecuteSqlRaw($"CALL register_measurements({patientId}, {measurementDto.Height}, {measurementDto.Fatpercentage}, {measurementDto.Musclepercentage}, {measurementDto.Weight}, {measurementDto.Waist}, {measurementDto.Neck},{measurementDto.Hips} , '{DateOnly.FromDateTime(measurementDto.Revisiondate)}');");
+
                 _context.SaveChanges();
+
                 return Result.Created;
             }
             catch

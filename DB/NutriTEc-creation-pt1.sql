@@ -145,6 +145,7 @@ CREATE TABLE PatientRecipe
 	PatientId INT NOT NULL,
     MealTime VARCHAR(50) NOT NULL,
     ConsumeDate DATE NOT NULL,
+	Servings FLOAT NOT NULL,
 
 	PRIMARY KEY (Id)
 );
@@ -191,6 +192,7 @@ CREATE TABLE PatientProduct
     PatientId INT NOT NULL,
     MealTime VARCHAR(50) NOT NULL,
 	ConsumeDate DATE NOT NULL,
+	Servings FLOAT NOT NULL,
 
 	PRIMARY KEY (Id)
 );

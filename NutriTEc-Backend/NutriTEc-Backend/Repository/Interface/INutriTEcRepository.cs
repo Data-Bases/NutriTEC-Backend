@@ -83,7 +83,7 @@ namespace NutriTEc_Backend.Repository.Interface
         /// <param name="measurementDto"></param>
         /// <param name="revisionDate"></param>
         /// <returns>Result</returns>
-        Result RegisterPatientMeasurements(int patientId, MeasurementDto measurementDto, DateTime revisionDate);
+        Result RegisterPatientMeasurements(int patientId, MeasurementDto measurementDto);
 
         /// <summary>
         /// Getting a patients nutricionist id and name

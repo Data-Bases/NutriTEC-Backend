@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 namespace NutriTEc_Backend.Controllers
 {
     [ApiController]
-    [Route("nutritec/admin")]
+    [Route("nutritec/recipe")]
     public class RecipeController : ControllerBase
     {
         private readonly INutriTEcRepository _repository;

@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 namespace NutriTEc_Backend.Controllers
 {
     [ApiController]
-    [Route("nutritec/admin")]
+    [Route("nutritec/patient")]
     public class PatientController : ControllerBase
     {
         private readonly INutriTEcRepository _repository;
@@ -114,7 +114,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost("RegisterPatientMeasurements", Name = "RegisterPatientMeasurements")]
-        public ActionResult<Result> RegisterPatientMeasurements(int patientId, MeasurementDto measurementDto, DateTime revisionDate)
+        public ActionResult<Result> RegisterPatientMeasurements(int patientId, MeasurementDto measurementDto)
         {
 
             if (!ModelState.IsValid)
@@ -122,7 +122,7 @@ namespace NutriTEc_Backend.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = _repository.RegisterPatientMeasurements(patientId, measurementDto, revisionDate);
+            var result = _repository.RegisterPatientMeasurements(patientId, measurementDto);
 
             if (result == Result.Error)
             {
