@@ -50,7 +50,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [HttpGet("GetProductById", Name = "GetProductById")]
+        [HttpGet("GetProductById/{id}", Name = "GetProductById/{id}")]
         public ActionResult<ProductInformationDto> GetProductById(int id)
         {
 
@@ -60,6 +60,40 @@ namespace NutriTEc_Backend.Controllers
             }
 
             var product = _repository.GetProductById(id);
+
+            if(product == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(product);
+        }
+
+
+        /// <summary>
+        /// Get a Product by its Barcode and its servings
+        /// </summary>
+        /// <param name="barcode"></param>
+        /// <returns>ProductInformationDto</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet("GetProductByIdAndServings", Name = "GetProductByIdAndServings")]
+        public ActionResult<ProductInformationDto> GetProductByIdAndServings(int id, double servings)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var product = _repository.GetProductByIdAndServings(id, servings);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
 
             return Ok(product);
         }

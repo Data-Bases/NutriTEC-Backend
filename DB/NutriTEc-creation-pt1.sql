@@ -1,7 +1,7 @@
 -- Nutritionist
 CREATE TABLE Nutritionist
 (
-	Id INT NOT NULL,
+	Id SERIAL NOT NULL,
 	Email VARCHAR(100) UNIQUE NOT NULL,
 	Password VARCHAR(100) NOT NULL,
 	Name VARCHAR(100) NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE Nutritionist
 	Province VARCHAR(100) NOT NULL,
 	Canton VARCHAR(100) NOT NULL,
 	District VARCHAR(100) NOT NULL,
-	Picture VARCHAR(100) NOT NULL,
+	Picture VARCHAR(10485760) NOT NULL,
 	AdminId INT NOT NULL,
 	ChargeTypeId INT NOT NULL,
 
@@ -45,7 +45,7 @@ CREATE TABLE Product
 -- Patient
 CREATE TABLE Patient
 (
-	Id INT NOT NULL,
+	Id SERIAL NOT NULL,
     NutriId INT,
 	Email VARCHAR(100) UNIQUE NOT NULL,
 	Name VARCHAR(100) NOT NULL,
@@ -113,13 +113,13 @@ CREATE TABLE Measurements
 (
 	Id SERIAL NOT NULL,
 	PatientId INT NOT NULL,
-	Height INT NOT NULL,
-    FatPercentage INT NOT NULL,
-    MusclePercentage INT NOT NULL,
-	Weight INT NOT NULL,
-    Waist INT NOT NULL,
-    Neck INT NOT NULL,
-    Hips INT NOT NULL,
+	Height FLOAT NOT NULL,
+    FatPercentage FLOAT NOT NULL,
+    MusclePercentage FLOAT NOT NULL,
+	Weight FLOAT NOT NULL,
+    Waist FLOAT NOT NULL,
+    Neck FLOAT NOT NULL,
+    Hips FLOAT NOT NULL,
     RevisionDate DATE NOT NULL,
 
 	PRIMARY KEY (Id)
@@ -145,6 +145,7 @@ CREATE TABLE PatientRecipe
 	PatientId INT NOT NULL,
     MealTime VARCHAR(50) NOT NULL,
     ConsumeDate DATE NOT NULL,
+	Servings FLOAT NOT NULL,
 
 	PRIMARY KEY (Id)
 );
@@ -191,6 +192,7 @@ CREATE TABLE PatientProduct
     PatientId INT NOT NULL,
     MealTime VARCHAR(50) NOT NULL,
 	ConsumeDate DATE NOT NULL,
+	Servings FLOAT NOT NULL,
 
 	PRIMARY KEY (Id)
 );

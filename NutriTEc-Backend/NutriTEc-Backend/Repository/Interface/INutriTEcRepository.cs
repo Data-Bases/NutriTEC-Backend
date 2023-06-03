@@ -61,6 +61,61 @@ namespace NutriTEc_Backend.Repository.Interface
         /// <returns>Result</returns>
         Result PatientSignUp(PatientDto patient);
 
+        /// <summary>
+        /// Adding a product asociated to a patient
+        /// </summary>
+        /// <param name="patientProductDto"></param>
+        /// <returns>Result</returns>
+        Result AddProductToPatient(PatientProductDto patientProductDto);
+
+        /// <summary>
+        /// 
+        /// Adding a recipe to a patient
+        /// </summary>
+        /// <param name="patientRecipeDto"></param>
+        /// <returns>Result</returns>
+        Result AddRecipeToPatient(PatientRecipeDto patientRecipeDto);
+
+        /// <summary>
+        /// Registers Patient Measurements
+        /// </summary>
+        /// <param name="patientId"></param>
+        /// <param name="measurementDto"></param>
+        /// <param name="revisionDate"></param>
+        /// <returns>Result</returns>
+        Result RegisterPatientMeasurements(int patientId, MeasurementDto measurementDto);
+
+        /// <summary>
+        /// Getting a patients nutricionist id and name
+        /// </summary>
+        /// <param name="patientId"></param>
+        /// <returns>The id and name of the nutricionist</returns>
+        NutriIdDto GetPatientsNutritionist(int patientId);
+
+        /// <summary>
+        /// Get a list of products consumed by patients in a certain date
+        /// </summary>
+        /// <param name="patientId"></param>
+        /// <param name="dateConsumed"></param>
+        /// <returns>ConsumedByPatient</returns>
+        List<ConsumedByPatient> GetConsumedRecipesByPatient(int patientId, DateTime dateConsumed);
+
+        /// <summary>
+        /// Get a list of products consumed by patients in a certain date
+        /// </summary>
+        /// <param name="patientId"></param>
+        /// <param name="dateConsumed"></param>
+        /// <returns>ConsumedByPatient</returns>
+        List<ConsumedByPatient> GetConsumedProductsByPatient(int patientId, DateTime dateConsumed);
+
+        /// <summary>
+        /// Get daily consumption by a patient on a certain date
+        /// </summary>
+        /// <param name="patientId"></param>
+        /// <param name="dateConsumed"></param>
+        /// <returns>DailyConsumptionDto</returns>
+        DailyConsumptionDto GetDailyConsumptionByPatient(int patientId, DateTime dateConsumed);
+
         /*
          * Recipe
          */
@@ -82,7 +137,7 @@ namespace NutriTEc_Backend.Repository.Interface
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        RecipeInfoDto GetRecipeById(int id);
+        RecipeInfoDto GetRecipeById(int id, int recipeServings);
 
         /*
          * Product
@@ -99,6 +154,14 @@ namespace NutriTEc_Backend.Repository.Interface
         /// <param name="barcode"></param>
         /// <returns>ProductInformationDto</returns>
         ProductInformationDto GetProductById(int id);
+
+        /// <summary>
+        /// Get product information by its barcode and servings
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="servings"></param>
+        /// <returns>ProductTotalInfoDto</returns>
+        ProductTotalInfo GetProductByIdAndServings(int id, double servings);
 
         /// <summary>
         /// Create a New Product
@@ -131,4 +194,5 @@ namespace NutriTEc_Backend.Repository.Interface
         /// <returns>Payroll report info</returns>
         List<PayrollReport> GetPayrollReport(int id);
     }
+
 }

@@ -15,6 +15,8 @@ public partial class Patientrecipe
 
     public DateOnly Consumedate { get; set; }
 
+    public double Servings { get; set; }
+
     public virtual Patient Patient { get; set; } = null!;
 
     public virtual Patient Recipe { get; set; } = null!;

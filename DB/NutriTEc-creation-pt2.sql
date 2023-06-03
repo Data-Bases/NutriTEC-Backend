@@ -24,7 +24,7 @@ FOREIGN KEY (PatientId) REFERENCES Patient (Id);
 -- Recipe-PatientRecipe
 ALTER TABLE PatientRecipe
 ADD CONSTRAINT PatientRecipe_RecipeId
-FOREIGN KEY (RecipeId) REFERENCES Patient (Id);
+FOREIGN KEY (RecipeId) REFERENCES Recipe (Id);
 
 -- Patient-Nutritionist
 ALTER TABLE Patient
@@ -126,6 +126,20 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION check_patient_exists()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM Patient
+        WHERE Id = NEW.PatientId
+    ) THEN
+        RAISE EXCEPTION 'Patient with ID % does not exist.', NEW.PatientId;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION create_recipe(recipe_name varchar(100))
 RETURNS int AS
@@ -240,6 +254,124 @@ BEGIN
 	RETURN total_patients;
 END; $$ 
 LANGUAGE 'plpgsql';
+
+CREATE OR REPLACE FUNCTION calculate_product_servings(product_id int, servings_value float)
+    RETURNS TABLE (
+		Name varchar(100),
+		PortionSize float,
+		Servings float,
+		Energy float,
+		Fat float,
+		Sodium float,
+        Carbs float,
+		Protein float,
+		Calcium float,
+		Iron float
+) 
+AS $$
+DECLARE
+	product_servings float;
+BEGIN
+	product_servings := servings_value;
+    RETURN QUERY SELECT
+			P.name,
+			P.portionsize,
+			product_servings,
+			product_servings * P.energy,
+            product_servings * P.fat,
+			product_servings * P.sodium,
+			product_servings * P.carbs,
+			product_servings * P.protein,
+			product_servings * P.calcium,
+			product_servings * P.iron
+    FROM
+        Product as P
+    WHERE
+        P.Barcode = product_id;
+END; $$ 
+
+LANGUAGE 'plpgsql';
+
+
+CREATE FUNCTION get_consumed_recipe(patient_id int, date_consumed date)
+RETURNS TABLE(
+	Id int,
+	Name varchar(100),
+	Servings float,
+	Energy float,
+	Mealtime varchar(50)
+	)
+AS $$
+BEGIN
+	RETURN QUERY SELECT 
+			R.Id,
+			R.Name,
+			PR.Servings,
+			(
+				SELECT TotalEnergy * PR.Servings 
+				FROM calculate_recipe_nutrients(R.Id)
+			),
+			PR.Mealtime
+		FROM Recipe as R 
+		JOIN Patientrecipe as PR
+		ON R.Id = PR.RecipeId
+		WHERE PR.PatientId = patient_id and PR.ConsumeDate = date_consumed;
+END; $$ 
+
+LANGUAGE 'plpgsql';
+
+
+CREATE FUNCTION get_consumed_product(patient_id int, date_consumed date)
+RETURNS TABLE(
+	Id int,
+	Name varchar(100),
+	Servings float,
+	Energy float,
+	Mealtime varchar(50)
+	)
+AS $$
+BEGIN
+	RETURN QUERY SELECT 
+			P.Barcode,
+			P.Name,
+			PP.Servings,
+			PP.Servings * P.Energy, 
+			PP.Mealtime
+		FROM Product as P
+		JOIN PatientProduct as PP
+		ON P.Barcode = PP.ProductBarcode
+		WHERE PP.PatientId = patient_id and PP.ConsumeDate = date_consumed;
+END; $$ 
+
+LANGUAGE 'plpgsql';
+
+
+CREATE PROCEDURE register_measurements(patient_id int, height float, fat_percentage float, muscle_percentage float, weight float, waist float, neck float, hips float, revision_date date)
+
+LANGUAGE SQL
+
+AS $$
+
+INSERT INTO Measurements (PatientId, Height, FatPercentage, MusclePercentage, Weight, Waist, Neck, Hips, RevisionDate)
+VALUES (patient_id, height, fat_percentage, muscle_percentage, weight, waist, neck, hips, revision_date);
+
+$$;
+
+CREATE TRIGGER check_patient_exists_measurements_trigger
+BEFORE INSERT ON Measurements
+FOR EACH ROW
+EXECUTE FUNCTION check_patient_exists();
+
+CREATE TRIGGER check_patient_exists_patientrecipe_trigger
+BEFORE INSERT ON PatientRecipe
+FOR EACH ROW
+EXECUTE FUNCTION check_patient_exists();
+
+
+CREATE TRIGGER check_patient_exists_patientproduct_trigger
+BEFORE INSERT ON PatientProduct
+FOR EACH ROW
+EXECUTE FUNCTION check_patient_exists();
 
 CREATE TRIGGER CheckEmailExistsInAdministrator
 BEFORE INSERT ON Administrator

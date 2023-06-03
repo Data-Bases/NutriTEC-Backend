@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 namespace NutriTEc_Backend.Controllers
 {
     [ApiController]
-    [Route("nutritec/admin")]
+    [Route("nutritec/recipe")]
     public class RecipeController : ControllerBase
     {
         private readonly INutriTEcRepository _repository;
@@ -76,7 +76,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("GetRecipesById/{id}", Name = "GetRecipesById/{id}")]
-        public ActionResult<List<RecipeInfoDto>> GetRecipesById(int id)
+        public ActionResult<RecipeInfoDto> GetRecipesById(int id)
         {
 
             if (!ModelState.IsValid)
@@ -84,7 +84,33 @@ namespace NutriTEc_Backend.Controllers
                 return BadRequest(ModelState);
             }
 
-            var recipe = _repository.GetRecipeById(id);
+            var recipeServings = 1;
+
+            var recipe = _repository.GetRecipeById(id, recipeServings);
+
+            if (recipe.Equals(new RecipeInfoDto()))
+            {
+                return NotFound();
+            }
+
+            return Ok(recipe);
+
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet("GetRecipesByIdAndServings", Name = "GetRecipesByIdAndServings")]
+        public ActionResult<RecipeInfoDto> GetRecipeByIdAndServings([Required] int id, [Required] int servings)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var recipe = _repository.GetRecipeById(id, servings);
 
             if (recipe.Equals(new RecipeInfoDto()))
             {

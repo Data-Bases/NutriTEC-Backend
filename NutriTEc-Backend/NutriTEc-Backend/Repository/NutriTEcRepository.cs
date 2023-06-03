@@ -13,6 +13,8 @@ using System.Linq;
 using NutriTEc_Backend.Models;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using static Nest.JoinField;
+using System.Collections;
 
 namespace NutriTEc_Backend.Repository
 {
@@ -249,6 +251,157 @@ namespace NutriTEc_Backend.Repository
             }
         }
 
+        public Result AddProductToPatient(PatientProductDto patientProductDto)
+        {
+            var newPatientProduct = new Patientproduct
+            {
+                Productbarcode = patientProductDto.ProductId,
+                Patientid = patientProductDto.PatientId,
+                Mealtime = patientProductDto.Mealtime,
+                Consumedate = DateOnly.FromDateTime(patientProductDto.Consumedate)
+            };
+
+            try
+            {
+                _context.Patientproducts.Add(newPatientProduct);
+                _context.SaveChanges();
+                return Result.Created;
+            }
+            catch
+            {
+                return Result.Error;
+            }
+        }
+
+        public Result AddRecipeToPatient(PatientRecipeDto patientRecipeDto)
+        {
+            var newPatientRecipe = new Patientrecipe
+            {
+                Recipeid = patientRecipeDto.Recipeid,
+                Patientid = patientRecipeDto.Patientid,
+                Mealtime = patientRecipeDto.Mealtime,
+                Consumedate = DateOnly.FromDateTime(patientRecipeDto.Consumedate),
+                Servings = patientRecipeDto.Servings,
+            };
+
+            try
+            {
+                _context.Patientrecipes.Add(newPatientRecipe);
+                _context.SaveChanges();
+                return Result.Created;
+            }
+            catch
+            {
+                return Result.Error;
+            }
+        }
+
+        public DailyConsumptionDto GetDailyConsumptionByPatient(int patientId, DateTime dateConsumed)
+        {
+            try
+            {
+                var consumedRecipes = GetConsumedRecipesByPatient(patientId, dateConsumed);
+
+                var consumedProducts = GetConsumedProductsByPatient(patientId, dateConsumed);
+
+                var info = GetDailyConsumptionClasify(consumedRecipes, consumedProducts);
+
+                if (consumedRecipes.IsNullOrEmpty() && consumedProducts.IsNullOrEmpty())
+                {
+                    return new DailyConsumptionDto();
+                }
+
+                return new DailyConsumptionDto
+                {
+                    Date = dateConsumed,
+                    TotalCalories = info.Item1,
+                    TotalCaloriesBreakfast = info.Item2,
+                    TotalCaloriesLunch = info.Item3,
+                    TotalCaloriesDinner = info.Item4,
+                    TotalCaloriesSnack = info.Item5,
+                    Breakfast = info.Item6,
+                    Lunch = info.Item7,
+                    Dinner  = info.Item8,
+                    Snack = info.Item9,
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return new DailyConsumptionDto();
+            }
+        }
+
+        public List<ConsumedByPatient> GetConsumedRecipesByPatient(int patientId, DateTime dateConsumed)
+        {
+            try
+            {
+                var query = $"SELECT Id, Name, Servings, Energy, Mealtime FROM get_consumed_recipe({patientId}, '{DateOnly.FromDateTime(dateConsumed).ToString("yyyy-MM-dd")}');";
+                var recipes = _context.ConsumedByPatient.FromSqlRaw(query).AsEnumerable().ToList();
+
+                if (recipes.IsNullOrEmpty())
+                {
+                    return new List<ConsumedByPatient>();
+                }
+
+                return recipes;
+            }
+            catch (Exception e)
+            {
+                return new List<ConsumedByPatient>();
+            }
+        }
+
+        public List<ConsumedByPatient> GetConsumedProductsByPatient(int patientId, DateTime dateConsumed)
+        {
+            try
+            {
+                var query = $"SELECT Id, Name, Servings, Energy, Mealtime FROM get_consumed_product({patientId}, '{DateOnly.FromDateTime(dateConsumed).ToString("yyyy-MM-dd")}');";
+                var recipes = _context.ConsumedByPatient.FromSqlRaw(query).AsEnumerable().ToList();
+
+                if (recipes.IsNullOrEmpty())
+                {
+                    return new List<ConsumedByPatient>();
+                }
+
+                return recipes;
+            }
+            catch (Exception e)
+            {
+                return new List<ConsumedByPatient>();
+            }
+        }
+
+        public Result RegisterPatientMeasurements(int patientId, MeasurementDto measurementDto)
+        {
+            try
+            {
+                _context.Database.ExecuteSqlRaw($"CALL register_measurements({patientId}, {measurementDto.Height}, {measurementDto.Fatpercentage}, {measurementDto.Musclepercentage}, {measurementDto.Weight}, {measurementDto.Waist}, {measurementDto.Neck},{measurementDto.Hips} , '{DateOnly.FromDateTime(measurementDto.Revisiondate)}');");
+
+                _context.SaveChanges();
+
+                return Result.Created;
+            }
+            catch
+            {
+                return Result.Error;
+            }
+        }
+
+        public NutriIdDto GetPatientsNutritionist(int patientId)
+        {
+            var patient = _context.Patients.FirstOrDefault(p => p.Id == patientId);
+            var nutritionist = _context.Nutritionists.FirstOrDefault(n => n.Id == patient.Nutriid);
+
+            var nutriIdDto = new NutriIdDto
+            {
+                Id = nutritionist.Id,
+                Name = nutritionist.Name
+            };
+
+            return nutriIdDto;
+        }
+
         /*
          * Product 
          */
@@ -292,6 +445,18 @@ namespace NutriTEc_Backend.Repository
             };
 
             return productInformationDto;
+        }
+
+        public ProductTotalInfo GetProductByIdAndServings(int id, double servings)
+        {
+            var product = _context.ProductTotalInfo.FromSqlRaw($"SELECT Name, PortionSize, Servings, Energy, Fat, Sodium, Carbs, Protein, Calcium, Iron FROM calculate_product_servings({id}, {servings})").AsEnumerable().FirstOrDefault();
+
+            if (product == null)
+            {
+                return null;
+            }
+
+            return product;
         }
 
         public Result AddNewProduct(ProductInformationDto productInformationDto)
@@ -399,7 +564,7 @@ namespace NutriTEc_Backend.Repository
             }
         }
 
-        public RecipeInfoDto GetRecipeById(int id)
+        public RecipeInfoDto GetRecipeById(int id, int recipeServings)
         { 
             try
             {
@@ -407,7 +572,7 @@ namespace NutriTEc_Backend.Repository
 
                 var productsInRecipe = _context.ProductRecipeNutrients.FromSqlRaw($"SELECT recipename, recipeid, productname, portionsize, servings, energy, fat, sodium, carbs, protein, calcium, iron FROM products_in_recipe WHERE recipeid = {id};").ToList();
 
-                return ParseTotalNutrients(recipeNutrients, productsInRecipe);
+                return ParseTotalNutrients(recipeNutrients, productsInRecipe, recipeServings);
             }
             catch (Exception ex)
             {
@@ -415,24 +580,24 @@ namespace NutriTEc_Backend.Repository
             }
         }
 
-        private RecipeInfoDto ParseTotalNutrients(RecipeNutrients recipe,  List<ProductRecipeNutrients> productRecipes)
+        private RecipeInfoDto ParseTotalNutrients(RecipeNutrients recipe,  List<ProductRecipeNutrients> productRecipes, int recipeServings)
         {
-            var productsInRecipeToReturn = new List<ProductTotalInfoDto>();
+            var productsInRecipeToReturn = new List<ProductTotalInfo>();
 
             foreach (var product in productRecipes)
             {
-                var productToReturn = new ProductTotalInfoDto()
+                var productToReturn = new ProductTotalInfo()
                 {
                     Name = product.ProductName,
-                    Portionsize = product.PortionSize,
-                    Servings = product.Servings,
-                    Energy = product.Energy,
-                    Fat = product.Fat,
-                    Sodium = product.Sodium,
-                    Carbs = product.Carbs,
-                    Protein = product.Protein,
-                    Calcium = product.Calcium,
-                    Iron = product.Iron,
+                    Portionsize = recipeServings * product.PortionSize,
+                    Servings = recipeServings * product.Servings,
+                    Energy = recipeServings * product.Energy,
+                    Fat = recipeServings * product.Fat,
+                    Sodium = recipeServings * product.Sodium,
+                    Carbs = recipeServings * product.Carbs,
+                    Protein = recipeServings * product.Protein,
+                    Calcium = recipeServings * product.Calcium,
+                    Iron = recipeServings * product.Iron,
                 };
 
                 productsInRecipeToReturn.Add(productToReturn);
@@ -442,16 +607,58 @@ namespace NutriTEc_Backend.Repository
             var recipeToReturn = new RecipeInfoDto
             {
                 RecipeName = productRecipes[0].RecipeName,
-                Energy = recipe.Totalenergy,
-                Fat = recipe.Totalfat,
-                Sodium = recipe.Totalsodium,
-                Carbs = recipe.Totalcarbs,
-                Calcium = recipe.Totalcalcium,
-                Iron = recipe.Totaliron,
-                Protein = recipe.Totalprotein,
+                Energy = recipeServings * recipe.Totalenergy,
+                Fat = recipeServings * recipe.Totalfat,
+                Sodium = recipeServings * recipe.Totalsodium,
+                Carbs = recipeServings * recipe.Totalcarbs,
+                Calcium = recipeServings * recipe.Totalcalcium,
+                Iron = recipeServings * recipe.Totaliron,
+                Protein = recipeServings * recipe.Totalprotein,
                 Products = productsInRecipeToReturn,
             };
             return recipeToReturn;
+        }
+
+        private (double, double, double, double, double, List<ConsumedByPatient>, List<ConsumedByPatient>, List<ConsumedByPatient>, List<ConsumedByPatient>) GetDailyConsumptionClasify(List<ConsumedByPatient> recipesConsumed, List<ConsumedByPatient> productsConsumed)
+        {
+            double totalCalores = 0;
+            double totalCaloresBreakfast = 0;
+            double totalCaloresLunch = 0;
+            double totalCaloresDinner = 0;
+            double totalCaloresSnack = 0;
+
+            var lunch = new List<ConsumedByPatient>();
+            var breakfast = new List<ConsumedByPatient>();
+            var dinner = new List<ConsumedByPatient>();
+            var snack = new List<ConsumedByPatient>();
+
+            foreach (var consumed in productsConsumed.Concat(recipesConsumed))
+            {
+                if (consumed.Mealtime == "Breakfast")
+                {
+                    breakfast.Add(consumed);
+                    totalCaloresBreakfast += consumed.Energy;
+                }
+                else if (consumed.Mealtime == "Lunch")
+                {
+                    lunch.Add(consumed);
+                    totalCaloresLunch += consumed.Energy;
+                }
+                else if (consumed.Mealtime == "Dinner")
+                {
+                    dinner.Add(consumed);
+                    totalCaloresDinner += consumed.Energy;
+                }
+                else if (consumed.Mealtime == "Snack")
+                {
+                    snack.Add(consumed);
+                    totalCaloresSnack += consumed.Energy;
+                }
+                
+                totalCalores += consumed.Energy;
+            }
+
+            return (totalCalores, totalCaloresBreakfast, totalCaloresLunch, totalCaloresDinner, totalCaloresSnack, breakfast, lunch, dinner, snack);
         }
 
     }
