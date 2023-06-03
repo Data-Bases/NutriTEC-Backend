@@ -38,6 +38,9 @@ DROP FUNCTION calculate_recipe_nutrients(int);
 DROP FUNCTION get_total_patients;
 DROP FUNCTION amount_to_charge;
 DROP FUNCTION payroll;
+DROP FUNCTION calculate_product_servings;
+DROP FUNCTION get_consumed_product;
+DROP FUNCTION get_consumed_recipe;
 
 DROP PROCEDURE register_measurements;
 

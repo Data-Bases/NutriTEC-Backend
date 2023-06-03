@@ -1,3 +1,5 @@
+-- DateTime : 2023-06-03T22:45:26.650Z
+
 -- Administrator
 INSERT INTO Administrator (Email, Password) VALUES
 ('admin@example.com', md5('pepe'));
@@ -56,7 +58,7 @@ INSERT INTO Product (Barcode, Name, Descripcion, PortionSize, Energy, Fat, Sodiu
 
 
 -- Recipe
-INSERT INTO Recipe(Id, Name) VALUES (1, 'Pollo a la manzana'), (2, 'Salmon a la manzana'), (3, 'Yogurt con manzana');
+INSERT INTO Recipe(Id, Name) VALUES (1, 'Chicken with apple'), (2, 'Salmon with apple'), (3, 'Yogurt with apple');
 
 -- ProductRecipe 
 INSERT INTO ProductRecipe(ProductBarcode, RecipeId, Servings) VALUES (33333, 1, 2.5), 
@@ -66,6 +68,27 @@ INSERT INTO ProductRecipe(ProductBarcode, RecipeId, Servings) VALUES (33333, 1, 
                                                                     (11111, 2, 2),
                                                                     (44444, 3, 1.5),
                                                                     (11111, 3, 1);
+
+-- PatienProduct
+INSERT INTO PatientProduct (ProductBarcode, PatientId, MealTime, ConsumeDate, Servings)
+VALUES (22222, 6, 'Breakfast', '2023-06-03', 2.5),
+       (44444, 6, 'Snack', '2023-06-03', 1.5),
+       (11111, 6, 'Dinner', '2023-06-03', 3),
+       (22222, 7, 'Breakfast', '2023-06-01', 1),
+       (44444, 8, 'Snack', '2023-06-01', 1.5),
+       (11111, 9, 'Dinner', '2023-06-01', 3);
+
+
+-- PatientRecipe
+INSERT INTO PatientRecipe (RecipeId, PatientId, MealTime, ConsumeDate, Servings)
+VALUES (3, 6, 'Breakfast', '2023-06-03', 2.5),
+       (2, 6, 'Lunch', '2023-06-03', 1.5),
+       (2, 6, 'Dinner', '2023-06-03', 3),
+       (3, 7, 'Breakfast', '2023-06-01', 2.5),
+       (2, 8, 'Lunch', '2023-06-01', 1.5),
+       (2, 8, 'Dinner', '2023-06-01', 3);
+
+
 
 -- ProductVitamin
 INSERT INTO ProductVitamin (ProductBarcode, VitaminId) VALUES

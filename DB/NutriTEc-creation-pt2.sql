@@ -24,7 +24,7 @@ FOREIGN KEY (PatientId) REFERENCES Patient (Id);
 -- Recipe-PatientRecipe
 ALTER TABLE PatientRecipe
 ADD CONSTRAINT PatientRecipe_RecipeId
-FOREIGN KEY (RecipeId) REFERENCES Patient (Id);
+FOREIGN KEY (RecipeId) REFERENCES Recipe (Id);
 
 -- Patient-Nutritionist
 ALTER TABLE Patient
@@ -288,6 +288,59 @@ BEGIN
         Product as P
     WHERE
         P.Barcode = product_id;
+END; $$ 
+
+LANGUAGE 'plpgsql';
+
+
+CREATE FUNCTION get_consumed_recipe(patient_id int, date_consumed date)
+RETURNS TABLE(
+	Id int,
+	Name varchar(100),
+	Servings float,
+	Energy float,
+	Mealtime varchar(50)
+	)
+AS $$
+BEGIN
+	RETURN QUERY SELECT 
+			R.Id,
+			R.Name,
+			PR.Servings,
+			(
+				SELECT TotalEnergy * PR.Servings 
+				FROM calculate_recipe_nutrients(R.Id)
+			),
+			PR.Mealtime
+		FROM Recipe as R 
+		JOIN Patientrecipe as PR
+		ON R.Id = PR.RecipeId
+		WHERE PR.PatientId = patient_id and PR.ConsumeDate = date_consumed;
+END; $$ 
+
+LANGUAGE 'plpgsql';
+
+
+CREATE FUNCTION get_consumed_product(patient_id int, date_consumed date)
+RETURNS TABLE(
+	Id int,
+	Name varchar(100),
+	Servings float,
+	Energy float,
+	Mealtime varchar(50)
+	)
+AS $$
+BEGIN
+	RETURN QUERY SELECT 
+			P.Barcode,
+			P.Name,
+			PP.Servings,
+			PP.Servings * P.Energy, 
+			PP.Mealtime
+		FROM Product as P
+		JOIN PatientProduct as PP
+		ON P.Barcode = PP.ProductBarcode
+		WHERE PP.PatientId = patient_id and PP.ConsumeDate = date_consumed;
 END; $$ 
 
 LANGUAGE 'plpgsql';

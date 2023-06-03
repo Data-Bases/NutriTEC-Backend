@@ -17,6 +17,6 @@
         public double Calcium { get; set; }
 
         public double Iron { get; set; }
-        public List<ProductTotalInfoDto> Products { get; set;}
+        public List<ProductTotalInfo> Products { get; set;}
     }
 }

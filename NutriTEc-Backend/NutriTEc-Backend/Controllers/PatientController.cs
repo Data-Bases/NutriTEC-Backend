@@ -37,13 +37,13 @@ namespace NutriTEc_Backend.Controllers
 
             var result = _repository.PatientSignUp(patient);
 
-            if(result == Result.Error)
+            if (result == Result.Error)
             {
                 return Unauthorized();
             }
 
             return Ok();
-            
+
         }
         /// <summary>
         /// Adding a Product to a patient
@@ -114,7 +114,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost("RegisterPatientMeasurements", Name = "RegisterPatientMeasurements")]
-        public ActionResult<Result> RegisterPatientMeasurements(int patientId, MeasurementDto measurementDto)
+        public ActionResult<Result> RegisterPatientMeasurements([Required] int patientId, MeasurementDto measurementDto)
         {
 
             if (!ModelState.IsValid)
@@ -142,7 +142,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [HttpGet("GetPatientsNutritionist", Name = "GetPatientsNutritionist")]
+        [HttpGet("GetNutritionistByPatiendId/{id}", Name = "GetNutritionistByPatiendId/{id}")]
         public ActionResult<NutriIdDto> GetPatientsNutritionist(int patientId)
         {
 
@@ -154,6 +154,35 @@ namespace NutriTEc_Backend.Controllers
             var products = _repository.GetPatientsNutritionist(patientId);
 
             return Ok(products);
+        }
+
+        /// <summary>
+        /// Get daily consumption by a patient on a certain date
+        /// </summary>
+        /// <param name="patientId"></param>
+        /// <param name="dateConsumed"></param>
+        /// <returns>DailyConsumptionDto</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet("GetDailyConsumptionByPatient", Name = "GetDailyConsumptionByPatient")]
+        public ActionResult<DailyConsumptionDto> GetDailyConsumptionByPatient([Required] int patientId, [Required] DateTime dateConsumed)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var dailyConsumption = _repository.GetDailyConsumptionByPatient(patientId, dateConsumed);
+
+            if (dailyConsumption.TotalCalories == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(dailyConsumption);
         }
     }
 }

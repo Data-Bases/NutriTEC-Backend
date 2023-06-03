@@ -2,7 +2,7 @@
 
 namespace NutriTEc_Backend.Dtos
 {
-    public class ProductTotalInfoDto
+    public class ProductTotalInfo
     {
         public string Name { get; set; }
 
