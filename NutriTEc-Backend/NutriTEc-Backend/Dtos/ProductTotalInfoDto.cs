@@ -7,6 +7,7 @@ namespace NutriTEc_Backend.Dtos
         public string Name { get; set; }
 
         public double Portionsize { get; set; }
+
         public double Servings { get; set; }
 
         public double Energy { get; set; }

@@ -69,6 +69,35 @@ namespace NutriTEc_Backend.Controllers
             return Ok(product);
         }
 
+
+        /// <summary>
+        /// Get a Product by its Barcode and its servings
+        /// </summary>
+        /// <param name="barcode"></param>
+        /// <returns>ProductInformationDto</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet("GetProductByIdAndServings", Name = "GetProductByIdAndServings")]
+        public ActionResult<ProductInformationDto> GetProductByIdAndServings(int id, double servings)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var product = _repository.GetProductByIdAndServings(id, servings);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(product);
+        }
+
         /// <summary>
         /// Create a New Product Not Approved
         /// </summary>

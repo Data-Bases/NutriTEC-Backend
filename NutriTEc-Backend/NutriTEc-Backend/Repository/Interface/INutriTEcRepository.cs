@@ -132,6 +132,14 @@ namespace NutriTEc_Backend.Repository.Interface
         ProductInformationDto GetProductById(int id);
 
         /// <summary>
+        /// Get product information by its barcode and servings
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="servings"></param>
+        /// <returns>ProductTotalInfoDto</returns>
+        ProductTotalInfoDto GetProductByIdAndServings(int id, double servings);
+
+        /// <summary>
         /// Create a New Product
         /// </summary>
         /// <param name="productInformationDto"></param>

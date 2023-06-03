@@ -370,6 +370,18 @@ namespace NutriTEc_Backend.Repository
             return productInformationDto;
         }
 
+        public ProductTotalInfoDto GetProductByIdAndServings(int id, double servings)
+        {
+            var product = _context.ProductTotalInfoDto.FromSqlRaw($"SELECT Name, PortionSize, Servings, Energy, Fat, Sodium, Carbs, Protein, Calcium, Iron FROM calculate_product_servings({id}, {servings})").AsEnumerable().FirstOrDefault();
+
+            if (product == null)
+            {
+                return null;
+            }
+
+            return product;
+        }
+
         public Result AddNewProduct(ProductInformationDto productInformationDto)
         {
             var newProduct = new Product

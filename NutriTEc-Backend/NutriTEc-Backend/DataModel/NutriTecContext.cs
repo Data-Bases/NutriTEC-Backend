@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using NutriTEc_Backend.Models;
 using NutriTEc_Backend.DataModel;
+using NutriTEc_Backend.Dtos;
 
 namespace NutriTEc_Backend.DataModel;
 
@@ -55,6 +56,7 @@ public partial class NutriTecContext : DbContext
     public virtual DbSet<RecipeNutrients> RecipeNutrients { get; set; }
     public virtual DbSet<ProductRecipeNutrients> ProductRecipeNutrients { get; set; }
     public virtual DbSet<PayrollReport> PayrollReports { get; set; }
+    public virtual DbSet<ProductTotalInfoDto> ProductTotalInfoDto { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -67,6 +69,7 @@ public partial class NutriTecContext : DbContext
         modelBuilder.Entity<RecipeNutrients>().HasNoKey();
         modelBuilder.Entity<ProductRecipeNutrients>().HasNoKey();
         modelBuilder.Entity<PayrollReport>().HasNoKey();
+        modelBuilder.Entity<ProductTotalInfoDto>().HasNoKey();
 
         modelBuilder
             .HasPostgresExtension("pg_buffercache")

@@ -255,6 +255,44 @@ BEGIN
 END; $$ 
 LANGUAGE 'plpgsql';
 
+CREATE OR REPLACE FUNCTION calculate_product_servings(product_id int, servings_value float)
+    RETURNS TABLE (
+		Name varchar(100),
+		PortionSize float,
+		Servings float,
+		Energy float,
+		Fat float,
+		Sodium float,
+        Carbs float,
+		Protein float,
+		Calcium float,
+		Iron float
+) 
+AS $$
+DECLARE
+	product_servings float;
+BEGIN
+	product_servings := servings_value;
+    RETURN QUERY SELECT
+			P.name,
+			P.portionsize,
+			product_servings,
+			product_servings * P.energy,
+            product_servings * P.fat,
+			product_servings * P.sodium,
+			product_servings * P.carbs,
+			product_servings * P.protein,
+			product_servings * P.calcium,
+			product_servings * P.iron
+    FROM
+        Product as P
+    WHERE
+        P.Barcode = product_id;
+END; $$ 
+
+LANGUAGE 'plpgsql';
+
+
 CREATE PROCEDURE register_measurements(patient_id int, height float, fat_percentage float, muscle_percentage float, weight float, waist float, neck float, hips float, revision_date date)
 
 LANGUAGE SQL
