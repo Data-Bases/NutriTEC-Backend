@@ -104,6 +104,35 @@ namespace NutriTEc_Backend.Controllers
         }
 
         /// <summary>
+        /// Asociating a plan to a patient
+        /// </summary>
+        /// <param name="planPatientDto"></param>
+        /// <returns>Result</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpPost("AddPlanToPatient", Name = "AddPlanToPatient")]
+        public ActionResult<Result> AddPlanToPatient([Required] PlanPatientDto planPatientDto)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = _repository.AddPlanToPatient(planPatientDto);
+
+            if (result == Result.Error)
+            {
+                return Unauthorized();
+            }
+
+            return Ok();
+
+        }
+
+        /// <summary>
         /// Registering a patient's measurements on an specific date
         /// </summary>
         /// <param name="patientId"></param>

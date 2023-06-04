@@ -50,6 +50,13 @@ namespace NutriTEc_Backend.Repository.Interface
         /// <returns>A List of Patients</returns>
         List<PatientIdDto> GetPatientsByNutriId(int nutriId);
 
+        /// <summary>
+        /// Get all the plans asociated to a nutricionist
+        /// </summary>
+        /// <param name="nutriId"></param>
+        /// <returns>List of PlanIdDtos</returns>
+        List<PlanIdDto> GetNutritionistPlans(int nutriId);
+
         /*
          * Patient
          */
@@ -75,6 +82,13 @@ namespace NutriTEc_Backend.Repository.Interface
         /// <param name="patientRecipeDto"></param>
         /// <returns>Result</returns>
         Result AddRecipeToPatient(PatientRecipeDto patientRecipeDto);
+
+        /// <summary>
+        /// Asociating a plan to a patient
+        /// </summary>
+        /// <param name="planPatientDto"></param>
+        /// <returns>Result</returns>
+        Result AddPlanToPatient(PlanPatientDto planPatientDto);
 
         /// <summary>
         /// Registers Patient Measurements

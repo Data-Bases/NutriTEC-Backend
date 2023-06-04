@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Nest;
 using NutriTEc_Backend.Dtos;
 using NutriTEc_Backend.Helpers;
@@ -63,5 +64,30 @@ namespace NutriTEc_Backend.Controllers
 
             return Ok(products);  
         }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet("GetNutritionistPlans", Name = "GetNutritionistPlans")]
+        public ActionResult<PlanIdDto> GetNutritionistPlans([Required] int nutriId)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var products = _repository.GetNutritionistPlans(nutriId);
+
+            if (products.IsNullOrEmpty())
+            {
+                return NotFound();
+            }
+
+            return Ok(products);
+        }
+
+        
     }
 }

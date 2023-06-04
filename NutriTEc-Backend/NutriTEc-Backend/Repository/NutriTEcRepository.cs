@@ -15,6 +15,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using static Nest.JoinField;
 using System.Collections;
+using System.ComponentModel.DataAnnotations;
 
 namespace NutriTEc_Backend.Repository
 {
@@ -214,6 +215,19 @@ namespace NutriTEc_Backend.Repository
             return patientsDto;
         }
 
+        public List<PlanIdDto> GetNutritionistPlans (int nutriId)
+        {
+            var plans = _context.Plans
+                .Where(p => p.Nutriid == nutriId)
+                .Select(p => new PlanIdDto
+                {
+                    Id = p.Id,
+                    Name = p.Name
+                }).ToList();
+
+            return plans;
+        }
+
         /*
          * Patient
          */
@@ -287,6 +301,27 @@ namespace NutriTEc_Backend.Repository
             try
             {
                 _context.Patientrecipes.Add(newPatientRecipe);
+                _context.SaveChanges();
+                return Result.Created;
+            }
+            catch
+            {
+                return Result.Error;
+            }
+        }
+        public Result AddPlanToPatient(PlanPatientDto planPatientDto)
+        {
+            var newPlanPatient = new Planpatient
+            {
+                Planid = planPatientDto.PlanId,
+                Patientid = planPatientDto.PatientId,
+                Initialdate = DateOnly.FromDateTime(planPatientDto.InitialDate),
+                Enddate = DateOnly.FromDateTime(planPatientDto.EndDate)
+            };
+
+            try
+            {
+                _context.Planpatients.Add(newPlanPatient);
                 _context.SaveChanges();
                 return Result.Created;
             }
@@ -682,6 +717,7 @@ namespace NutriTEc_Backend.Repository
 
             return (totalCalores, totalCaloresBreakfast, totalCaloresLunch, totalCaloresDinner, totalCaloresSnack, breakfast, lunch, dinner, snack);
         }
+
 
     }
 
