@@ -174,6 +174,19 @@ CREATE TABLE PlanProduct
 	PRIMARY KEY (Id)
 );
 
+-- PlanRecipe
+CREATE TABLE PlanRecipe
+(
+	Id SERIAL NOT NULL,
+	RecipeId INT NOT NULL,
+    PlanId INT NOT NULL,
+	Servings FLOAT NOT NULL,
+    MealTime VARCHAR(50) NOT NULL,
+    ConsumeWeekDay VARCHAR(50) NOT NULL,
+
+	PRIMARY KEY (Id)
+);
+
 -- ProductVitamin
 CREATE TABLE ProductVitamin
 (

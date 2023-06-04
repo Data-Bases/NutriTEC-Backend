@@ -12,9 +12,13 @@ ALTER TABLE PlanPatient DROP CONSTRAINT PlanPatient_PatientId;
 ALTER TABLE Measurements DROP CONSTRAINT Measurements_PatientId;
 
 ALTER TABLE Plan DROP CONSTRAINT Plan_NutriId;
+ALTER TABLE Plan DROP CONSTRAINT unique_plan;
 
 ALTER TABLE PlanProduct DROP CONSTRAINT PlanProduct_ProductBarcode;
 ALTER TABLE PlanProduct DROP CONSTRAINT PlanProduct_PlanId;
+
+ALTER TABLE PlanRecipe DROP CONSTRAINT PlanRecipe_RecipeId;
+ALTER TABLE PlanRecipe DROP CONSTRAINT PlanRecipe_PlanId;
 
 ALTER TABLE ProductVitamin DROP CONSTRAINT ProductVitamin_ProductBarcode;
 ALTER TABLE ProductVitamin DROP CONSTRAINT ProductVitamin_Vitamin;
@@ -42,6 +46,7 @@ DROP FUNCTION calculate_product_servings;
 DROP FUNCTION get_consumed_product;
 DROP FUNCTION get_consumed_recipe;
 DROP FUNCTION get_patient_measurements;
+DROP FUNCTION create_plan;
 
 DROP PROCEDURE register_measurements;
 
@@ -60,4 +65,5 @@ DROP TABLE ProductRecipe;
 DROP TABLE PlanProduct;
 DROP TABLE ProductVitamin;
 DROP TABLE PatientProduct;
+DROP TABLE PlanRecipe;
 

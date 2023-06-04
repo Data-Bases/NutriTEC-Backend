@@ -19,5 +19,5 @@ public partial class Patientrecipe
 
     public virtual Patient Patient { get; set; } = null!;
 
-    public virtual Patient Recipe { get; set; } = null!;
+    public virtual Recipe Recipe { get; set; } = null!;
 }

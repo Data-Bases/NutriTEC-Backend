@@ -9,5 +9,9 @@ public partial class Recipe
 
     public string Name { get; set; } = null!;
 
+    public virtual ICollection<Patientrecipe> Patientrecipes { get; set; } = new List<Patientrecipe>();
+
+    public virtual ICollection<Planrecipe> Planrecipes { get; set; } = new List<Planrecipe>();
+
     public virtual ICollection<Productrecipe> Productrecipes { get; set; } = new List<Productrecipe>();
 }

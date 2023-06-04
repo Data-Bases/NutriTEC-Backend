@@ -33,9 +33,7 @@ public partial class Patient
 
     public virtual ICollection<Patientproduct> Patientproducts { get; set; } = new List<Patientproduct>();
 
-    public virtual ICollection<Patientrecipe> PatientrecipePatients { get; set; } = new List<Patientrecipe>();
-
-    public virtual ICollection<Patientrecipe> PatientrecipeRecipes { get; set; } = new List<Patientrecipe>();
+    public virtual ICollection<Patientrecipe> Patientrecipes { get; set; } = new List<Patientrecipe>();
 
     public virtual ICollection<Planpatient> Planpatients { get; set; } = new List<Planpatient>();
 }

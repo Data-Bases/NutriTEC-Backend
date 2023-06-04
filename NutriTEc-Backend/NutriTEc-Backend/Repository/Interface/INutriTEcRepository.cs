@@ -193,6 +193,17 @@ namespace NutriTEc_Backend.Repository.Interface
         /// <param name="id"></param>
         /// <returns>Payroll report info</returns>
         List<PayrollReport> GetPayrollReport(int id);
+
+        /*
+         * Plans
+         */
+
+        /// <summary>
+        /// Create plans 
+        /// </summary>
+        /// <param name="plan"></param>
+        /// <returns></returns>
+        Result CreatePlan(PlanDto plan);
     }
 
 }

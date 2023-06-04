@@ -37,6 +37,8 @@ public partial class NutriTecContext : DbContext
 
     public virtual DbSet<Planproduct> Planproducts { get; set; }
 
+    public virtual DbSet<Planrecipe> Planrecipes { get; set; }
+
     public virtual DbSet<Product> Products { get; set; }
 
     public virtual DbSet<Productrecipe> Productrecipes { get; set; }
@@ -57,6 +59,7 @@ public partial class NutriTecContext : DbContext
     public virtual DbSet<PayrollReport> PayrollReports { get; set; }
     public virtual DbSet<ProductTotalInfo> ProductTotalInfo { get; set; }
     public virtual DbSet<ConsumedByPatient> ConsumedByPatient { get; set; }
+    public virtual DbSet<PlanId> PlanIds { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -71,6 +74,7 @@ public partial class NutriTecContext : DbContext
         modelBuilder.Entity<PayrollReport>().HasNoKey();
         modelBuilder.Entity<ProductTotalInfo>().HasNoKey();
         modelBuilder.Entity<ConsumedByPatient>().HasNoKey();
+        modelBuilder.Entity<PlanId>().HasNoKey();
 
         modelBuilder
             .HasPostgresExtension("pg_buffercache")
@@ -140,9 +144,7 @@ public partial class NutriTecContext : DbContext
 
             entity.HasIndex(e => e.Email, "nutritionist_email_key").IsUnique();
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Adminid).HasColumnName("adminid");
             entity.Property(e => e.Age).HasColumnName("age");
             entity.Property(e => e.Birthdate).HasColumnName("birthdate");
@@ -172,7 +174,7 @@ public partial class NutriTecContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("password");
             entity.Property(e => e.Picture)
-                .HasMaxLength(100)
+                .HasMaxLength(10485760)
                 .HasColumnName("picture");
             entity.Property(e => e.Province)
                 .HasMaxLength(100)
@@ -198,9 +200,7 @@ public partial class NutriTecContext : DbContext
 
             entity.HasIndex(e => e.Email, "patient_email_key").IsUnique();
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Age).HasColumnName("age");
             entity.Property(e => e.Birthdate).HasColumnName("birthdate");
             entity.Property(e => e.Caloriesintake).HasColumnName("caloriesintake");
@@ -270,12 +270,12 @@ public partial class NutriTecContext : DbContext
             entity.Property(e => e.Recipeid).HasColumnName("recipeid");
             entity.Property(e => e.Servings).HasColumnName("servings");
 
-            entity.HasOne(d => d.Patient).WithMany(p => p.PatientrecipePatients)
+            entity.HasOne(d => d.Patient).WithMany(p => p.Patientrecipes)
                 .HasForeignKey(d => d.Patientid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("patientrecipe_patientid");
 
-            entity.HasOne(d => d.Recipe).WithMany(p => p.PatientrecipeRecipes)
+            entity.HasOne(d => d.Recipe).WithMany(p => p.Patientrecipes)
                 .HasForeignKey(d => d.Recipeid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("patientrecipe_recipeid");
@@ -286,6 +286,8 @@ public partial class NutriTecContext : DbContext
             entity.HasKey(e => e.Id).HasName("plan_pkey");
 
             entity.ToTable("plan");
+
+            entity.HasIndex(e => new { e.Name, e.Nutriid }, "unique_plan").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Name)
@@ -348,6 +350,34 @@ public partial class NutriTecContext : DbContext
                 .HasForeignKey(d => d.Productbarcode)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("planproduct_productbarcode");
+        });
+
+        modelBuilder.Entity<Planrecipe>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("planrecipe_pkey");
+
+            entity.ToTable("planrecipe");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Consumeweekday)
+                .HasMaxLength(50)
+                .HasColumnName("consumeweekday");
+            entity.Property(e => e.Mealtime)
+                .HasMaxLength(50)
+                .HasColumnName("mealtime");
+            entity.Property(e => e.Planid).HasColumnName("planid");
+            entity.Property(e => e.Recipeid).HasColumnName("recipeid");
+            entity.Property(e => e.Servings).HasColumnName("servings");
+
+            entity.HasOne(d => d.Plan).WithMany(p => p.Planrecipes)
+                .HasForeignKey(d => d.Planid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("planrecipe_planid");
+
+            entity.HasOne(d => d.Recipe).WithMany(p => p.Planrecipes)
+                .HasForeignKey(d => d.Recipeid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("planrecipe_recipeid");
         });
 
         modelBuilder.Entity<Product>(entity =>

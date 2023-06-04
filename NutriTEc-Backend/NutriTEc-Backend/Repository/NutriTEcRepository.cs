@@ -15,6 +15,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using static Nest.JoinField;
 using System.Collections;
+using Elasticsearch.Net;
 
 namespace NutriTEc_Backend.Repository
 {
@@ -503,6 +504,7 @@ namespace NutriTEc_Backend.Repository
             return unapprovedProductsDto;
         }
 
+
         /*
          * Recipe
          */
@@ -580,6 +582,87 @@ namespace NutriTEc_Backend.Repository
             }
         }
 
+        /*
+         * Plans
+         */
+        
+        public Result CreatePlan(PlanDto plan)
+        {
+            var productsToInsert = new List<Planproduct>();
+            var recipeToInsert = new List<Planrecipe>();
+            try
+            {
+                if (plan.Products.IsNullOrEmpty() && plan.Recipes.IsNullOrEmpty())
+                {
+                    return Result.Error;
+                }
+
+                var planId = _context.PlanIds.FromSqlRaw($"select create_plan from create_plan('{plan.PlanName}', {plan.NutriId})").FirstOrDefault();
+
+                _context.SaveChanges();
+
+                if (!plan.Products.IsNullOrEmpty())
+                {
+                    foreach (var product in plan.Products)
+                    {
+                        if (!Enum.IsDefined(typeof(DayOfWeek), product.ConsumeWeekDay) || !Enum.IsDefined(typeof(Mealtime), product.Mealtime))
+                        {
+                            return Result.Error;
+                        }
+                        productsToInsert.Add(new Planproduct
+                        {
+                            Productbarcode = product.ProductId,
+                            Planid = planId.create_plan,
+                            Consumeweekday = product.ConsumeWeekDay,
+                            Mealtime = product.Mealtime,
+                            Servings = product.Servings,
+                        });
+                    }
+
+                    _context.Planproducts.AddRange(productsToInsert);
+                 
+                    _context.SaveChanges();
+                }
+
+                if (!plan.Recipes.IsNullOrEmpty())
+                {
+                    foreach (var recipe in plan.Recipes)
+                    {
+                        if (!Enum.IsDefined(typeof(DayOfWeek), recipe.ConsumeWeekDay) || !Enum.IsDefined(typeof(Mealtime), recipe.Mealtime))
+                        {
+                            return Result.Error;
+                        }
+                        recipeToInsert.Add(new Planrecipe
+                        {
+                            Recipeid = recipe.RecipeId,
+                            Planid = planId.create_plan,
+                            Consumeweekday = recipe.ConsumeWeekDay,
+                            Mealtime = recipe.Mealtime,
+                            Servings = recipe.Servings,
+                        });
+                    }
+
+                    _context.Planrecipes.AddRange(recipeToInsert);
+
+                    _context.SaveChanges();
+                }
+
+
+                return Result.Created;
+
+            }
+            catch (Exception ex)
+            {
+                return Result.Error;
+            }
+        }
+
+        
+
+        /*
+         * Private Methods
+         */
+
         private RecipeInfoDto ParseTotalNutrients(RecipeNutrients recipe,  List<ProductRecipeNutrients> productRecipes, int recipeServings)
         {
             var productsInRecipeToReturn = new List<ProductTotalInfo>();
@@ -634,22 +717,22 @@ namespace NutriTEc_Backend.Repository
 
             foreach (var consumed in productsConsumed.Concat(recipesConsumed))
             {
-                if (consumed.Mealtime == "Breakfast")
+                if (consumed.Mealtime == Mealtime.Breakfast.GetStringValue())
                 {
                     breakfast.Add(consumed);
                     totalCaloresBreakfast += consumed.Energy;
                 }
-                else if (consumed.Mealtime == "Lunch")
+                else if (consumed.Mealtime == Mealtime.Lunch.GetStringValue())
                 {
                     lunch.Add(consumed);
                     totalCaloresLunch += consumed.Energy;
                 }
-                else if (consumed.Mealtime == "Dinner")
+                else if (consumed.Mealtime == Mealtime.Dinner.GetStringValue())
                 {
                     dinner.Add(consumed);
                     totalCaloresDinner += consumed.Energy;
                 }
-                else if (consumed.Mealtime == "Snack")
+                else if (consumed.Mealtime == Mealtime.Snack.GetStringValue())
                 {
                     snack.Add(consumed);
                     totalCaloresSnack += consumed.Energy;

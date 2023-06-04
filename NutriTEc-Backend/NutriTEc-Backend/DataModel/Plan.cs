@@ -16,4 +16,6 @@ public partial class Plan
     public virtual ICollection<Planpatient> Planpatients { get; set; } = new List<Planpatient>();
 
     public virtual ICollection<Planproduct> Planproducts { get; set; } = new List<Planproduct>();
+
+    public virtual ICollection<Planrecipe> Planrecipes { get; set; } = new List<Planrecipe>();
 }

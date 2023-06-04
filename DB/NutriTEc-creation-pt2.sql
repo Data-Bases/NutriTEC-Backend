@@ -61,6 +61,16 @@ ALTER TABLE PlanProduct
 ADD CONSTRAINT PlanProduct_PlanId
 FOREIGN KEY (PlanId) REFERENCES Plan (Id);
 
+-- PlanProduct-Recipe
+ALTER TABLE PlanRecipe
+ADD CONSTRAINT PlanRecipe_RecipeId
+FOREIGN KEY (RecipeId) REFERENCES Recipe (Id);
+
+-- PlanProduct-Plan
+ALTER TABLE PlanRecipe
+ADD CONSTRAINT PlanRecipe_PlanId
+FOREIGN KEY (PlanId) REFERENCES Plan (Id);
+
 -- ProductVitamin-Product
 ALTER TABLE ProductVitamin
 ADD CONSTRAINT ProductVitamin_ProductBarcode
@@ -90,6 +100,9 @@ FOREIGN KEY (AdminId) REFERENCES Administrator(Id);
 ALTER TABLE Nutritionist
 ADD CONSTRAINT Nutritionist_ChargeTypeId
 FOREIGN KEY (ChargeTypeId) REFERENCES ChargeType(Id);
+
+ALTER TABLE Plan
+ADD CONSTRAINT unique_plan UNIQUE (Name, NutriId);
 
 -- Views
 CREATE VIEW UserCredentials AS
@@ -383,6 +396,23 @@ BEGIN
     RETURN;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION create_plan(plan_name varchar(100), nutri_id int)
+RETURNS int AS
+$$
+DECLARE
+    plan_id int;
+BEGIN
+    -- Insert the recipe
+    INSERT INTO Plan (NutriId, Name)
+    VALUES (nutri_id, plan_name)
+	
+	RETURNING id INTO plan_id;
+    RETURN plan_id;
+END;
+$$
+LANGUAGE plpgsql;
 
 
 CREATE PROCEDURE register_measurements(patient_id int, height float, fat_percentage float, muscle_percentage float, weight float, waist float, neck float, hips float, revision_date date)
