@@ -8,6 +8,7 @@ ALTER TABLE Patient DROP CONSTRAINT Patient_NutriId;
 
 ALTER TABLE PlanPatient DROP CONSTRAINT PlanPatient_PlanId;
 ALTER TABLE PlanPatient DROP CONSTRAINT PlanPatient_PatientId;
+ALTER TABLE PlanPatient DROP CONSTRAINT unique_plan_patient;
 
 ALTER TABLE Measurements DROP CONSTRAINT Measurements_PatientId;
 
@@ -47,8 +48,12 @@ DROP FUNCTION get_consumed_product;
 DROP FUNCTION get_consumed_recipe;
 DROP FUNCTION get_patient_measurements;
 DROP FUNCTION create_plan;
+DROP FUNCTION get_product_plan;
+DROP FUNCTION get_recipe_plan;
 
 DROP PROCEDURE register_measurements;
+DROP PROCEDURE insert_nutri;
+DROP PROCEDURE insert_plan_patient;
 
 DROP TABLE Nutritionist;
 DROP TABLE Product;

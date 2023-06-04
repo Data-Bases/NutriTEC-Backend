@@ -227,6 +227,21 @@ namespace NutriTEc_Backend.Repository.Interface
         /// <param name="plan"></param>
         /// <returns></returns>
         Result CreatePlan(PlanDto plan);
+
+        /// <summary>
+        /// Get Plan total info
+        /// </summary>
+        /// <param name="planId"></param>
+        /// <returns>DailyConsumptionPlanDto</returns>
+        DailyConsumptionPlanDto GetPlanById(int planId);
+
+        /// <summary>
+        /// Get plan by patient id and initial date
+        /// </summary>
+        /// <param name="patiendId"></param>
+        /// <param name="initialDate"></param>
+        /// <returns>DailyConsumptionPlanDto</returns>
+        DailyConsumptionPlanDto GetPlanByPatientId(int patiendId, DateTime initialDate);
     }
 
 }

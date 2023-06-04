@@ -104,6 +104,9 @@ FOREIGN KEY (ChargeTypeId) REFERENCES ChargeType(Id);
 ALTER TABLE Plan
 ADD CONSTRAINT unique_plan UNIQUE (Name, NutriId);
 
+ALTER TABLE PlanPatient
+ADD CONSTRAINT unique_plan_patient UNIQUE (PatientId, InitialDate);
+
 -- Views
 CREATE VIEW UserCredentials AS
 SELECT Id, Email, Password, 'P' AS UserType FROM Patient
@@ -414,6 +417,148 @@ END;
 $$
 LANGUAGE plpgsql;
 
+
+CREATE FUNCTION get_recipe_plan(plan_id int, weekday varchar(50))
+RETURNS TABLE(
+	Id int,
+	Name varchar(100),
+	Servings float,
+	Energy float,
+	Mealtime varchar(50)
+	)
+AS $$
+BEGIN
+	RETURN QUERY SELECT 
+			R.Id,
+			R.Name,
+			PR.Servings,
+			(
+				SELECT TotalEnergy * PR.Servings 
+				FROM calculate_recipe_nutrients(R.Id)
+			),
+			PR.Mealtime
+		FROM Recipe as R 
+		JOIN Planrecipe as PR
+		ON R.Id = PR.RecipeId
+		WHERE PR.PlanId = plan_id and PR.ConsumeWeekDay = weekday;
+END; $$ 
+
+LANGUAGE 'plpgsql';
+
+
+CREATE FUNCTION get_product_plan(plan_id int, weekday varchar(50))
+RETURNS TABLE(
+	Id int,
+	Name varchar(100),
+	Servings float,
+	Energy float,
+	Mealtime varchar(50)
+	)
+AS $$
+BEGIN
+	RETURN QUERY SELECT 
+			P.Barcode,
+			P.Name,
+			PP.Servings,
+			PP.Servings * P.Energy, 
+			PP.Mealtime
+		FROM Product as P
+		JOIN Planproduct as PP
+		ON P.Barcode = PP.ProductBarcode
+		WHERE PP.PlanId = plan_id and PP.ConsumeWeekDay = weekday;
+END; $$ 
+
+LANGUAGE 'plpgsql';
+
+
+CREATE OR REPLACE PROCEDURE insert_plan_patient(
+    p_planId INT,
+    p_patientId INT,
+    p_initialDate DATE
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    p_endDate DATE;
+    p_weekday INT;
+BEGIN
+    -- Get the weekday value of the initial date (0 for Sunday, 1 for Monday, and so on)
+    p_weekday := EXTRACT(ISODOW FROM p_initialDate);
+
+    -- If the initial date is not Monday (1), raise an exception and stop the insertion
+    IF p_weekday <> 1 THEN
+        RAISE EXCEPTION 'InitialDate must be a Monday.';
+    END IF;
+
+    -- Calculate the end date as 7 days after the initial date
+    p_endDate := p_initialDate + INTERVAL '7 days';
+
+    INSERT INTO PlanPatient (PlanId, PatientId, InitialDate, EndDate)
+    VALUES (p_planId, p_patientId, p_initialDate, p_endDate);
+END;
+$$;
+
+CREATE OR REPLACE PROCEDURE insert_nutri(
+    p_email VARCHAR(100),
+    p_password VARCHAR(100),
+    p_name VARCHAR(100),
+    p_lastName1 VARCHAR(100),
+    p_lastName2 VARCHAR(100),
+    p_age INT,
+    p_birthDate DATE,
+    p_weight INT,
+    p_imc INT,
+    p_nutritionistCode INT,
+    p_cardNumber INT,
+    p_province VARCHAR(100),
+    p_canton VARCHAR(100),
+    p_district VARCHAR(100),
+    p_picture VARCHAR(10485760),
+    p_adminId INT,
+    p_chargeTypeId INT
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO Nutritionist (
+        Email,
+        Password,
+        Name,
+        LastName1,
+        LastName2,
+        Age,
+        BirthDate,
+        Weight,
+        IMC,
+        NutritionistCode,
+        CardNumber,
+        Province,
+        Canton,
+        District,
+        Picture,
+        AdminId,
+        ChargeTypeId
+    ) VALUES (
+        p_email,
+        p_password,
+        p_name,
+        p_lastName1,
+        COALESCE(p_lastName2, ''),
+        p_age,
+        p_birthDate,
+        COALESCE(p_weight, 0),
+        COALESCE(p_imc, 0),
+        p_nutritionistCode,
+        COALESCE(p_cardNumber, 0),
+        p_province,
+        p_canton,
+        p_district,
+        p_picture,
+        p_adminId,
+        p_chargeTypeId
+    );
+END;
+$$;
 
 CREATE PROCEDURE register_measurements(patient_id int, height float, fat_percentage float, muscle_percentage float, weight float, waist float, neck float, hips float, revision_date date)
 
