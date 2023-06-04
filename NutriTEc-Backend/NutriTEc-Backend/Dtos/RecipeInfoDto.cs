@@ -1,4 +1,6 @@
-﻿namespace NutriTEc_Backend.Dtos
+﻿using NutriTEc_Backend.Models;
+
+namespace NutriTEc_Backend.Dtos
 {
     public class RecipeInfoDto
     {

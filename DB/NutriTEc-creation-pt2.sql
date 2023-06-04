@@ -346,6 +346,45 @@ END; $$
 LANGUAGE 'plpgsql';
 
 
+CREATE OR REPLACE FUNCTION get_patient_measurements(
+    patient_id INT,
+    start_date DATE,
+    end_date DATE
+)
+RETURNS TABLE (
+    Height FLOAT,
+    FatPercentage FLOAT,
+    MusclePercentage FLOAT,
+    Weight FLOAT,
+    Waist FLOAT,
+    Neck FLOAT,
+    Hips FLOAT,
+	RevisionDate date
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        M.Height,
+        M.FatPercentage,
+        M.MusclePercentage,
+        M.Weight,
+        M.Waist,
+        M.Neck,
+        M.Hips,
+		M.RevisionDate
+    FROM
+        Measurements AS M
+    WHERE
+        M.PatientId = patient_id
+        AND M.RevisionDate >= start_date
+        AND M.RevisionDate <= end_date;
+
+    RETURN;
+END;
+$$ LANGUAGE plpgsql;
+
+
 CREATE PROCEDURE register_measurements(patient_id int, height float, fat_percentage float, muscle_percentage float, weight float, waist float, neck float, hips float, revision_date date)
 
 LANGUAGE SQL
@@ -366,7 +405,6 @@ CREATE TRIGGER check_patient_exists_patientrecipe_trigger
 BEFORE INSERT ON PatientRecipe
 FOR EACH ROW
 EXECUTE FUNCTION check_patient_exists();
-
 
 CREATE TRIGGER check_patient_exists_patientproduct_trigger
 BEFORE INSERT ON PatientProduct

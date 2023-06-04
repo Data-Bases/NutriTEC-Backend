@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
 
-namespace NutriTEc_Backend.Models
+namespace NutriTEc_Backend.Dtos
 {
     public class CommentDto
     {
@@ -11,6 +11,6 @@ namespace NutriTEc_Backend.Models
         public string Meal { get; set; }
         public string CommentText { get; set; }
 
-        
+
     }
 }

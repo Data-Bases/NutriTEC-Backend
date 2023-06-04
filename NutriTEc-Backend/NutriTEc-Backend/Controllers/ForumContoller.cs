@@ -3,7 +3,6 @@ using Nest;
 using NutriTEc_Backend.Dtos;
 using NutriTEc_Backend.Entities;
 using NutriTEc_Backend.Helpers;
-using NutriTEc_Backend.Models;
 using NutriTEc_Backend.Repository.Interface;
 using System.ComponentModel.DataAnnotations;
 
