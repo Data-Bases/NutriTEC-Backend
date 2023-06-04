@@ -137,7 +137,7 @@ namespace NutriTEc_Backend.Repository.Interface
         /// <param name="startDate"></param>
         /// <param name="finishDate"></param>
         /// <returns>List of Measurements</returns>
-        List<MeasurementDto> GetPatientMeasurementsByDate(int patientId, DateTime startDate, DateTime finishDate);
+        List<MeasurementFunc> GetPatientMeasurementsByDate(int patientId, DateTime startDate, DateTime finishDate);
 
         /*
          * Recipe
