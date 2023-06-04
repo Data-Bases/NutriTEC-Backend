@@ -50,6 +50,13 @@ namespace NutriTEc_Backend.Repository.Interface
         /// <returns>A List of Patients</returns>
         List<PatientIdDto> GetPatientsByNutriId(int nutriId);
 
+        /// <summary>
+        /// Get all the plans asociated to a nutricionist
+        /// </summary>
+        /// <param name="nutriId"></param>
+        /// <returns>List of PlanIdDtos</returns>
+        List<PlanIdDto> GetNutritionistPlans(int nutriId);
+
         /*
          * Patient
          */
@@ -75,6 +82,13 @@ namespace NutriTEc_Backend.Repository.Interface
         /// <param name="patientRecipeDto"></param>
         /// <returns>Result</returns>
         Result AddRecipeToPatient(PatientRecipeDto patientRecipeDto);
+
+        /// <summary>
+        /// Asociating a plan to a patient
+        /// </summary>
+        /// <param name="planPatientDto"></param>
+        /// <returns>Result</returns>
+        Result AddPlanToPatient(PlanPatientDto planPatientDto);
 
         /// <summary>
         /// Registers Patient Measurements
@@ -115,6 +129,15 @@ namespace NutriTEc_Backend.Repository.Interface
         /// <param name="dateConsumed"></param>
         /// <returns>DailyConsumptionDto</returns>
         DailyConsumptionDto GetDailyConsumptionByPatient(int patientId, DateTime dateConsumed);
+
+        /// <summary>
+        /// Get the measurements of a patient on a specific time gap
+        /// </summary>
+        /// <param name="patientId"></param>
+        /// <param name="startDate"></param>
+        /// <param name="finishDate"></param>
+        /// <returns>List of Measurements</returns>
+        List<MeasurementFunc> GetPatientMeasurementsByDate(int patientId, DateTime startDate, DateTime finishDate);
 
         /*
          * Recipe

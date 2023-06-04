@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Nest;
 using NutriTEc_Backend.Dtos;
 using NutriTEc_Backend.Helpers;
@@ -27,7 +28,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost("PatientSignUp", Name = "PatientSignUp")]
-        public ActionResult<Result> PatientSignUp(PatientDto patient)
+        public ActionResult<Result> PatientSignUp([Required] PatientDto patient)
         {
 
             if (!ModelState.IsValid)
@@ -55,7 +56,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost("AddProductToPatient", Name = "AddProductToPatient")]
-        public ActionResult<Result> AddProductToPatient(PatientProductDto patientProductDto)
+        public ActionResult<Result> AddProductToPatient([Required] PatientProductDto patientProductDto)
         {
 
             if (!ModelState.IsValid)
@@ -83,7 +84,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost("AddRecipeToPatient", Name = "AddRecipeToPatient")]
-        public ActionResult<Result> AddRecipeToPatient(PatientRecipeDto patientRecipeDto)
+        public ActionResult<Result> AddRecipeToPatient([Required] PatientRecipeDto patientRecipeDto)
         {
 
             if (!ModelState.IsValid)
@@ -92,6 +93,35 @@ namespace NutriTEc_Backend.Controllers
             }
 
             var result = _repository.AddRecipeToPatient(patientRecipeDto);
+
+            if (result == Result.Error)
+            {
+                return Unauthorized();
+            }
+
+            return Ok();
+
+        }
+
+        /// <summary>
+        /// Asociating a plan to a patient
+        /// </summary>
+        /// <param name="planPatientDto"></param>
+        /// <returns>Result</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpPost("AddPlanToPatient", Name = "AddPlanToPatient")]
+        public ActionResult<Result> AddPlanToPatient([Required] PlanPatientDto planPatientDto)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = _repository.AddPlanToPatient(planPatientDto);
 
             if (result == Result.Error)
             {
@@ -143,7 +173,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("GetNutritionistByPatiendId/{id}", Name = "GetNutritionistByPatiendId/{id}")]
-        public ActionResult<NutriIdDto> GetPatientsNutritionist(int patientId)
+        public ActionResult<NutriIdDto> GetPatientsNutritionist([Required] int patientId)
         {
 
             if (!ModelState.IsValid)
@@ -183,6 +213,30 @@ namespace NutriTEc_Backend.Controllers
             }
 
             return Ok(dailyConsumption);
+        }
+
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet("GetPatientMeasurementsByDate", Name = "GetPatientMeasurementsByDate")]
+        public ActionResult<MeasurementDto> GetPatientMeasurementsByDate([Required] int patientId, [Required] DateTime startDate, [Required] DateTime finishDate)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var measurements = _repository.GetPatientMeasurementsByDate(patientId, startDate, finishDate);
+
+            if (measurements.IsNullOrEmpty())
+            {
+                return NotFound();
+            }
+
+            return Ok(measurements);
         }
     }
 }

@@ -16,6 +16,7 @@ using System;
 using static Nest.JoinField;
 using System.Collections;
 using Elasticsearch.Net;
+using System.ComponentModel.DataAnnotations;
 
 namespace NutriTEc_Backend.Repository
 {
@@ -215,6 +216,19 @@ namespace NutriTEc_Backend.Repository
             return patientsDto;
         }
 
+        public List<PlanIdDto> GetNutritionistPlans (int nutriId)
+        {
+            var plans = _context.Plans
+                .Where(p => p.Nutriid == nutriId)
+                .Select(p => new PlanIdDto
+                {
+                    Id = p.Id,
+                    Name = p.Name
+                }).ToList();
+
+            return plans;
+        }
+
         /*
          * Patient
          */
@@ -288,6 +302,27 @@ namespace NutriTEc_Backend.Repository
             try
             {
                 _context.Patientrecipes.Add(newPatientRecipe);
+                _context.SaveChanges();
+                return Result.Created;
+            }
+            catch
+            {
+                return Result.Error;
+            }
+        }
+        public Result AddPlanToPatient(PlanPatientDto planPatientDto)
+        {
+            var newPlanPatient = new Planpatient
+            {
+                Planid = planPatientDto.PlanId,
+                Patientid = planPatientDto.PatientId,
+                Initialdate = DateOnly.FromDateTime(planPatientDto.InitialDate),
+                Enddate = DateOnly.FromDateTime(planPatientDto.EndDate)
+            };
+
+            try
+            {
+                _context.Planpatients.Add(newPlanPatient);
                 _context.SaveChanges();
                 return Result.Created;
             }
@@ -401,6 +436,28 @@ namespace NutriTEc_Backend.Repository
             };
 
             return nutriIdDto;
+        }
+
+        public List<MeasurementFunc> GetPatientMeasurementsByDate(int patientId, DateTime startDate, DateTime finishDate)
+        {
+            try
+            {
+                var query = $"SELECT Height, FatPercentage, MusclePercentage, Weight, Waist, Neck, Hips, RevisionDate " +
+                            $"FROM get_patient_measurements({patientId}, '{DateOnly.FromDateTime(startDate).ToString("yyyy-MM-dd")}', " +
+                            $"'{DateOnly.FromDateTime(finishDate).ToString("yyyy-MM-dd")}');";
+                var measurements = _context.MeasurementFunc.FromSqlRaw(query).AsEnumerable().ToList();
+
+                if (measurements.IsNullOrEmpty())
+                {
+                    return new List<MeasurementFunc>();
+                }
+
+                return measurements;
+            }
+            catch (Exception e)
+            {
+                return new List<MeasurementFunc>();
+            }
         }
 
         /*
@@ -743,6 +800,7 @@ namespace NutriTEc_Backend.Repository
 
             return (totalCalores, totalCaloresBreakfast, totalCaloresLunch, totalCaloresDinner, totalCaloresSnack, breakfast, lunch, dinner, snack);
         }
+
 
     }
 

@@ -29,7 +29,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost("AdminSignUp", Name = "AdminSignUp")]
-        public ActionResult<Result> AdminSignUp(AdminDto admin)
+        public ActionResult<Result> AdminSignUp([Required] AdminDto admin)
         {
 
             if (!ModelState.IsValid)
@@ -57,7 +57,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("ApproveProduct/{id}", Name = "ApproveProduct")]
-        public ActionResult<Result> ApproveProduct(int id)
+        public ActionResult<Result> ApproveProduct([Required] int id)
         {
 
             if (!ModelState.IsValid)
