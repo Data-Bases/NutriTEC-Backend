@@ -91,6 +91,26 @@ VALUES (3, 6, 'Breakfast', '2023-06-03', 2.5),
        (2, 8, 'Dinner', '2023-06-01', 3);
 
 
+-- Plans
+INSERT INTO Plan (NutriId, Name)
+VALUES (1, 'Plan Adelgazar'),
+       (1, 'Plan Aumento Peso'),
+       (3, 'Plan Aumento Muscular');
+
+-- Insert values into the PlanProduct table
+INSERT INTO PlanProduct (ProductBarcode, PlanId, Servings, MealTime, ConsumeWeekDay)
+VALUES (11111, 1, 2.5, 'Breakfast', 'Monday'),
+       (33333, 1, 3.0, 'Dinner', 'Monday'),
+       (44444, 2, 1.5, 'Breakfast', 'Tuesday'),
+       (11111, 3, 2.5, 'Breakfast', 'Wednesday'),
+       (44444, 3, 1.5, 'Snack', 'Wednesday'),
+       (33333, 3, 3.0, 'Dinner', 'Wednesday');
+
+-- Insert values into the PlanRecipe table
+INSERT INTO PlanRecipe (RecipeId, PlanId, Servings, MealTime, ConsumeWeekDay)
+VALUES (3, 1, 2, 'Snack', 'Monday'),
+       (2, 1, 1.5, 'Lunch', 'Monday'),
+       (3, 2, 3.0, 'Dinner', 'Tuesday');
 
 -- ProductVitamin
 INSERT INTO ProductVitamin (ProductBarcode, VitaminId) VALUES

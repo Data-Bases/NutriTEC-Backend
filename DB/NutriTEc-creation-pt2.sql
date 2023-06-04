@@ -398,7 +398,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION create_plan(plan_name varchar(100), nutri_id int)
+CREATE OR REPLACE FUNCTION create_plan(plan_name varchar(250), nutri_id int)
 RETURNS int AS
 $$
 DECLARE
