@@ -402,6 +402,28 @@ namespace NutriTEc_Backend.Repository
             return nutriIdDto;
         }
 
+        public List<MeasurementDto> GetPatientMeasurementsByDate(int patientId, DateTime startDate, DateTime finishDate)
+        {
+            try
+            {
+                var query = $"SELECT Height, FatPercentage, MusclePercentage, Weight, Waist, Neck, Hips, RevisionDate " +
+                            $"FROM get_patient_measurements({patientId}, '{DateOnly.FromDateTime(startDate).ToString("yyyy-MM-dd")}', " +
+                            $"'{DateOnly.FromDateTime(finishDate).ToString("yyyy-MM-dd")}');";
+                var measurements = _context.MeasurementDto.FromSqlRaw(query).AsEnumerable().ToList();
+
+                if (measurements.IsNullOrEmpty())
+                {
+                    return new List<MeasurementDto>();
+                }
+
+                return measurements;
+            }
+            catch (Exception e)
+            {
+                return new List<MeasurementDto>();
+            }
+        }
+
         /*
          * Product 
          */

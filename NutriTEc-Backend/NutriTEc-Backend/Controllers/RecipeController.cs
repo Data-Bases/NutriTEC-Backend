@@ -28,7 +28,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost("CreateRecipe", Name = "CreateRecipe")]
-        public ActionResult<Result> CreateRecipe(RecipeXProductsDto recipe)
+        public ActionResult<Result> CreateRecipe([Required] RecipeXProductsDto recipe)
         {
 
             if (!ModelState.IsValid)
@@ -76,7 +76,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("GetRecipesById/{id}", Name = "GetRecipesById/{id}")]
-        public ActionResult<RecipeInfoDto> GetRecipesById(int id)
+        public ActionResult<RecipeInfoDto> GetRecipesById([Required] int id)
         {
 
             if (!ModelState.IsValid)

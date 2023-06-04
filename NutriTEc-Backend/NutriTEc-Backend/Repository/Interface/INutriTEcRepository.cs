@@ -116,6 +116,15 @@ namespace NutriTEc_Backend.Repository.Interface
         /// <returns>DailyConsumptionDto</returns>
         DailyConsumptionDto GetDailyConsumptionByPatient(int patientId, DateTime dateConsumed);
 
+        /// <summary>
+        /// Get the measurements of a patient on a specific time gap
+        /// </summary>
+        /// <param name="patientId"></param>
+        /// <param name="startDate"></param>
+        /// <param name="finishDate"></param>
+        /// <returns>List of Measurements</returns>
+        List<MeasurementDto> GetPatientMeasurementsByDate(int patientId, DateTime startDate, DateTime finishDate);
+
         /*
          * Recipe
          */

@@ -27,7 +27,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost("NutritionistSignUp", Name = "NutritionistSignUp")]
-        public ActionResult<Result> NutritionistSignUp(NutriDto nutri)
+        public ActionResult<Result> NutritionistSignUp([Required] NutriDto nutri)
         {
 
             if (!ModelState.IsValid)
@@ -51,7 +51,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("GetPatientsByNutriId", Name = "GetPatientsByNutriId")]
-        public ActionResult<ProductDto> GetPatientsByNutriId(int nutriId)
+        public ActionResult<ProductDto> GetPatientsByNutriId([Required] int nutriId)
         {
 
             if (!ModelState.IsValid)

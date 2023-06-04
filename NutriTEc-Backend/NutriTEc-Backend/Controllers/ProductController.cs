@@ -51,7 +51,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("GetProductById/{id}", Name = "GetProductById/{id}")]
-        public ActionResult<ProductInformationDto> GetProductById(int id)
+        public ActionResult<ProductInformationDto> GetProductById([Required] int id)
         {
 
             if (!ModelState.IsValid)
@@ -80,7 +80,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("GetProductByIdAndServings", Name = "GetProductByIdAndServings")]
-        public ActionResult<ProductInformationDto> GetProductByIdAndServings(int id, double servings)
+        public ActionResult<ProductInformationDto> GetProductByIdAndServings([Required] int id, [Required] double servings)
         {
 
             if (!ModelState.IsValid)
@@ -108,7 +108,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost("AddNewProduct", Name = "AddNewProduct")]
-        public ActionResult<Result> AddNewProduct(ProductInformationDto productInformationDto)
+        public ActionResult<Result> AddNewProduct([Required] ProductInformationDto productInformationDto)
         {
 
             if (!ModelState.IsValid)
