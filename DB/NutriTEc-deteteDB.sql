@@ -41,6 +41,7 @@ DROP FUNCTION payroll;
 DROP FUNCTION calculate_product_servings;
 DROP FUNCTION get_consumed_product;
 DROP FUNCTION get_consumed_recipe;
+DROP FUNCTION get_patient_measurements;
 
 DROP PROCEDURE register_measurements;
 

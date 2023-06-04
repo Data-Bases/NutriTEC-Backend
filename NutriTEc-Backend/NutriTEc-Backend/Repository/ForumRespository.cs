@@ -11,7 +11,6 @@ using Microsoft.Data.SqlClient;
 using Npgsql;
 using MongoDB.Driver;
 using NutriTEc_Backend.Entities;
-using NutriTEc_Backend.Models;
 using static Nest.JoinField;
 
 namespace NutriTEc_Backend.Repository

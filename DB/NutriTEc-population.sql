@@ -35,6 +35,8 @@ INSERT INTO Patient (Id, NutriId, Email, Name, LastName1, LastName2, Age, BirthD
 -- Measurements
 INSERT INTO Measurements(PatientId, Height, FatPercentage, MusclePercentage, Weight, Waist, Neck, Hips, RevisionDate) VALUES
 (6, 170, 25, 30, 70, 80, 35, 90, '2023-01-10'),
+(6, 172, 26, 30, 70, 84, 33, 91, '2023-01-11'),
+(6, 180, 27, 31, 78, 81, 34, 92, '2023-01-12'),
 (7, 180, 20, 35, 80, 85, 38, 95, '2023-02-15'),
 (8, 165, 30, 25, 60, 75, 32, 85, '2023-03-20'),
 (9, 175, 22, 32, 75, 82, 37, 92, '2023-04-25'),

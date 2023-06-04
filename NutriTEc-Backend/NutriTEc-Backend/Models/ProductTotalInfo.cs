@@ -1,6 +1,6 @@
 ﻿using NutriTEc_Backend.DataModel;
 
-namespace NutriTEc_Backend.Dtos
+namespace NutriTEc_Backend.Models
 {
     public class ProductTotalInfo
     {

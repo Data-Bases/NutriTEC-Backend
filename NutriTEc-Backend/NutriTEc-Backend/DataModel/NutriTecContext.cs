@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using NutriTEc_Backend.Models;
 using NutriTEc_Backend.DataModel;
-using NutriTEc_Backend.Dtos;
 
 namespace NutriTEc_Backend.DataModel;
 
