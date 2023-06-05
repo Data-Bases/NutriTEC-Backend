@@ -39,7 +39,6 @@ DROP TRIGGER CheckEmailExistsInAdministrator ON Administrator;
 DROP TRIGGER CheckEmailExistsInPatient ON Patient;
 DROP TRIGGER CheckEmailExistsInNutritionist ON Nutritionist;
 
-DROP FUNCTION IF EXISTS check_email_exists();
 DROP FUNCTION create_recipe(character varying);
 DROP FUNCTION calculate_recipe_nutrients(int);
 DROP FUNCTION get_total_patients;
@@ -77,3 +76,8 @@ DROP TABLE ProductVitamin;
 DROP TABLE PatientProduct;
 DROP TABLE PlanRecipe;
 
+DROP FUNCTION IF EXISTS check_email_exists();
+DROP FUNCTION IF EXISTS prevent_future_birthdates();
+DROP FUNCTION IF EXISTS prevent_future_revisiondates();
+DROP FUNCTION IF EXISTS prevent_future_initialdates();
+DROP FUNCTION IF EXISTS prevent_future_consumedates();

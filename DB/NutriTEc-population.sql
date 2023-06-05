@@ -52,8 +52,9 @@ INSERT INTO Vitamin (Name, Amount) VALUES
 
 -- Product
 INSERT INTO Product (Barcode, Name, Descripcion, PortionSize, Energy, Fat, Sodium, Carbs, Protein, Calcium, Iron, IsApproved) VALUES
+(11111, 'Apple', 'Red delicious apple', 1, 52, 0.2, 0, 14, 0.3, 6, 0.2, true),
 (22222, 'Milk', 'Low-fat milk', 250, 103, 2.4, 105, 12, 8, 276, 0.1, false),
-(33333, 'Chicken', 'Grilled chicken breast', 1, 100, 165, 3.6, 66, 0, 31, 0.01, false),
+(33333, 'Chicken', 'Fried chicken', 1, 100, 165, 3.6, 66, 0, 31, 0.01, false),
 (44444, 'Yogurt', 'Low-fat strawberry yogurt', 150, 120, 1.5, 95, 20, 5, 200, 0.1, false),
 (55555, 'Salmon', 'Grilled salmon fillet', 1, 150, 275, 15, 55, 0, 30, 0.6, false);
 
@@ -133,34 +134,37 @@ INSERT INTO ProductVitamin (ProductBarcode, VitaminId) VALUES
 --Patient
 INSERT INTO Patient (NutriId, Email, Name, LastName1, LastName2, Age, BirthDate, Password, Country, CaloriesIntake) VALUES
 (1, 'marco_rivera@example.com', 'Marco', 'Rivera', 'Meneses', 18, '2005-05-07',md5('basesdedatos'), 'CostaRica', 2500);
---Plan
-INSERT INTO Plan(NutriId, Name)
-VALUES (1, 'Plan Atleta Ciclismo');
+
 --PlanPatient
 INSERT INTO PlanPatient(PlanId, PatientId, InitialDate, EndDate)
-VALUES (4, 12, '2023-06-05', '2023-06-11');
+VALUES (4, 12, '2023-05-22', '2023-05-29');
+
 --Products
 INSERT INTO Product (Barcode, Name, Descripcion, PortionSize, Energy, Fat, Sodium, Carbs, Protein, Calcium, Iron, IsApproved) VALUES
-(11111, 'Apple', 'Red delicious apple', 1, 52, 0.2, 0, 14, 0.3, 6, 0.2, true),
 (11112, 'Rice', 'Long-grain white rice', 1, 130, 0.3, 0, 28, 2.7, 8, 0.4, true),
 (11113, 'Beans', 'Black beans', 1, 227, 0.9, 1, 41, 15, 39, 2.6, true),
 (11114, 'Chicken', 'Grilled chicken breast', 1, 165, 3.6, 64, 0, 31, 14, 0.6, true),
 (11115, 'Tuna', 'Canned tuna in water', 1, 116, 0.5, 384, 0, 26, 9, 1.2, true); 
+
 -- Recipes
 INSERT INTO Recipe(Id, Name) VALUES (10, 'Gallo Pinto'), (11, 'Rice With Ckicken'), (12, 'Rice With Tuna');
+
 --ProductRecipes
   -- Gallo Pinto
 INSERT INTO ProductRecipe(ProductBarcode, RecipeId, Servings) VALUES
 (11112, 10, 1),
 (11113, 10, 1);
+
   -- Rice With Ckicken
 INSERT INTO ProductRecipe(ProductBarcode, RecipeId, Servings) VALUES
 (11112, 11, 1),
 (11114, 11, 1);
+
   -- Rice With Tuna
 INSERT INTO ProductRecipe(ProductBarcode, RecipeId, Servings) VALUES
 (11112, 12, 1),
 (11115, 12, 1);
+
 -- PlanRecipe and PlanProduct
 INSERT INTO PlanRecipe(RecipeId, PlanId, Servings, MealTime, ConsumeWeekDay) VALUES
 (10, 4, 1, 'Breakfast', 'Monday'),
