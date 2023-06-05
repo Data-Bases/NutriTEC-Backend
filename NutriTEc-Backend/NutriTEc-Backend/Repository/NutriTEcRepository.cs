@@ -396,6 +396,50 @@ namespace NutriTEc_Backend.Repository
             }
         }
 
+        public Result DeleteProductFromPatient(int patientId, int productId)
+        {
+            var patient = _context.Patients.Find(patientId);
+            try
+            {
+                var product = patient.Patientproducts.FirstOrDefault(p => p.Id == productId);
+                patient.Patientproducts.Remove(product);
+                _context.SaveChanges();
+                return Result.Deleted;
+            }
+            catch
+            {
+                return Result.Error;
+            }
+        }
+        public Result DeleteRecipeFromPatient(int patientId, int recipeId)
+        {
+            var patient = _context.Patients.Find(patientId);
+            try
+            {
+                var recipe = patient.Patientrecipes.FirstOrDefault(r => r.Id == recipeId);
+                patient.Patientrecipes.Remove(recipe);
+                _context.SaveChanges();
+                return Result.Deleted;
+            }
+            catch
+            {
+                return Result.Error;
+            }
+        }
+        public Result AddPlanToPatient(PlanPatientDto planPatientDto)
+        {
+            try
+            {
+                _context.Database.ExecuteSqlRaw($"CALL insert_plan_patient({planPatientDto.PlanId}, {planPatientDto.PatientId}, '{planPatientDto.InitialDate.ToString("yyyy-MM-dd")}');");
+                _context.SaveChanges();
+                return Result.Created;
+            }
+            catch
+            {
+                return Result.Error;
+            }
+        }
+
         public Result RegisterPatientMeasurements(int patientId, MeasurementDto measurementDto)
         {
             try
