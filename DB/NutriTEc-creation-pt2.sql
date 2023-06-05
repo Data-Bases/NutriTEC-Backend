@@ -124,6 +124,11 @@ P.Carbs* PR.servings as carbs, P.Protein * PR.servings as protein,
 P.Calcium * PR.servings as calcium, P.Iron * PR.servings as iron
 FROM (recipe as R  join productrecipe as PR on R.Id = PR.recipeid) join product as P on P.barcode = PR.productbarcode;
 
+CREATE OR REPLACE VIEW patient_products AS
+SELECT PP.PatientId, P.Barcode, P.Name, PP.Servings, PP.Servings * P.Energy AS Energy, PP.Mealtime, PP.ConsumeDate
+		FROM Product as P
+		JOIN PatientProduct as PP
+		ON P.Barcode = PP.ProductBarcode;
 
 
 -- Fuctions
@@ -320,17 +325,15 @@ RETURNS TABLE(
 AS $$
 BEGIN
 	RETURN QUERY SELECT 
-			R.Id,
-			R.Name,
+			PR.Id,
+			PR.Name,
 			PR.Servings,
 			(
 				SELECT TotalEnergy * PR.Servings 
-				FROM calculate_recipe_nutrients(R.Id)
+				FROM calculate_recipe_nutrients(PR.Id)
 			),
 			PR.Mealtime
-		FROM Recipe as R 
-		JOIN Patientrecipe as PR
-		ON R.Id = PR.RecipeId
+		FROM patient_recipe as PR
 		WHERE PR.PatientId = patient_id and PR.ConsumeDate = date_consumed;
 END; $$ 
 
@@ -348,14 +351,12 @@ RETURNS TABLE(
 AS $$
 BEGIN
 	RETURN QUERY SELECT 
-			P.Barcode,
-			P.Name,
+			PP.Barcode,
+			PP.Name,
 			PP.Servings,
-			PP.Servings * P.Energy, 
+			PP.Energy, 
 			PP.Mealtime
-		FROM Product as P
-		JOIN PatientProduct as PP
-		ON P.Barcode = PP.ProductBarcode
+		FROM patient_products as PP
 		WHERE PP.PatientId = patient_id and PP.ConsumeDate = date_consumed;
 END; $$ 
 
@@ -502,6 +503,40 @@ BEGIN
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE VIEW patient_recipe AS
+SELECT PR.PatientId, R.Id, R.Name, PR.Servings, (SELECT TotalEnergy * PR.Servings FROM calculate_recipe_nutrients(R.Id)) as Energy, PR.Mealtime, PR.ConsumeDate
+		FROM Recipe as R 
+		JOIN Patientrecipe as PR
+		ON R.Id = PR.RecipeId;
+
+
+CREATE PROCEDURE delete_recipe(recipe_id int)
+
+LANGUAGE SQL
+
+AS $$
+
+DELETE FROM planrecipe as PR WHERE PR.RecipeId = recipe_id; 
+DELETE FROM productrecipe as PR WHERE PR.RecipeId = recipe_id;
+DELETE FROM patientrecipe as PR WHERE PR.RecipeId = recipe_id;
+DELETE FROM Recipe WHERE Recipe.Id = recipe_id;
+
+$$;
+
+CREATE PROCEDURE delete_plan(plan_id int)
+
+LANGUAGE SQL
+
+AS $$
+
+DELETE FROM planrecipe as PR WHERE PR.PlanId = plan_id; 
+DELETE FROM planproduct as PR WHERE PR.PlanId = plan_id;
+DELETE FROM planpatient as PR WHERE PR.PlanId = plan_id;
+DELETE FROM plan WHERE plan.Id = plan_id;
+
+$$;
+
 
 CREATE OR REPLACE FUNCTION prevent_future_enddates()
 RETURNS TRIGGER AS $$
