@@ -84,6 +84,22 @@ namespace NutriTEc_Backend.Repository.Interface
         Result AddRecipeToPatient(PatientRecipeDto patientRecipeDto);
 
         /// <summary>
+        /// Deleting a product from a patient
+        /// </summary>
+        /// <param name="patientId"></param>
+        /// <param name="productId"></param>
+        /// <returnsResult></returns>
+        Result DeleteProductFromPatient(int patientId, int productId);
+
+        /// <summary>
+        /// Deleting a recipe from a patient
+        /// </summary>
+        /// <param name="patientId"></param>
+        /// <param name="recipeId"></param>
+        /// <returns>Result</returns>
+        Result DeleteRecipeFromPatient(int patientId, int recipeId);
+
+        /// <summary>
         /// Asociating a plan to a patient
         /// </summary>
         /// <param name="planPatientDto"></param>
