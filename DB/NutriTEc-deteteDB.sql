@@ -32,6 +32,8 @@ ALTER TABLE Nutritionist DROP CONSTRAINT Nutritionist_ChargeTypeId;
 
 DROP VIEW IF EXISTS UserCredentials;
 DROP VIEW IF EXISTS products_in_recipe;
+DROP VIEW patient_products;
+DROP VIEW patient_recipe;
 
 DROP TRIGGER CheckEmailExistsInAdministrator ON Administrator;
 DROP TRIGGER CheckEmailExistsInPatient ON Patient;
@@ -54,6 +56,8 @@ DROP FUNCTION get_recipe_plan;
 DROP PROCEDURE register_measurements;
 DROP PROCEDURE insert_nutri;
 DROP PROCEDURE insert_plan_patient;
+DROP PROCEDURE delete_recipe;
+
 
 DROP TABLE Nutritionist;
 DROP TABLE Product;

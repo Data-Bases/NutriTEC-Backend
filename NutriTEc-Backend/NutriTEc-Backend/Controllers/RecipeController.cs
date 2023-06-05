@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualBasic;
 using Nest;
 using NutriTEc_Backend.Dtos;
 using NutriTEc_Backend.Helpers;
@@ -102,7 +103,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("GetRecipesByIdAndServings", Name = "GetRecipesByIdAndServings")]
-        public ActionResult<RecipeInfoDto> GetRecipeByIdAndServings([Required] int id, [Required] int servings)
+        public ActionResult<RecipeInfoDto> GetRecipeByIdAndServings([Required] int id, [Required] double servings)
         {
 
             if (!ModelState.IsValid)
@@ -113,6 +114,107 @@ namespace NutriTEc_Backend.Controllers
             var recipe = _repository.GetRecipeById(id, servings);
 
             if (recipe.Equals(new RecipeInfoDto()))
+            {
+                return NotFound();
+            }
+
+            return Ok(recipe);
+
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpPut("InsertProductToRecipe", Name = "InsertProductToRecipe")]
+        public ActionResult<Result> InsertProductToRecipe([Required] int recipeId, [Required] int productId, [Required] double servings)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var recipe = _repository.InsertProductToRecipe(recipeId, productId, servings);
+
+            if (recipe.Equals(Result.Error))
+            {
+                return Unauthorized();
+            }
+
+            return Ok(recipe);
+
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpPut("EditProductInRecipe", Name = "EditProductInRecipe")]
+        public ActionResult<Result> EditProductInRecipe([Required] int recipeId, [Required] int productId, [Required] double servings)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var recipe = _repository.EditProductInRecipe(recipeId, productId, servings);
+
+            if (recipe.Equals(Result.NotFound))
+            {
+                return NotFound();
+            }
+
+            if (recipe.Equals(Result.Error))
+            {
+                return Unauthorized();
+            }
+
+            return Ok(recipe);
+
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpDelete("DeleteProductInRecipe", Name = "DeleteProductInRecipe")]
+        public ActionResult<Result> DeleteProductInRecipe([Required] int recipeId, [Required] int productId)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var recipe = _repository.DeleteProductInRecipe(recipeId, productId);
+
+            if (recipe.Equals(Result.Error) || recipe.Equals(Result.NotFound))
+            {
+                return NotFound();
+            }
+
+            return Ok(recipe);
+
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpDelete("DeleteRecipe", Name = "DeleteRecipe")]
+        public ActionResult<Result> DeleteRecipe([Required] int recipeId)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var recipe = _repository.DeleteRecipe(recipeId);
+
+            if (recipe.Equals(Result.Error))
             {
                 return NotFound();
             }

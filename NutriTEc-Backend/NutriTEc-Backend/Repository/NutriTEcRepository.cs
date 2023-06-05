@@ -611,7 +611,7 @@ namespace NutriTEc_Backend.Repository
             }
         }
 
-        public RecipeInfoDto GetRecipeById(int id, int recipeServings)
+        public RecipeInfoDto GetRecipeById(int id, double recipeServings)
         { 
             try
             {
@@ -627,10 +627,100 @@ namespace NutriTEc_Backend.Repository
             }
         }
 
+        public Result DeleteRecipe(int recipeId)
+        {
+            try
+            {
+                _context.Database.ExecuteSqlRaw($"CALL delete_recipe({recipeId});");
+
+                _context.SaveChanges();
+
+                return Result.Created;
+
+            }
+            catch (Exception ex)
+            {
+                return Result.Error;
+            }
+        }
+
+        public Result DeleteProductInRecipe(int recipeId, int productId)
+        {
+            try
+            {
+                var productRecipe = _context.Productrecipes.Where(p => p.Recipeid == recipeId && p.Productbarcode == productId).FirstOrDefault();
+                
+                if (productRecipe == null)
+                {
+                    return Result.NotFound;
+                }
+
+                _context.Productrecipes.Remove(productRecipe);
+
+                _context.SaveChanges();
+
+                return Result.Created;
+
+            }
+            catch (Exception ex)
+            {
+                return Result.Error;
+            }
+        }
+
+
+        public Result EditProductInRecipe(int recipeId, int productId, double servings)
+        {
+            try
+            {
+                var productInRecipe = _context.Productrecipes.Where(p => p.Recipeid == recipeId && p.Productbarcode == productId).FirstOrDefault();
+                
+                if (productInRecipe == null)
+                {
+                    return Result.NotFound;
+                }
+
+                productInRecipe.Servings = servings;
+
+                _context.SaveChanges();
+
+                return Result.Created;
+
+            }
+            catch (Exception ex)
+            {
+                return Result.Error;
+            }
+        }
+
+        public Result InsertProductToRecipe(int recipeId, int productId, double servings)
+        {
+            try
+            {
+                var product = new Productrecipe
+                {
+                    Productbarcode = productId,
+                    Servings = servings,
+                    Recipeid = recipeId,
+                };
+
+                _context.Productrecipes.Add(product);
+
+                _context.SaveChanges();
+
+                return Result.Created;
+
+            }
+            catch (Exception ex)
+            {
+                return Result.Error;
+            }
+        }
+
         /*
          * Plans
          */
-        
+
         public Result CreatePlan(PlanDto plan)
         {
             var productsToInsert = new List<Planproduct>();
@@ -779,7 +869,7 @@ namespace NutriTEc_Backend.Repository
          * Private Methods
          */
 
-        private RecipeInfoDto ParseTotalNutrients(RecipeNutrients recipe,  List<ProductRecipeNutrients> productRecipes, int recipeServings)
+        private RecipeInfoDto ParseTotalNutrients(RecipeNutrients recipe,  List<ProductRecipeNutrients> productRecipes, double recipeServings)
         {
             var productsInRecipeToReturn = new List<ProductTotalInfo>();
 
