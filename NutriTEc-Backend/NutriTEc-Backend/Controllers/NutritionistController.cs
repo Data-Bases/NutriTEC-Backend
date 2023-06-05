@@ -52,7 +52,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("GetPatientsByNutriId", Name = "GetPatientsByNutriId")]
-        public ActionResult<ProductDto> GetPatientsByNutriId([Required] int nutriId)
+        public ActionResult<PatientIdDto> GetPatientsByNutriId([Required] int nutriId)
         {
 
             if (!ModelState.IsValid)
