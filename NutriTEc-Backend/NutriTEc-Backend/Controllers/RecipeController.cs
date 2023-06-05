@@ -48,6 +48,10 @@ namespace NutriTEc_Backend.Controllers
             
         }
 
+        /// <summary>
+        /// Get recipes
+        /// </summary>
+        /// <returns></returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -72,6 +76,11 @@ namespace NutriTEc_Backend.Controllers
 
         }
 
+        /// <summary>
+        /// Get recipe by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -98,6 +107,12 @@ namespace NutriTEc_Backend.Controllers
 
         }
 
+        /// <summary>
+        /// Returns a recipe by id, and servings with the nutritional value 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="servings"></param>
+        /// <returns></returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -122,6 +137,13 @@ namespace NutriTEc_Backend.Controllers
 
         }
 
+        /// <summary>
+        /// Inserts a new product into a certain recipe
+        /// </summary>
+        /// <param name="recipeId"></param>
+        /// <param name="productId"></param>
+        /// <param name="servings"></param>
+        /// <returns></returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -146,6 +168,13 @@ namespace NutriTEc_Backend.Controllers
 
         }
 
+        /// <summary>
+        /// Edit servings into a product that exits in a recipe
+        /// </summary>
+        /// <param name="recipeId"></param>
+        /// <param name="productId"></param>
+        /// <param name="servings"></param>
+        /// <returns></returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -175,6 +204,12 @@ namespace NutriTEc_Backend.Controllers
 
         }
 
+        /// <summary>
+        /// Delete a product into a recipe
+        /// </summary>
+        /// <param name="recipeId"></param>
+        /// <param name="productId"></param>
+        /// <returns></returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -199,6 +234,11 @@ namespace NutriTEc_Backend.Controllers
 
         }
 
+        /// <summary>
+        /// Delete recipe and all its relations
+        /// </summary>
+        /// <param name="recipeId"></param>
+        /// <returns></returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -64,11 +64,11 @@ namespace NutriTEc_Backend.Repository
 
             var userName = string.Empty;
 
-            if ( user.Usertype.Equals("P"))
+            if (user.Usertype.Equals("P"))
             {
                 userName = _context.Patients.FirstOrDefault(p => p.Id == user.Id).Name;
 
-            }else if (user.Usertype.Equals("N"))
+            } else if (user.Usertype.Equals("N"))
             {
                 userName = _context.Nutritionists.FirstOrDefault(p => p.Id == user.Id).Name;
             }
@@ -90,7 +90,7 @@ namespace NutriTEc_Backend.Repository
          * Admin
          */
 
-        public Result AdminSignUp (AdminDto admin)
+        public Result AdminSignUp(AdminDto admin)
         {
             admin.Password = PassowordHelper.EncodePasswordMD5(admin.Password).ToLower();
 
@@ -108,7 +108,7 @@ namespace NutriTEc_Backend.Repository
                 return Result.Created;
 
 
-            }catch (Exception ex)
+            } catch (Exception ex)
             {
                 return Result.Error;
             }
@@ -161,7 +161,7 @@ namespace NutriTEc_Backend.Repository
         /*
          * Nutri
          */
-        public Result NutriSignUp (NutriDto nutri)
+        public Result NutriSignUp(NutriDto nutri)
         {
             nutri.Password = PassowordHelper.EncodePasswordMD5(nutri.Password).ToLower();
 
@@ -174,7 +174,7 @@ namespace NutriTEc_Backend.Repository
                 Lastname2 = (string.IsNullOrEmpty(nutri.Lastname2)) ? "" : nutri.Lastname2,
                 Age = nutri.Age,
                 Birthdate = DateOnly.FromDateTime(nutri.Birthdate),
-                Weight = (nutri.Weight == null ) ? 0 : nutri.Weight,
+                Weight = (nutri.Weight == null) ? 0 : nutri.Weight,
                 Imc = (nutri.Imc == null) ? 0 : nutri.Imc,
                 Nutritionistcode = nutri.Nutritionistcode,
                 Cardnumber = (nutri.Cardnumber == null) ? 0 : nutri.Cardnumber,
@@ -219,7 +219,7 @@ namespace NutriTEc_Backend.Repository
             return patientsDto;
         }
 
-        public List<PlanIdDto> GetNutritionistPlans (int nutriId)
+        public List<PlanIdDto> GetNutritionistPlans(int nutriId)
         {
             var plans = _context.Plans
                 .Where(p => p.Nutriid == nutriId)
@@ -236,7 +236,7 @@ namespace NutriTEc_Backend.Repository
          * Patient
          */
 
-        public Result PatientSignUp (PatientDto patient)
+        public Result PatientSignUp(PatientDto patient)
         {
             patient.Password = PassowordHelper.EncodePasswordMD5(patient.Password).ToLower();
 
@@ -250,7 +250,7 @@ namespace NutriTEc_Backend.Repository
                 Birthdate = DateOnly.FromDateTime(patient.Birthdate),
                 Password = patient.Password,
                 Country = patient.Country,
-                Caloriesintake = (patient.Caloriesintake == null) ? null : patient.Caloriesintake, 
+                Caloriesintake = (patient.Caloriesintake == null) ? null : patient.Caloriesintake,
                 Nutriid = (patient.Nutriid == null) ? null : patient.Nutriid,
             };
 
@@ -583,13 +583,13 @@ namespace NutriTEc_Backend.Repository
                 _context.SaveChanges();
 
                 return Result.Created;
-                
+
             }
             catch (Exception ex)
             {
                 return Result.Error;
             }
-        }   
+        }
 
         public List<RecipeDto> GetRecipes()
         {
@@ -602,7 +602,7 @@ namespace NutriTEc_Backend.Repository
                     {
                         Id = x.Id,
                         Name = x.Name,
-                    }) );
+                    }));
                 return recipes;
             }
             catch (Exception ex)
@@ -612,7 +612,7 @@ namespace NutriTEc_Backend.Repository
         }
 
         public RecipeInfoDto GetRecipeById(int id, double recipeServings)
-        { 
+        {
             try
             {
                 var recipeNutrients = _context.RecipeNutrients.FromSqlRaw($"SELECT totalenergy, totalsodium, totalcarbs, totalprotein, totalcalcium, totalfat, totaliron  FROM calculate_recipe_nutrients({id});").AsEnumerable().FirstOrDefault();
@@ -649,7 +649,7 @@ namespace NutriTEc_Backend.Repository
             try
             {
                 var productRecipe = _context.Productrecipes.Where(p => p.Recipeid == recipeId && p.Productbarcode == productId).FirstOrDefault();
-                
+
                 if (productRecipe == null)
                 {
                     return Result.NotFound;
@@ -674,7 +674,7 @@ namespace NutriTEc_Backend.Repository
             try
             {
                 var productInRecipe = _context.Productrecipes.Where(p => p.Recipeid == recipeId && p.Productbarcode == productId).FirstOrDefault();
-                
+
                 if (productInRecipe == null)
                 {
                     return Result.NotFound;
@@ -755,7 +755,7 @@ namespace NutriTEc_Backend.Repository
                     }
 
                     _context.Planproducts.AddRange(productsToInsert);
-                 
+
                     _context.SaveChanges();
                 }
 
@@ -782,6 +782,195 @@ namespace NutriTEc_Backend.Repository
                     _context.SaveChanges();
                 }
 
+
+                return Result.Created;
+
+            }
+            catch (Exception ex)
+            {
+                return Result.Error;
+            }
+        }
+
+        public Result InsertProductToPlan(int planId, ProductInPlanDto product)
+        {
+            try
+            {
+                if (!Enum.IsDefined(typeof(DayOfWeek), product.ConsumeWeekDay) || !Enum.IsDefined(typeof(Mealtime), product.Mealtime))
+                {
+                    return Result.Error;
+                }
+                _context.Planproducts.Add(new Planproduct
+                {
+                    Productbarcode = product.ProductId,
+                    Planid = planId,
+                    Consumeweekday = product.ConsumeWeekDay,
+                    Mealtime = product.Mealtime,
+                    Servings = product.Servings,
+                });
+                
+                _context.SaveChanges();
+
+                return Result.Created;
+
+            }
+            catch (Exception ex)
+            {
+                return Result.Error;
+            }
+        }
+
+        public Result InsertRecipeToPlan(int planId, RecipeInPlanDto recipe)
+        {
+            try
+            {
+                if (!Enum.IsDefined(typeof(DayOfWeek), recipe.ConsumeWeekDay) || !Enum.IsDefined(typeof(Mealtime), recipe.Mealtime))
+                {
+                    return Result.Error;
+                }
+                _context.Planrecipes.Add(new Planrecipe
+                {
+                    Recipeid = recipe.RecipeId,
+                    Planid = planId,
+                    Consumeweekday = recipe.ConsumeWeekDay,
+                    Mealtime = recipe.Mealtime,
+                    Servings = recipe.Servings,
+                });
+
+                _context.SaveChanges();
+
+                return Result.Created;
+
+            }
+            catch (Exception ex)
+            {
+                return Result.Error;
+            }
+        }
+
+        public Result EditProductInPlan(int planId, ProductInPlanDto product)
+        {
+            try
+            {
+                if (!Enum.IsDefined(typeof(DayOfWeek), product.ConsumeWeekDay) || !Enum.IsDefined(typeof(Mealtime), product.Mealtime))
+                {
+                    return Result.Error;
+                }
+
+                var result = _context.Planproducts.Where(p => p.Planid == planId && p.Productbarcode == product.ProductId && p.Consumeweekday == product.ConsumeWeekDay && p.Mealtime == product.Mealtime).FirstOrDefault();
+
+                if (result == null)
+                {
+                    return Result.NotFound;
+                }
+
+                result.Servings = product.Servings;
+
+                _context.SaveChanges();
+
+                return Result.Created;
+
+            }
+            catch (Exception ex)
+            {
+                return Result.Error;
+            }
+        }
+
+        public Result EditRecipeInPlan(int planId, RecipeInPlanDto recipe)
+        {
+            try
+            {
+                if (!Enum.IsDefined(typeof(DayOfWeek), recipe.ConsumeWeekDay) || !Enum.IsDefined(typeof(Mealtime), recipe.Mealtime))
+                {
+                    return Result.Error;
+                }
+
+                var result = _context.Planrecipes.Where(p => p.Planid == planId && p.Recipeid == recipe.RecipeId && p.Consumeweekday == recipe.ConsumeWeekDay && p.Mealtime == recipe.Mealtime).FirstOrDefault();
+
+                if (result == null)
+                {
+                    return Result.NotFound;
+                }
+
+                result.Servings = recipe.Servings;
+
+                _context.SaveChanges();
+
+                return Result.Created;
+
+            }
+            catch (Exception ex)
+            {
+                return Result.Error;
+            }
+        }
+
+        public Result DeleteProductInPlan(int planId, ProductInPlanDto product)
+        {
+            try
+            {
+                if (!Enum.IsDefined(typeof(DayOfWeek), product.ConsumeWeekDay) || !Enum.IsDefined(typeof(Mealtime), product.Mealtime))
+                {
+                    return Result.Error;
+                }
+
+                var result = _context.Planproducts.Where(p => p.Planid == planId && p.Productbarcode == product.ProductId && p.Consumeweekday == product.ConsumeWeekDay && p.Mealtime == product.Mealtime).FirstOrDefault();
+
+                if (result == null)
+                {
+                    return Result.NotFound;
+                }
+
+                _context.Planproducts.Remove(result);
+
+                _context.SaveChanges();
+
+                return Result.Created;
+
+            }
+            catch (Exception ex)
+            {
+                return Result.Error;
+            }
+        }
+
+        public Result DeleteRecipeInPlan(int planId, RecipeInPlanDto recipe)
+        {
+            try
+            {
+                if (!Enum.IsDefined(typeof(DayOfWeek), recipe.ConsumeWeekDay) || !Enum.IsDefined(typeof(Mealtime), recipe.Mealtime))
+                {
+                    return Result.Error;
+                }
+
+                var result = _context.Planrecipes.Where(p => p.Planid == planId && p.Recipeid == recipe.RecipeId && p.Consumeweekday == recipe.ConsumeWeekDay && p.Mealtime == recipe.Mealtime).FirstOrDefault();
+
+                if (result == null)
+                {
+                    return Result.NotFound;
+                }
+
+                _context.Planrecipes.Remove(result);
+
+                _context.SaveChanges();
+
+                return Result.Created;
+
+            }
+            catch (Exception ex)
+            {
+                return Result.Error;
+            }
+        }
+
+        public Result DeletePlan(int planId)
+        {
+            try
+            {
+                _context.Database.ExecuteSqlRaw($"CALL delete_plan({planId});");
+
+                _context.SaveChanges();
 
                 return Result.Created;
 

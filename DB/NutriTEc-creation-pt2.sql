@@ -491,6 +491,20 @@ DELETE FROM Recipe WHERE Recipe.Id = recipe_id;
 
 $$;
 
+CREATE PROCEDURE delete_plan(plan_id int)
+
+LANGUAGE SQL
+
+AS $$
+
+DELETE FROM planrecipe as PR WHERE PR.PlanId = plan_id; 
+DELETE FROM planproduct as PR WHERE PR.PlanId = plan_id;
+DELETE FROM planpatient as PR WHERE PR.PlanId = plan_id;
+DELETE FROM plan WHERE plan.Id = plan_id;
+
+$$;
+
+
 CREATE OR REPLACE PROCEDURE insert_plan_patient(
     p_planId INT,
     p_patientId INT,
