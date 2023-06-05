@@ -276,7 +276,8 @@ namespace NutriTEc_Backend.Repository
                 Productbarcode = patientProductDto.ProductId,
                 Patientid = patientProductDto.PatientId,
                 Mealtime = patientProductDto.Mealtime,
-                Consumedate = DateOnly.FromDateTime(patientProductDto.Consumedate)
+                Consumedate = DateOnly.FromDateTime(patientProductDto.Consumedate),
+                Servings = patientProductDto.Servings
             };
 
             try
@@ -299,7 +300,7 @@ namespace NutriTEc_Backend.Repository
                 Patientid = patientRecipeDto.Patientid,
                 Mealtime = patientRecipeDto.Mealtime,
                 Consumedate = DateOnly.FromDateTime(patientRecipeDto.Consumedate),
-                Servings = patientRecipeDto.Servings,
+                Servings = patientRecipeDto.Servings
             };
 
             try
