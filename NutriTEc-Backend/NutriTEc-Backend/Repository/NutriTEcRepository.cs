@@ -386,12 +386,11 @@ namespace NutriTEc_Backend.Repository
         }
 
         public Result DeleteProductFromPatient(int patientId, int productId)
-        {
-            var patient = _context.Patients.Find(patientId);
+        {    
             try
             {
-                var product = patient.Patientproducts.FirstOrDefault(p => p.Id == productId);
-                patient.Patientproducts.Remove(product);
+                var product = _context.Patientproducts.FirstOrDefault(p => p.Productbarcode == productId && p.Patientid == patientId);
+                _context.Patientproducts.Remove(product);
                 _context.SaveChanges();
                 return Result.Deleted;
             }
@@ -402,11 +401,10 @@ namespace NutriTEc_Backend.Repository
         }
         public Result DeleteRecipeFromPatient(int patientId, int recipeId)
         {
-            var patient = _context.Patients.Find(patientId);
             try
             {
-                var recipe = patient.Patientrecipes.FirstOrDefault(r => r.Id == recipeId);
-                patient.Patientrecipes.Remove(recipe);
+                var recipe = _context.Patientrecipes.FirstOrDefault(r => r.Recipeid == recipeId && p.Patientid == patientId);
+                _context.Patientrecipes.Remove(recipe);
                 _context.SaveChanges();
                 return Result.Deleted;
             }
