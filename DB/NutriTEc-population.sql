@@ -52,7 +52,6 @@ INSERT INTO Vitamin (Name, Amount) VALUES
 
 -- Product
 INSERT INTO Product (Barcode, Name, Descripcion, PortionSize, Energy, Fat, Sodium, Carbs, Protein, Calcium, Iron, IsApproved) VALUES
-(11111, 'Apple', 'Red delicious apple', 1, 52, 0.2, 0, 14, 0.3, 6, 0.2, true),
 (22222, 'Milk', 'Low-fat milk', 250, 103, 2.4, 105, 12, 8, 276, 0.1, false),
 (33333, 'Chicken', 'Grilled chicken breast', 1, 100, 165, 3.6, 66, 0, 31, 0.01, false),
 (44444, 'Yogurt', 'Low-fat strawberry yogurt', 150, 120, 1.5, 95, 20, 5, 200, 0.1, false),
@@ -93,7 +92,8 @@ VALUES (3, 1, 'Breakfast', '2023-06-03', 2.5),
 
 -- Plans
 INSERT INTO Plan (NutriId, Name)
-VALUES (1, 'Plan Adelgazar'),
+VALUES (1, 'Plan Atleta Ciclismo'),
+       (1, 'Plan Adelgazar'),
        (1, 'Plan Aumento Peso'),
        (3, 'Plan Aumento Muscular');
 
@@ -127,3 +127,68 @@ INSERT INTO ProductVitamin (ProductBarcode, VitaminId) VALUES
 (22222, 3),
 (33333, 4),
 (44444, 5);
+
+-- Plan Marco Rivera
+
+--Patient
+INSERT INTO Patient (NutriId, Email, Name, LastName1, LastName2, Age, BirthDate, Password, Country, CaloriesIntake) VALUES
+(1, 'marco_rivera@example.com', 'Marco', 'Rivera', 'Meneses', 18, '2005-05-07',md5('basesdedatos'), 'CostaRica', 2500);
+--Plan
+INSERT INTO Plan(NutriId, Name)
+VALUES (1, 'Plan Atleta Ciclismo');
+--PlanPatient
+INSERT INTO PlanPatient(PlanId, PatientId, InitialDate, EndDate)
+VALUES (4, 12, '2023-06-05', '2023-06-11');
+--Products
+INSERT INTO Product (Barcode, Name, Descripcion, PortionSize, Energy, Fat, Sodium, Carbs, Protein, Calcium, Iron, IsApproved) VALUES
+(11111, 'Apple', 'Red delicious apple', 1, 52, 0.2, 0, 14, 0.3, 6, 0.2, true),
+(11112, 'Rice', 'Long-grain white rice', 1, 130, 0.3, 0, 28, 2.7, 8, 0.4, true),
+(11113, 'Beans', 'Black beans', 1, 227, 0.9, 1, 41, 15, 39, 2.6, true),
+(11114, 'Chicken', 'Grilled chicken breast', 1, 165, 3.6, 64, 0, 31, 14, 0.6, true),
+(11115, 'Tuna', 'Canned tuna in water', 1, 116, 0.5, 384, 0, 26, 9, 1.2, true); 
+-- Recipes
+INSERT INTO Recipe(Id, Name) VALUES (10, 'Gallo Pinto'), (11, 'Rice With Ckicken'), (12, 'Rice With Tuna');
+--ProductRecipes
+  -- Gallo Pinto
+INSERT INTO ProductRecipe(ProductBarcode, RecipeId, Servings) VALUES
+(11112, 10, 1),
+(11113, 10, 1);
+  -- Rice With Ckicken
+INSERT INTO ProductRecipe(ProductBarcode, RecipeId, Servings) VALUES
+(11112, 11, 1),
+(11114, 11, 1);
+  -- Rice With Tuna
+INSERT INTO ProductRecipe(ProductBarcode, RecipeId, Servings) VALUES
+(11112, 12, 1),
+(11115, 12, 1);
+-- PlanRecipe and PlanProduct
+INSERT INTO PlanRecipe(RecipeId, PlanId, Servings, MealTime, ConsumeWeekDay) VALUES
+(10, 4, 1, 'Breakfast', 'Monday'),
+(11, 4, 1, 'Lunch', 'Monday'),
+(12, 4, 1, 'Dinner', 'Monday'),
+(10, 4, 1, 'Breakfast', 'Tuesday'),
+(11, 4, 1, 'Lunch', 'Tuesday'),
+(12, 4, 1, 'Dinner', 'Tuesday'),
+(10, 4, 1, 'Breakfast', 'Wednesday'),
+(11, 4, 1, 'Lunch', 'Wednesday'),
+(12, 4, 1, 'Dinner', 'Wednesday'),
+(10, 4, 1, 'Breakfast', 'Thursday'),
+(11, 4, 1, 'Lunch', 'Thursday'),
+(12, 4, 1, 'Dinner', 'Thursday'),
+(10, 4, 1, 'Breakfast', 'Friday'),
+(11, 4, 1, 'Lunch', 'Friday'),
+(12, 4, 1, 'Dinner', 'Friday'),
+(10, 4, 1, 'Breakfast', 'Saturday'),
+(11, 4, 1, 'Lunch', 'Saturday'),
+(12, 4, 1, 'Dinner', 'Saturday'),
+(10, 4, 1, 'Breakfast', 'Sunday'),
+(11, 4, 1, 'Lunch', 'Sunday'),
+(12, 4, 1, 'Dinner', 'Sunday');
+INSERT INTO PlanProduct(ProductBarcode, PlanId, Servings, MealTime, ConsumeWeekDay) VALUES
+(11111, 4, 1, 'Snack', 'Monday'),
+(11111, 4, 1, 'Snack', 'Tuesday'),
+(11111, 4, 1, 'Snack', 'Wednesday'),
+(11111, 4, 1, 'Snack', 'Thursday'),
+(11111, 4, 1, 'Snack', 'Friday'),
+(11111, 4, 1, 'Snack', 'Saturday'),
+(11111, 4, 1, 'Snack', 'Sunday');

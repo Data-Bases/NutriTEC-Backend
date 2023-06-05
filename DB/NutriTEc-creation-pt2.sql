@@ -126,7 +126,7 @@ FROM (recipe as R  join productrecipe as PR on R.Id = PR.recipeid) join product 
 
 
 
--- Triggers and Fuctions
+-- Fuctions
 CREATE OR REPLACE FUNCTION check_email_exists()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -470,7 +470,64 @@ END; $$
 
 LANGUAGE 'plpgsql';
 
+CREATE OR REPLACE FUNCTION prevent_future_birthdates()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.BirthDate > CURRENT_DATE THEN
+        RAISE EXCEPTION 'BirthDate cannot be in the future.';
+    END IF;
 
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION prevent_future_revisiondates()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.RevisionDate > CURRENT_DATE THEN
+        RAISE EXCEPTION 'RevisionDate cannot be in the future.';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION prevent_future_initialdates()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.InitialDate > CURRENT_DATE THEN
+        RAISE EXCEPTION 'InitialDate cannot be in the future.';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION prevent_future_enddates()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.EndDate > CURRENT_DATE THEN
+        RAISE EXCEPTION 'EndDate cannot be in the future.';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION prevent_future_consumedates()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.ConsumeDate > CURRENT_DATE THEN
+        RAISE EXCEPTION 'ConsumeDate cannot be in the future.';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+-- Stored Procedures
 CREATE OR REPLACE PROCEDURE insert_plan_patient(
     p_planId INT,
     p_patientId INT,
@@ -571,6 +628,7 @@ VALUES (patient_id, height, fat_percentage, muscle_percentage, weight, waist, ne
 
 $$;
 
+-- Triggers
 CREATE TRIGGER check_patient_exists_measurements_trigger
 BEFORE INSERT ON Measurements
 FOR EACH ROW
@@ -601,3 +659,42 @@ BEFORE INSERT ON Nutritionist
 FOR EACH ROW
 EXECUTE FUNCTION check_email_exists();
 
+CREATE TRIGGER CheckNutritionistDate
+BEFORE INSERT ON Nutritionist
+FOR EACH ROW
+EXECUTE FUNCTION prevent_future_birthdates();
+
+CREATE TRIGGER CheckPatientDate
+BEFORE INSERT ON Patient
+FOR EACH ROW
+EXECUTE FUNCTION prevent_future_birthdates();
+
+CREATE TRIGGER CheckMeasurementsDate
+BEFORE INSERT ON Measurements
+FOR EACH ROW
+EXECUTE FUNCTION prevent_future_revisiondates();
+
+CREATE TRIGGER CheckPlanPatientInitialDate
+BEFORE INSERT ON PlanPatient
+FOR EACH ROW
+EXECUTE FUNCTION prevent_future_initialdates();
+
+CREATE TRIGGER CheckPlanPatientEndDate
+BEFORE INSERT ON PlanPatient
+FOR EACH ROW
+EXECUTE FUNCTION prevent_future_enddates();
+
+CREATE TRIGGER CheckPatientRecipeInitialDate
+BEFORE INSERT ON PatientRecipe
+FOR EACH ROW
+EXECUTE FUNCTION prevent_future_initialdates();
+
+CREATE TRIGGER CheckPatientRecipeEndDate
+BEFORE INSERT ON PatientRecipe
+FOR EACH ROW
+EXECUTE FUNCTION prevent_future_enddates();
+
+CREATE TRIGGER CheckPatientProductConsumeDate
+BEFORE INSERT ON PatientProduct
+FOR EACH ROW
+EXECUTE FUNCTION prevent_future_consumedates();
