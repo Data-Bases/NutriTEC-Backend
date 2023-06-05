@@ -313,19 +313,7 @@ namespace NutriTEc_Backend.Repository
                 return Result.Error;
             }
         }
-        public Result AddPlanToPatient(PlanPatientDto planPatientDto)
-        {
-            try
-            {
-                _context.Database.ExecuteSqlRaw($"CALL insert_plan_patient({planPatientDto.PlanId}, {planPatientDto.PatientId}, '{planPatientDto.InitialDate.ToString("yyyy-MM-dd")}');");
-                _context.SaveChanges();
-                return Result.Created;
-            }
-            catch
-            {
-                return Result.Error;
-            }
-        }
+        
 
         public DailyConsumptionDto GetDailyConsumptionByPatient(int patientId, DateTime dateConsumed)
         {
