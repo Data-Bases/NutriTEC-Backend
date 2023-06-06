@@ -90,6 +90,7 @@ namespace NutriTEc_Backend.Repository
          * Admin
          */
 
+
         public Result AdminSignUp(AdminDto admin)
         {
             admin.Password = PassowordHelper.EncodePasswordMD5(admin.Password).ToLower();
@@ -205,10 +206,69 @@ namespace NutriTEc_Backend.Repository
             }
         }
 
+
+        public NutriDto GetNutritionistById(int nutriId)
+        {
+            try
+            {
+                var nutri = _context.Nutritionists.Where(n => n.Id == nutriId).FirstOrDefault();
+                
+                if (nutri == null)
+                {
+                    return new NutriDto();
+                }
+
+                var nutriToReturn =  new NutriDto
+                {
+                    Email = nutri.Email,
+                    Password = nutri.Password,
+                    Name = nutri.Name,
+                    Lastname1 = nutri.Lastname1,
+                    Lastname2 = (string.IsNullOrEmpty(nutri.Lastname2)) ? "" : nutri.Lastname2,
+                    Age = nutri.Age,
+                    Weight = (nutri.Weight == null) ? 0 : nutri.Weight,
+                    Imc = (nutri.Imc == null) ? 0 : nutri.Imc,
+                    Nutritionistcode = nutri.Nutritionistcode,
+                    Cardnumber = ( nutri.Cardnumber == null) ? 0 : nutri.Cardnumber,
+                    Birthdate = new DateTime(nutri.Birthdate.Year, nutri.Birthdate.Month, nutri.Birthdate.Day),
+                    Province = nutri.Province,
+                    Canton = nutri.Canton,
+                    District = nutri.District,
+                    Picture = nutri.Picture,
+                    Adminid = nutri.Adminid,
+                    Chargetypeid = nutri.Chargetypeid,
+                };
+
+                _context.SaveChanges();
+
+                return nutriToReturn;
+
+
+            }
+            catch (Exception ex)
+            {
+                return new NutriDto();
+            }
+        }
+
         public List<PatientIdDto> GetPatientsByNutriId(int nutriId)
         {
             var patientsDto = _context.Patients
                 .Where(p => p.Nutriid == nutriId)
+                .Select(p => new PatientIdDto
+                {
+                    Id = p.Id,
+                    Name = p.Name
+                })
+                .ToList();
+
+            return patientsDto;
+        }
+
+        public List<PatientIdDto> GetAvailablePatients()
+        {
+            var patientsDto = _context.Patients
+                .Where(p => p.Nutriid == null)
                 .Select(p => new PatientIdDto
                 {
                     Id = p.Id,
@@ -266,6 +326,72 @@ namespace NutriTEc_Backend.Repository
             catch (Exception ex)
             {
                 return Result.Error;
+            }
+        }
+
+        public Result AsignPatientToNutri(int patientId, int nutriId)
+        {
+            try
+            {
+                var patient = _context.Patients.Where(p => p.Id == patientId).FirstOrDefault();
+
+                if (patient == null)
+                {
+                    return Result.NotFound;
+                }
+
+                if (patient.Nutriid != null)
+                {
+                    return Result.Error;
+                }
+
+                patient.Nutriid = nutriId;
+
+                _context.SaveChanges();
+                return Result.Created;
+
+
+            }
+            catch (Exception ex)
+            {
+                return Result.Error;
+            }
+        }
+
+        public PatientDto GetPatientById(int patientId)
+        {
+            try
+            {
+                var patient = _context.Patients.Where(p => p.Id == patientId).FirstOrDefault();
+
+                if (patient == null)
+                {
+                    return new PatientDto();
+                }
+
+                var patientToReturn = new PatientDto()
+                {
+                    Name = patient.Name,
+                    Email = patient.Email,
+                    Lastname1 = patient.Lastname1,
+                    Lastname2 = patient.Lastname2,
+                    Age = patient.Age,
+                    Birthdate = new DateTime(patient.Birthdate.Year, patient.Birthdate.Month, patient.Birthdate.Day),
+                    Password = patient.Password,
+                    Country = patient.Country,
+                    Caloriesintake = (patient.Caloriesintake == null) ? null : patient.Caloriesintake,
+                    Nutriid = (patient.Nutriid == null) ? null : patient.Nutriid,
+                };
+
+                _context.SaveChanges();
+
+                return patientToReturn;
+
+
+            }
+            catch (Exception ex)
+            {
+                return new PatientDto();
             }
         }
 
@@ -484,7 +610,7 @@ namespace NutriTEc_Backend.Repository
          */
         public List<ProductDto> GetAllProducts()
         {
-            var productsDto = _context.Products
+            var productsDto = _context.Products.Where(p => p.Isapproved == true)
                 .Select(p => new ProductDto
                 {
                     Id = p.Barcode,
@@ -517,8 +643,7 @@ namespace NutriTEc_Backend.Repository
                 Carbs = product.Carbs,
                 Protein = product.Protein,
                 Calcium = product.Calcium,
-                Iron = product.Iron,
-                IsApproved = (product.Isapproved == null) ? null : product.Isapproved
+                Iron = product.Iron
             };
 
             return productInformationDto;

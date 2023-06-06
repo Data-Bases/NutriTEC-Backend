@@ -13,7 +13,6 @@
         public double Protein { get; set; }
         public double Calcium { get; set; }
         public double Iron { get; set; }
-        public bool? IsApproved { get; set; }
 
     }
 }

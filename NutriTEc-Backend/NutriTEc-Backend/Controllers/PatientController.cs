@@ -298,5 +298,56 @@ namespace NutriTEc_Backend.Controllers
 
             return Ok(measurements);
         }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet("GetPatientById/{id}", Name = "GetPatientById/{id}")]
+        public ActionResult<PatientDto> GetPatientById([Required] int id)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = _repository.GetPatientById(id);
+
+            if (result.Equals(new PatientDto()))
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpPut("AsignPatientToNutri", Name = "AsignPatientToNutri")]
+        public ActionResult<Result> AsignPatientToNutri([Required] int patientId, [Required] int nutriId)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = _repository.AsignPatientToNutri(patientId, nutriId);
+
+            if (result.Equals(Result.NotFound))
+            {
+                return NotFound();
+            }
+
+            if (result.Equals(Result.Error))
+            {
+                return Unauthorized();
+            }
+
+            return Ok();
+        }
     }
 }

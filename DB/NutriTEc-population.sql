@@ -18,7 +18,7 @@ INSERT INTO Nutritionist (Email, Password, Name, LastName1, LastName2, Age, Birt
 ('ram@example.com', md5('pepe'), 'Ramses', 'Gutierrez', null, 20, '2003-04-08', 60, 20, 98765, 963852, 'San Jose', 'Perez Zeledon', 'Centro', 'headshot.jpg', 1, 2),
 ('martinez@example.com', md5('pepe'), 'Andres', 'Martinez', null, 22, '2001-04-25', 60, 21, 24680, 987654, 'Cartago', 'Cartago', 'Cartago', 'profile.jpg', 1, 1);
 
--- Patients
+-- Patients with nutri
 INSERT INTO Patient (NutriId, Email, Name, LastName1, LastName2, Age, BirthDate, Password, Country, CaloriesIntake) VALUES
 (1, 'juan@example.com', 'Juan', 'Navarro', 'Navarro', 22, '2001-08-02',md5('pepe'), 'Canada', 1800),
 (2, 'reii@example.com', 'Rashell', 'Aguilar', 'Caballero', 21, '2001-07-10', md5('pepe'), 'United States', 2000),
@@ -27,10 +27,13 @@ INSERT INTO Patient (NutriId, Email, Name, LastName1, LastName2, Age, BirthDate,
 (5, 'pepe@example.com', 'Pepe', 'Blanco', 'Montoya', 10, '2013-04-12', md5('pepe'), 'Canada', 1500),
 (1, 'will@example.com', 'Wilberth', 'Mejias', 'Cruz', 52, '1972-12-31', md5('pepe'), 'Costa Rica', 1800),
 (2, 'anna@example.com', 'Anna', 'Barrrantes', 'Leiva', 32, '1995-01-20', md5('pepe'), 'Costa Rica', 1800),
-(3, 'katia@example.com', 'Katia', 'Navarro', 'Hernandez', 52, '1970-10-23', md5('pepe'), 'Costa Rica', 1800),
-(4, 'raquel@example.com', 'Raquel', 'Navarro', 'Navarro', 25, '1990-05-20', md5('pepe'), 'Berlin', 1800),
-(5, 'meli@example.com', 'Meli', 'Hernandez', 'Ovares', 30, '1996-11-20', md5('pepe'), 'Costa Rica', 1800),
-(1, 'pri@example.com', 'Pri', 'Sanchez', 'Hernandez', 18, '2005-08-13', md5('pepe'), 'Costa Rica', 1800);
+(3, 'katia@example.com', 'Katia', 'Navarro', 'Hernandez', 52, '1970-10-23', md5('pepe'), 'Costa Rica', 1800); 
+
+-- Patient without nutri
+INSERT INTO Patient (Email, Name, LastName1, LastName2, Age, BirthDate, Password, Country, CaloriesIntake) VALUES
+('raquel@example.com', 'Raquel', 'Navarro', 'Navarro', 25, '1990-05-20', md5('pepe'), 'Berlin', 1800),
+('meli@example.com', 'Meli', 'Hernandez', 'Ovares', 30, '1996-11-20', md5('pepe'), 'Costa Rica', 1800),
+('pri@example.com', 'Pri', 'Sanchez', 'Hernandez', 18, '2005-08-13', md5('pepe'), 'Costa Rica', 1800);
 
 -- Measurements
 INSERT INTO Measurements(PatientId, Height, FatPercentage, MusclePercentage, Weight, Waist, Neck, Hips, RevisionDate) VALUES
