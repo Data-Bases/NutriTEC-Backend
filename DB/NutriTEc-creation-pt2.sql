@@ -109,6 +109,10 @@ ADD CONSTRAINT unique_plan_patient UNIQUE (PatientId, InitialDate);
 
 
 -- Fuctions
+/*
+ This trigger function that checks if the user with the specified ID exists in the "UserCredentials" view. 
+ If not, it raises an exception, otherwise, it allows the operation to proceed.
+*/
 CREATE OR REPLACE FUNCTION check_email_exists()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -124,6 +128,10 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+/*
+ This trigger function that checks if the patient with the specified ID exists in the "Patient" table. 
+ If not, it raises an exception, otherwise, it allows the operation to proceed.
+*/
 CREATE OR REPLACE FUNCTION check_patient_exists()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -139,6 +147,10 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+/*
+The function will insert the recipe into the "recipe" table 
+and return the ID of the newly created recipe.
+*/
 CREATE OR REPLACE FUNCTION create_recipe(recipe_name varchar(100))
 RETURNS int AS
 $$
@@ -155,7 +167,12 @@ END;
 $$
 LANGUAGE plpgsql;
 
-
+/*
+This function is used to get the discount and charge amount based on the charge type 
+and total number of patients.
+The function utilizes the "get_total_patients" function to calculate the total number 
+of patients associated with the nutritionist. 
+*/
 CREATE OR REPLACE FUNCTION calculate_recipe_nutrients(recipe_id int)
     RETURNS TABLE (
 		TotalEnergy float, 
@@ -185,7 +202,12 @@ END; $$
 
 LANGUAGE 'plpgsql';
 
-
+/*
+This function providing the administrator ID, and retrieve 
+the payroll (the discount and charge amount based on the charge type and total number of patients) 
+information for the nutritionist.The function utilizes the "get_total_patients" function 
+to calculate the total number of patients associated with the nutritionist
+*/
 CREATE OR REPLACE FUNCTION payroll(admin_id int)
     RETURNS TABLE (
 		ChargeType int,
@@ -220,7 +242,10 @@ BEGIN
 END; $$ 
 LANGUAGE 'plpgsql';
 
-
+/* 
+ The function calculates the charge amount and discounted amount based on the provided charge 
+ type and total number of patients.
+*/
 CREATE OR REPLACE FUNCTION amount_to_charge(total_patients int, charge_type int, OUT charge_amount float, OUT discounted_amount float)
     AS $$
 BEGIN
@@ -239,7 +264,9 @@ BEGIN
 END; 
 $$ LANGUAGE plpgsql;
 
-
+/*
+The function will return the total number of patients associated with the specified nutritionist.
+*/
 CREATE OR REPLACE FUNCTION get_total_patients(nutri_id int)
     RETURNS int AS $$
 DECLARE
@@ -253,6 +280,10 @@ BEGIN
 END; $$ 
 LANGUAGE 'plpgsql';
 
+/*
+The function will return a table with the calculated nutritional information 
+for the specified product and servings.
+*/
 CREATE OR REPLACE FUNCTION calculate_product_servings(product_id int, servings_value float)
     RETURNS TABLE (
 		Name varchar(100),
@@ -290,7 +321,11 @@ END; $$
 
 LANGUAGE 'plpgsql';
 
-
+/*
+The function will return a table with the consumed recipe information for the specified patient 
+and date. The function also utilizes another function called "calculate_recipe_nutrients" 
+to calculate the total energy of the recipe based on its ID.
+*/
 CREATE FUNCTION get_consumed_recipe(patient_id int, date_consumed date)
 RETURNS TABLE(
 	Id int,
@@ -316,7 +351,10 @@ END; $$
 
 LANGUAGE 'plpgsql';
 
-
+/*
+The function will return a table with the consumed product information 
+for the specified patient and date.
+*/
 CREATE FUNCTION get_consumed_product(patient_id int, date_consumed date)
 RETURNS TABLE(
 	Id int,
@@ -339,7 +377,10 @@ END; $$
 
 LANGUAGE 'plpgsql';
 
-
+/*
+The function will return a table with the requested measurements data within 
+the specified date range for the given patient.
+*/
 CREATE OR REPLACE FUNCTION get_patient_measurements(
     patient_id INT,
     start_date DATE,
@@ -378,7 +419,11 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
+/*
+This function create a new plan record in the "Plan" table with the specified name 
+and nutritionist ID. 
+The function will return the ID of the newly created plan.
+*/
 CREATE OR REPLACE FUNCTION create_plan(plan_name varchar(250), nutri_id int)
 RETURNS int AS
 $$
@@ -395,7 +440,12 @@ END;
 $$
 LANGUAGE plpgsql;
 
-
+/*
+This function return a table with the requested recipe plan information based 
+on the provided plan ID and weekday. The function also utilizes another 
+function called "calculate_recipe_nutrients" to calculate the total energy 
+of the recipe based on its ID.
+*/
 CREATE FUNCTION get_recipe_plan(plan_id int, weekday varchar(50))
 RETURNS TABLE(
 	Id int,
@@ -423,7 +473,11 @@ END; $$
 
 LANGUAGE 'plpgsql';
 
-
+/*
+This function takes two parameters: "plan_id" of type integer and "weekday" of type varchar(50).
+The function returns a table with columns: Id (integer), Name (varchar), Servings (float), 
+Energy (float), and Mealtime (varchar).
+*/
 CREATE FUNCTION get_product_plan(plan_id int, weekday varchar(50))
 RETURNS TABLE(
 	Id int,
@@ -448,6 +502,16 @@ END; $$
 
 LANGUAGE 'plpgsql';
 
+/*
+This function it is used as a trigger function,the trigger function is designed 
+to prevent inserting or updating rows with a "BirthDate" value that is in the future.
+
+Outputs:
+If the "BirthDate" value of the new or updated row is greater than the current date,
+an exception is raised with the message "BirthDate" cannot be in the future."
+If the "BirthDate" value is valid (not in the future), 
+the trigger function returns the new row data.
+*/
 CREATE OR REPLACE FUNCTION prevent_future_birthdates()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -459,6 +523,16 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+/*
+This function it is used as a trigger function,the trigger function is designed 
+to prevent inserting or updating rows with a "RevisionDate" value that is in the future.
+
+Outputs:
+If the "RevisionDate" value of the new or updated row is greater than the current date,
+an exception is raised with the message "RevisionDate" cannot be in the future."
+If the "RevisionDate" value is valid (not in the future), 
+the trigger function returns the new row data.
+*/
 CREATE OR REPLACE FUNCTION prevent_future_revisiondates()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -470,6 +544,16 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+/*
+This function it is used as a trigger function,the trigger function is designed 
+to prevent inserting or updating rows with a "InitialDate" value that is in the future.
+
+Outputs:
+If the "InitialDate" value of the new or updated row is greater than the current date,
+an exception is raised with the message "InitialDate cannot be in the future."
+If the "InitialDate" value is valid (not in the future), 
+the trigger function returns the new row data.
+*/
 CREATE OR REPLACE FUNCTION prevent_future_initialdates()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -481,7 +565,16 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+/*
+This function it is used as a trigger function,the trigger function is designed 
+to prevent inserting or updating rows with a "ConsumeDate" value that is in the future.
 
+Outputs:
+If the "ConsumeDate" value of the new or updated row is greater than the current date,
+an exception is raised with the message "ConsumeDate cannot be in the future."
+If the "ConsumeDate" value is valid (not in the future), 
+the trigger function returns the new row data.
+*/
 CREATE OR REPLACE FUNCTION prevent_future_consumedates()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -495,6 +588,13 @@ $$ LANGUAGE plpgsql;
 
 -- Views
 
+/*
+This view creates a view called "UserCredentials" that combines 
+the email, password, and user type (as a code) 
+from the "Patient," "Nutritionist," and "Administrator" tables into a single result set. 
+
+It is used in a trigger function checksIfEmailExists(). 
+*/
 CREATE VIEW UserCredentials AS
 SELECT Id, Email, Password, 'P' AS UserType FROM Patient
 UNION ALL
@@ -502,7 +602,12 @@ SELECT Id, Email, Password, 'N' AS UserType FROM Nutritionist
 UNION ALL
 SELECT Id, Email, Password, 'A' AS UserType FROM Administrator;
 
+/*
+This view combines information from the "recipe," "productrecipe," and "product" tables. 
+It includes details calculated based on the servings and the corresponding product's nutritional values.
 
+It is used by calculate_recipe_nutrients() function
+*/
 CREATE OR REPLACE VIEW products_in_recipe AS
 SELECT R.name as recipename, R.Id as recipeid, P.name as productname, 
 P.portionsize as portionsize, PR.servings as servings, P.energy * PR.servings as energy, 
@@ -511,12 +616,29 @@ P.Carbs* PR.servings as carbs, P.Protein * PR.servings as protein,
 P.Calcium * PR.servings as calcium, P.Iron * PR.servings as iron
 FROM (recipe as R  join productrecipe as PR on R.Id = PR.recipeid) join product as P on P.barcode = PR.productbarcode;
 
+/*
+This view  combines information from the "Product" and "PatientProduct" tables. 
+It includes details such as the patient ID, product barcode, product name, servings, 
+energy (calculated based on servings and the product's energy value), 
+mealtime, and consume date for each patient's product consumption.
+
+It is used by get_consumed_product() function
+*/
 CREATE OR REPLACE VIEW patient_products AS
 SELECT PP.PatientId, P.Barcode, P.Name, PP.Servings, PP.Servings * P.Energy AS Energy, PP.Mealtime, PP.ConsumeDate
 		FROM Product as P
 		JOIN PatientProduct as PP
 		ON P.Barcode = PP.ProductBarcode;
 
+/*
+This view called "patient_recipe" that combines information from the "Recipe" and "PatientRecipe" tables.
+It includes details such as the patient ID, recipe ID, recipe name, servings, 
+energy (calculated using a custom function called "calculate_recipe_nutrients" 
+which returns the total energy of the recipe multiplied by the servings), 
+mealtime, and consume date for each patient's recipe consumption.
+
+It is used by get_consumed_recipe() function
+*/
 CREATE OR REPLACE VIEW patient_recipe AS
 SELECT PR.PatientId, R.Id, R.Name, PR.Servings, (SELECT TotalEnergy * PR.Servings FROM calculate_recipe_nutrients(R.Id)) as Energy, PR.Mealtime, PR.ConsumeDate
 		FROM Recipe as R 
@@ -524,6 +646,7 @@ SELECT PR.PatientId, R.Id, R.Name, PR.Servings, (SELECT TotalEnergy * PR.Serving
 		ON R.Id = PR.RecipeId;
 
 -- Stored Procedures
+
 CREATE PROCEDURE delete_recipe(recipe_id int)
 
 LANGUAGE SQL
