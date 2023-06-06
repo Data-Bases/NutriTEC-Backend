@@ -403,7 +403,7 @@ namespace NutriTEc_Backend.Repository
         {
             try
             {
-                var recipe = _context.Patientrecipes.FirstOrDefault(r => r.Recipeid == recipeId && p.Patientid == patientId);
+                var recipe = _context.Patientrecipes.FirstOrDefault(r => r.Recipeid == recipeId && r.Patientid == patientId);
                 _context.Patientrecipes.Remove(recipe);
                 _context.SaveChanges();
                 return Result.Deleted;
