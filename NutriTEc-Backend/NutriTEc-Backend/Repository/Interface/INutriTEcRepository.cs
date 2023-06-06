@@ -57,6 +57,20 @@ namespace NutriTEc_Backend.Repository.Interface
         /// <returns>List of PlanIdDtos</returns>
         List<PlanIdDto> GetNutritionistPlans(int nutriId);
 
+        /// <summary>
+        /// Get nutritionist by Id
+        /// </summary>
+        /// <param name="nutriId"></param>
+        /// <returns></returns>
+        NutriDto GetNutritionistById(int nutriId);
+
+        /// <summary>
+        /// Get patients that are not related to any nutritionist
+        /// </summary>
+        /// <returns></returns>
+        List<PatientIdDto> GetAvailablePatients();
+
+
         /*
          * Patient
          */
@@ -67,6 +81,21 @@ namespace NutriTEc_Backend.Repository.Interface
         /// <param name="patient"></param>
         /// <returns>Result</returns>
         Result PatientSignUp(PatientDto patient);
+
+        /// <summary>
+        /// Asign patient to nutritionist
+        /// </summary>
+        /// <param name="patientId"></param>
+        /// <param name="nutriId"></param>
+        /// <returns></returns>
+        Result AsignPatientToNutri(int patientId, int nutriId);
+
+        /// <summary>
+        /// Get patient information by id
+        /// </summary>
+        /// <param name="patientId"></param>
+        /// <returns></returns>
+        PatientDto GetPatientById(int patientId);
 
         /// <summary>
         /// Adding a product asociated to a patient
