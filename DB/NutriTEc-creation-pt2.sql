@@ -107,24 +107,6 @@ ADD CONSTRAINT unique_plan UNIQUE (Name, NutriId);
 ALTER TABLE PlanPatient
 ADD CONSTRAINT unique_plan_patient UNIQUE (PatientId, InitialDate);
 
--- Views
-CREATE VIEW UserCredentials AS
-SELECT Id, Email, Password, 'P' AS UserType FROM Patient
-UNION ALL
-SELECT Id, Email, Password, 'N' AS UserType FROM Nutritionist
-UNION ALL
-SELECT Id, Email, Password, 'A' AS UserType FROM Administrator;
-
-
-CREATE OR REPLACE VIEW products_in_recipe AS
-SELECT R.name as recipename, R.Id as recipeid, P.name as productname, 
-P.portionsize as portionsize, PR.servings as servings, P.energy * PR.servings as energy, 
-P.Fat * PR.servings as fat, P.Sodium * PR.servings as sodium, 
-P.Carbs* PR.servings as carbs, P.Protein * PR.servings as protein, 
-P.Calcium * PR.servings as calcium, P.Iron * PR.servings as iron
-FROM (recipe as R  join productrecipe as PR on R.Id = PR.recipeid) join product as P on P.barcode = PR.productbarcode;
-
-
 
 -- Fuctions
 CREATE OR REPLACE FUNCTION check_email_exists()
@@ -320,17 +302,15 @@ RETURNS TABLE(
 AS $$
 BEGIN
 	RETURN QUERY SELECT 
-			R.Id,
-			R.Name,
+			PR.Id,
+			PR.Name,
 			PR.Servings,
 			(
 				SELECT TotalEnergy * PR.Servings 
-				FROM calculate_recipe_nutrients(R.Id)
+				FROM calculate_recipe_nutrients(PR.Id)
 			),
 			PR.Mealtime
-		FROM Recipe as R 
-		JOIN Patientrecipe as PR
-		ON R.Id = PR.RecipeId
+		FROM patient_recipe as PR
 		WHERE PR.PatientId = patient_id and PR.ConsumeDate = date_consumed;
 END; $$ 
 
@@ -348,14 +328,12 @@ RETURNS TABLE(
 AS $$
 BEGIN
 	RETURN QUERY SELECT 
-			P.Barcode,
-			P.Name,
+			PP.Barcode,
+			PP.Name,
 			PP.Servings,
-			PP.Servings * P.Energy, 
+			PP.Energy, 
 			PP.Mealtime
-		FROM Product as P
-		JOIN PatientProduct as PP
-		ON P.Barcode = PP.ProductBarcode
+		FROM patient_products as PP
 		WHERE PP.PatientId = patient_id and PP.ConsumeDate = date_consumed;
 END; $$ 
 
@@ -503,16 +481,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION prevent_future_enddates()
-RETURNS TRIGGER AS $$
-BEGIN
-    IF NEW.EndDate > CURRENT_DATE THEN
-        RAISE EXCEPTION 'EndDate cannot be in the future.';
-    END IF;
-
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION prevent_future_consumedates()
 RETURNS TRIGGER AS $$
@@ -525,9 +493,63 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Views
 
+CREATE VIEW UserCredentials AS
+SELECT Id, Email, Password, 'P' AS UserType FROM Patient
+UNION ALL
+SELECT Id, Email, Password, 'N' AS UserType FROM Nutritionist
+UNION ALL
+SELECT Id, Email, Password, 'A' AS UserType FROM Administrator;
+
+
+CREATE OR REPLACE VIEW products_in_recipe AS
+SELECT R.name as recipename, R.Id as recipeid, P.name as productname, 
+P.portionsize as portionsize, PR.servings as servings, P.energy * PR.servings as energy, 
+P.Fat * PR.servings as fat, P.Sodium * PR.servings as sodium, 
+P.Carbs* PR.servings as carbs, P.Protein * PR.servings as protein, 
+P.Calcium * PR.servings as calcium, P.Iron * PR.servings as iron
+FROM (recipe as R  join productrecipe as PR on R.Id = PR.recipeid) join product as P on P.barcode = PR.productbarcode;
+
+CREATE OR REPLACE VIEW patient_products AS
+SELECT PP.PatientId, P.Barcode, P.Name, PP.Servings, PP.Servings * P.Energy AS Energy, PP.Mealtime, PP.ConsumeDate
+		FROM Product as P
+		JOIN PatientProduct as PP
+		ON P.Barcode = PP.ProductBarcode;
+
+CREATE OR REPLACE VIEW patient_recipe AS
+SELECT PR.PatientId, R.Id, R.Name, PR.Servings, (SELECT TotalEnergy * PR.Servings FROM calculate_recipe_nutrients(R.Id)) as Energy, PR.Mealtime, PR.ConsumeDate
+		FROM Recipe as R 
+		JOIN Patientrecipe as PR
+		ON R.Id = PR.RecipeId;
 
 -- Stored Procedures
+CREATE PROCEDURE delete_recipe(recipe_id int)
+
+LANGUAGE SQL
+
+AS $$
+
+DELETE FROM planrecipe as PR WHERE PR.RecipeId = recipe_id; 
+DELETE FROM productrecipe as PR WHERE PR.RecipeId = recipe_id;
+DELETE FROM patientrecipe as PR WHERE PR.RecipeId = recipe_id;
+DELETE FROM Recipe WHERE Recipe.Id = recipe_id;
+
+$$;
+
+CREATE PROCEDURE delete_plan(plan_id int)
+
+LANGUAGE SQL
+
+AS $$
+
+DELETE FROM planrecipe as PR WHERE PR.PlanId = plan_id; 
+DELETE FROM planproduct as PR WHERE PR.PlanId = plan_id;
+DELETE FROM planpatient as PR WHERE PR.PlanId = plan_id;
+DELETE FROM plan WHERE plan.Id = plan_id;
+
+$$;
+
 CREATE OR REPLACE PROCEDURE insert_plan_patient(
     p_planId INT,
     p_patientId INT,
@@ -678,21 +700,6 @@ CREATE TRIGGER CheckPlanPatientInitialDate
 BEFORE INSERT ON PlanPatient
 FOR EACH ROW
 EXECUTE FUNCTION prevent_future_initialdates();
-
-CREATE TRIGGER CheckPlanPatientEndDate
-BEFORE INSERT ON PlanPatient
-FOR EACH ROW
-EXECUTE FUNCTION prevent_future_enddates();
-
-CREATE TRIGGER CheckPatientRecipeInitialDate
-BEFORE INSERT ON PatientRecipe
-FOR EACH ROW
-EXECUTE FUNCTION prevent_future_initialdates();
-
-CREATE TRIGGER CheckPatientRecipeEndDate
-BEFORE INSERT ON PatientRecipe
-FOR EACH ROW
-EXECUTE FUNCTION prevent_future_enddates();
 
 CREATE TRIGGER CheckPatientProductConsumeDate
 BEFORE INSERT ON PatientProduct

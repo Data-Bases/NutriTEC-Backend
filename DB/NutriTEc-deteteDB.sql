@@ -32,12 +32,13 @@ ALTER TABLE Nutritionist DROP CONSTRAINT Nutritionist_ChargeTypeId;
 
 DROP VIEW IF EXISTS UserCredentials;
 DROP VIEW IF EXISTS products_in_recipe;
+DROP VIEW patient_products;
+DROP VIEW patient_recipe;
 
 DROP TRIGGER CheckEmailExistsInAdministrator ON Administrator;
 DROP TRIGGER CheckEmailExistsInPatient ON Patient;
 DROP TRIGGER CheckEmailExistsInNutritionist ON Nutritionist;
 
-DROP FUNCTION IF EXISTS check_email_exists();
 DROP FUNCTION create_recipe(character varying);
 DROP FUNCTION calculate_recipe_nutrients(int);
 DROP FUNCTION get_total_patients;
@@ -54,6 +55,9 @@ DROP FUNCTION get_recipe_plan;
 DROP PROCEDURE register_measurements;
 DROP PROCEDURE insert_nutri;
 DROP PROCEDURE insert_plan_patient;
+DROP PROCEDURE delete_recipe;
+DROP PROCEDURE delete_plan;
+
 
 DROP TABLE Nutritionist;
 DROP TABLE Product;
@@ -72,3 +76,8 @@ DROP TABLE ProductVitamin;
 DROP TABLE PatientProduct;
 DROP TABLE PlanRecipe;
 
+DROP FUNCTION IF EXISTS check_email_exists();
+DROP FUNCTION IF EXISTS prevent_future_birthdates();
+DROP FUNCTION IF EXISTS prevent_future_revisiondates();
+DROP FUNCTION IF EXISTS prevent_future_initialdates();
+DROP FUNCTION IF EXISTS prevent_future_consumedates();

@@ -172,11 +172,44 @@ namespace NutriTEc_Backend.Repository.Interface
         List<RecipeDto> GetRecipes();
 
         /// <summary>
-        /// 
+        /// Get recipe by Id 
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        RecipeInfoDto GetRecipeById(int id, int recipeServings);
+        RecipeInfoDto GetRecipeById(int id, double recipeServings);
+        
+        /// <summary>
+        /// Delete recipe
+        /// </summary>
+        /// <param name="recipeId"></param>
+        /// <returns>Result</returns>
+        Result DeleteRecipe(int recipeId);
+
+        /// <summary>
+        /// Delete a product from a recipie
+        /// </summary>
+        /// <param name="recipeId"></param>
+        /// <param name="productId"></param>
+        /// <returns>Result</returns>
+        Result DeleteProductInRecipe(int recipeId, int productId);
+
+        /// <summary>
+        /// Edit product in recipe
+        /// </summary>
+        /// <param name="recipeId"></param>
+        /// <param name="productId"></param>
+        /// <param name="servings"></param>
+        /// <returns>Result</returns>
+        Result EditProductInRecipe(int recipeId, int productId, double servings);
+
+        /// <summary>
+        /// Inserts a product into existing recipe
+        /// </summary>
+        /// <param name="recipeId"></param>
+        /// <param name="productId"></param>
+        /// <param name="servings"></param>
+        /// <returns>Result</returns>
+        Result InsertProductToRecipe(int recipeId, int productId, double servings);
 
         /*
          * Product
@@ -258,6 +291,61 @@ namespace NutriTEc_Backend.Repository.Interface
         /// <param name="initialDate"></param>
         /// <returns>DailyConsumptionPlanDto</returns>
         DailyConsumptionPlanDto GetPlanByPatientId(int patiendId, DateTime initialDate);
+
+        /// <summary>
+        /// Insert a new product to plan
+        /// </summary>
+        /// <param name="planId"></param>
+        /// <param name="product"></param>
+        /// <returns></returns>
+        Result InsertProductToPlan(int planId, ProductInPlanDto product);
+
+        /// <summary>
+        /// Insert a new recipe to plan
+        /// </summary>
+        /// <param name="planId"></param>
+        /// <param name="recipe"></param>
+        /// <returns></returns>
+        Result InsertRecipeToPlan(int planId, RecipeInPlanDto recipe);
+
+        /// <summary>
+        /// Edit product servings in a plan
+        /// </summary>
+        /// <param name="planId"></param>
+        /// <param name="product"></param>
+        /// <returns></returns>
+        Result EditProductInPlan(int planId, ProductInPlanDto product);
+
+        /// <summary>
+        /// Edit recipe servings in a plan
+        /// </summary>
+        /// <param name="planId"></param>
+        /// <param name="recipe"></param>
+        /// <returns></returns>
+        Result EditRecipeInPlan(int planId, RecipeInPlanDto recipe);
+
+        /// <summary>
+        /// Delete recipe in plan
+        /// </summary>
+        /// <param name="planId"></param>
+        /// <param name="recipe"></param>
+        /// <returns></returns>
+        Result DeleteRecipeInPlan(int planId, RecipeInPlanDto recipe);
+
+        /// <summary>
+        /// Delete product in plan
+        /// </summary>
+        /// <param name="planId"></param>
+        /// <param name="product"></param>
+        /// <returns></returns>
+        Result DeleteProductInPlan(int planId, ProductInPlanDto product);
+
+        /// <summary>
+        /// Deletes plan
+        /// </summary>
+        /// <param name="planId"></param>
+        /// <returns></returns>
+        Result DeletePlan(int planId);
     }
 
 }
