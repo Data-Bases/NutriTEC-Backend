@@ -162,7 +162,7 @@ namespace NutriTEc_Backend.Repository
         /*
          * Nutri
          */
-        public Result NutriSignUp(NutriDto nutri)
+        public Result NutriSignUp(NutriNoAgeDto nutri)
         {
             nutri.Password = PassowordHelper.EncodePasswordMD5(nutri.Password).ToLower();
 
@@ -173,7 +173,6 @@ namespace NutriTEc_Backend.Repository
                 Name = nutri.Name,
                 Lastname1 = nutri.Lastname1,
                 Lastname2 = (string.IsNullOrEmpty(nutri.Lastname2)) ? "" : nutri.Lastname2,
-                Age = nutri.Age,
                 Birthdate = DateOnly.FromDateTime(nutri.Birthdate),
                 Weight = (nutri.Weight == null) ? 0 : nutri.Weight,
                 Imc = (nutri.Imc == null) ? 0 : nutri.Imc,
@@ -190,7 +189,7 @@ namespace NutriTEc_Backend.Repository
             try
             {
                 _context.Database.ExecuteSqlRaw($"CALL insert_nutri('{nutriToInsert.Email}', '{nutriToInsert.Password}', '{nutriToInsert.Name}', '{nutriToInsert.Lastname1}'," +
-                                                                        $"'{nutriToInsert.Lastname2}', {nutriToInsert.Age}, '{nutriToInsert.Birthdate}', {nutriToInsert.Weight}, {nutriToInsert.Imc}," +
+                                                                        $"'{nutriToInsert.Lastname2}', '{nutriToInsert.Birthdate}', {nutriToInsert.Weight}, {nutriToInsert.Imc}," +
                                                                         $" {nutriToInsert.Nutritionistcode}, {nutriToInsert.Cardnumber}, '{nutriToInsert.Province}', '{nutriToInsert.Canton}', " +
                                                                         $"'{nutriToInsert.District}', '{nutriToInsert.Picture}', {nutriToInsert.Adminid}, {nutriToInsert.Chargetypeid});");
 
@@ -225,7 +224,6 @@ namespace NutriTEc_Backend.Repository
                     Name = nutri.Name,
                     Lastname1 = nutri.Lastname1,
                     Lastname2 = (string.IsNullOrEmpty(nutri.Lastname2)) ? "" : nutri.Lastname2,
-                    Age = nutri.Age,
                     Weight = (nutri.Weight == null) ? 0 : nutri.Weight,
                     Imc = (nutri.Imc == null) ? 0 : nutri.Imc,
                     Nutritionistcode = nutri.Nutritionistcode,
@@ -238,6 +236,9 @@ namespace NutriTEc_Backend.Repository
                     Adminid = nutri.Adminid,
                     Chargetypeid = nutri.Chargetypeid,
                 };
+
+                nutriToReturn.Age = getAge(nutriToReturn.Birthdate);
+
 
                 _context.SaveChanges();
 
@@ -296,7 +297,7 @@ namespace NutriTEc_Backend.Repository
          * Patient
          */
 
-        public Result PatientSignUp(PatientDto patient)
+        public Result PatientSignUp(PatientNoAgeDto patient)
         {
             patient.Password = PassowordHelper.EncodePasswordMD5(patient.Password).ToLower();
 
@@ -306,7 +307,6 @@ namespace NutriTEc_Backend.Repository
                 Email = patient.Email,
                 Lastname1 = patient.Lastname1,
                 Lastname2 = patient.Lastname2,
-                Age = patient.Age,
                 Birthdate = DateOnly.FromDateTime(patient.Birthdate),
                 Password = patient.Password,
                 Country = patient.Country,
@@ -375,13 +375,14 @@ namespace NutriTEc_Backend.Repository
                     Email = patient.Email,
                     Lastname1 = patient.Lastname1,
                     Lastname2 = patient.Lastname2,
-                    Age = patient.Age,
                     Birthdate = new DateTime(patient.Birthdate.Year, patient.Birthdate.Month, patient.Birthdate.Day),
                     Password = patient.Password,
                     Country = patient.Country,
                     Caloriesintake = (patient.Caloriesintake == null) ? null : patient.Caloriesintake,
                     Nutriid = (patient.Nutriid == null) ? null : patient.Nutriid,
                 };
+
+                patientToReturn.Age = getAge(patientToReturn.Birthdate);
 
                 _context.SaveChanges();
 
@@ -1479,6 +1480,20 @@ namespace NutriTEc_Backend.Repository
             {
                 return new List<ConsumedByPatient>();
             }
+        }
+
+        private int getAge(DateTime birthdate)
+        {
+            DateTime today = DateTime.Today;
+            int age = today.Year - birthdate.Year;
+
+            // Check if the birthday has already occurred this year
+            if (birthdate > today.AddYears(-age))
+            {
+                age--;
+            }
+
+             return age;
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using NutriTEc_Backend.DataModel;
 
 namespace NutriTEc_Backend.DataModel;
 
@@ -17,8 +16,6 @@ public partial class Nutritionist
     public string Lastname1 { get; set; } = null!;
 
     public string? Lastname2 { get; set; }
-
-    public int Age { get; set; }
 
     public DateOnly Birthdate { get; set; }
 

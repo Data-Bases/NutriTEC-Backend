@@ -11,29 +11,29 @@ INSERT INTO ChargeType (Nombre) VALUES
 ('Anual');
 
 -- Nutritionist
-INSERT INTO Nutritionist (Email, Password, Name, LastName1, LastName2, Age, BirthDate, Weight, IMC, NutritionistCode, CardNumber, Province, Canton, District, Picture, AdminId, ChargeTypeId) VALUES
-('diana@example.com', md5('pepe'), 'Diana', 'Mejias', 'Hernandez', 21, '2001-08-08', 60, 23, 12345, 123456, 'Puntarenas', 'Buenos Aires', 'Buenos Aires', 'picture.jpg', 1, 1),
-('geo@example.com', md5('pepe'), 'Geovanny', 'Garcia', 'Downing', 21, '2001-12-07', 60, 25, 67890, 321654, 'Guanacaste', 'Liberia', 'Liberia', 'avatar.jpg', 1, 2),
-('vale@example.com',md5('pepe'), 'Valesska', 'Blanco', 'Montoya', 22, '2001-05-22', 60, 20, 54321, 147258, 'Cartago', 'Cartago', 'Oriental', 'photo.jpg', 1, 3),
-('ram@example.com', md5('pepe'), 'Ramses', 'Gutierrez', null, 20, '2003-04-08', 60, 20, 98765, 963852, 'San Jose', 'Perez Zeledon', 'Centro', 'headshot.jpg', 1, 2),
-('martinez@example.com', md5('pepe'), 'Andres', 'Martinez', null, 22, '2001-04-25', 60, 21, 24680, 987654, 'Cartago', 'Cartago', 'Cartago', 'profile.jpg', 1, 1);
+INSERT INTO Nutritionist (Email, Password, Name, LastName1, LastName2, BirthDate, Weight, IMC, NutritionistCode, CardNumber, Province, Canton, District, Picture, AdminId, ChargeTypeId) VALUES
+('diana@example.com', md5('pepe'), 'Diana', 'Mejias', 'Hernandez', '2001-08-08', 60, 23, 12345, 123456, 'Puntarenas', 'Buenos Aires', 'Buenos Aires', 'picture.jpg', 1, 1),
+('geo@example.com', md5('pepe'), 'Geovanny', 'Garcia', 'Downing', '2001-12-07', 60, 25, 67890, 321654, 'Guanacaste', 'Liberia', 'Liberia', 'avatar.jpg', 1, 2),
+('vale@example.com',md5('pepe'), 'Valesska', 'Blanco', 'Montoya', '2001-05-22', 60, 20, 54321, 147258, 'Cartago', 'Cartago', 'Oriental', 'photo.jpg', 1, 3),
+('ram@example.com', md5('pepe'), 'Ramses', 'Gutierrez', null, '2003-04-08', 60, 20, 98765, 963852, 'San Jose', 'Perez Zeledon', 'Centro', 'headshot.jpg', 1, 2),
+('martinez@example.com', md5('pepe'), 'Andres', 'Martinez', null, '2001-04-25', 60, 21, 24680, 987654, 'Cartago', 'Cartago', 'Cartago', 'profile.jpg', 1, 1);
 
 -- Patients with nutri
-INSERT INTO Patient (NutriId, Email, Name, LastName1, LastName2, Age, BirthDate, Password, Country, CaloriesIntake) VALUES
-(1, 'juan@example.com', 'Juan', 'Navarro', 'Navarro', 22, '2001-08-02',md5('pepe'), 'Canada', 1800),
-(2, 'reii@example.com', 'Rashell', 'Aguilar', 'Caballero', 21, '2001-07-10', md5('pepe'), 'United States', 2000),
-(3, 'bobby@example.com', 'Bobby', 'Mejias', 'Hernandez', 17, '2006-12-28', md5('pepe'), 'Mexico', 1600),
-(4, 'chloe@example.com', 'Chloe', 'Mejias', 'Hernandez', 12, '2011-11-20', md5('pepe'), 'Canada', 1800),
-(5, 'pepe@example.com', 'Pepe', 'Blanco', 'Montoya', 10, '2013-04-12', md5('pepe'), 'Canada', 1500),
-(1, 'will@example.com', 'Wilberth', 'Mejias', 'Cruz', 52, '1972-12-31', md5('pepe'), 'Costa Rica', 1800),
-(2, 'anna@example.com', 'Anna', 'Barrrantes', 'Leiva', 32, '1995-01-20', md5('pepe'), 'Costa Rica', 1800),
-(3, 'katia@example.com', 'Katia', 'Navarro', 'Hernandez', 52, '1970-10-23', md5('pepe'), 'Costa Rica', 1800); 
+INSERT INTO Patient (NutriId, Email, Name, LastName1, LastName2, BirthDate, Password, Country, CaloriesIntake) VALUES
+(1, 'juan@example.com', 'Juan', 'Navarro', 'Navarro', '2001-08-02',md5('pepe'), 'Canada', 1800),
+(2, 'reii@example.com', 'Rashell', 'Aguilar', 'Caballero', '2001-07-10', md5('pepe'), 'United States', 2000),
+(3, 'bobby@example.com', 'Bobby', 'Mejias', 'Hernandez', '2006-12-28', md5('pepe'), 'Mexico', 1600),
+(4, 'chloe@example.com', 'Chloe', 'Mejias', 'Hernandez', '2011-11-20', md5('pepe'), 'Canada', 1800),
+(5, 'pepe@example.com', 'Pepe', 'Blanco', 'Montoya', '2013-04-12', md5('pepe'), 'Canada', 1500),
+(1, 'will@example.com', 'Wilberth', 'Mejias', 'Cruz', '1972-12-31', md5('pepe'), 'Costa Rica', 1800),
+(2, 'anna@example.com', 'Anna', 'Barrrantes', 'Leiva', '1995-01-20', md5('pepe'), 'Costa Rica', 1800),
+(3, 'katia@example.com', 'Katia', 'Navarro', 'Hernandez', '1970-10-23', md5('pepe'), 'Costa Rica', 1800); 
 
 -- Patient without nutri
-INSERT INTO Patient (Email, Name, LastName1, LastName2, Age, BirthDate, Password, Country, CaloriesIntake) VALUES
-('raquel@example.com', 'Raquel', 'Navarro', 'Navarro', 25, '1990-05-20', md5('pepe'), 'Berlin', 1800),
-('meli@example.com', 'Meli', 'Hernandez', 'Ovares', 30, '1996-11-20', md5('pepe'), 'Costa Rica', 1800),
-('pri@example.com', 'Pri', 'Sanchez', 'Hernandez', 18, '2005-08-13', md5('pepe'), 'Costa Rica', 1800);
+INSERT INTO Patient (Email, Name, LastName1, LastName2, BirthDate, Password, Country, CaloriesIntake) VALUES
+('raquel@example.com', 'Raquel', 'Navarro', 'Navarro', '1990-05-20', md5('pepe'), 'Berlin', 1800),
+('meli@example.com', 'Meli', 'Hernandez', 'Ovares',  '1996-11-20', md5('pepe'), 'Costa Rica', 1800),
+('pri@example.com', 'Pri', 'Sanchez', 'Hernandez',  '2005-08-13', md5('pepe'), 'Costa Rica', 1800);
 
 -- Measurements
 INSERT INTO Measurements(PatientId, Height, FatPercentage, MusclePercentage, Weight, Waist, Neck, Hips, RevisionDate) VALUES
@@ -55,11 +55,11 @@ INSERT INTO Vitamin (Name, Amount) VALUES
 
 -- Product
 INSERT INTO Product (Barcode, Name, Descripcion, PortionSize, Energy, Fat, Sodium, Carbs, Protein, Calcium, Iron, IsApproved) VALUES
-(11111, 'Apple', 'Red delicious apple', 1, 52, 0.2, 0, 14, 0.3, 6, 0.2, true),
+(11111, 'Apple', 'Red delicious apple', 100, 52, 0.2, 0, 14, 0.3, 6, 0.2, true),
 (22222, 'Milk', 'Low-fat milk', 250, 103, 2.4, 105, 12, 8, 276, 0.1, false),
-(33333, 'Chicken', 'Fried chicken', 1, 100, 165, 3.6, 66, 0, 31, 0.01, false),
+(33333, 'Chicken', 'Fried chicken', 100, 100, 165, 3.6, 66, 0, 31, 0.01, false),
 (44444, 'Yogurt', 'Low-fat strawberry yogurt', 150, 120, 1.5, 95, 20, 5, 200, 0.1, false),
-(55555, 'Salmon', 'Grilled salmon fillet', 1, 150, 275, 15, 55, 0, 30, 0.6, false);
+(55555, 'Salmon', 'Grilled salmon fillet', 150, 150, 275, 15, 55, 0, 30, 0.6, false);
 
 
 -- Recipe
@@ -135,8 +135,8 @@ INSERT INTO ProductVitamin (ProductBarcode, VitaminId) VALUES
 -- Plan Marco Rivera
 
 --Patient
-INSERT INTO Patient (NutriId, Email, Name, LastName1, LastName2, Age, BirthDate, Password, Country, CaloriesIntake) VALUES
-(1, 'marco_rivera@example.com', 'Marco', 'Rivera', 'Meneses', 18, '2005-05-07',md5('basesdedatos'), 'CostaRica', 2500);
+INSERT INTO Patient (NutriId, Email, Name, LastName1, LastName2, BirthDate, Password, Country, CaloriesIntake) VALUES
+(1, 'marco_rivera@example.com', 'Marco', 'Rivera', 'Meneses', '2005-05-07',md5('basesdedatos'), 'CostaRica', 2500);
 
 --PlanPatient
 INSERT INTO PlanPatient(PlanId, PatientId, InitialDate, EndDate)
@@ -144,10 +144,10 @@ VALUES (4, 12, '2023-05-22', '2023-05-29');
 
 --Products
 INSERT INTO Product (Barcode, Name, Descripcion, PortionSize, Energy, Fat, Sodium, Carbs, Protein, Calcium, Iron, IsApproved) VALUES
-(11112, 'Rice', 'Long-grain white rice', 1, 130, 0.3, 0, 28, 2.7, 8, 0.4, true),
-(11113, 'Beans', 'Black beans', 1, 227, 0.9, 1, 41, 15, 39, 2.6, true),
-(11114, 'Chicken', 'Grilled chicken breast', 1, 165, 3.6, 64, 0, 31, 14, 0.6, true),
-(11115, 'Tuna', 'Canned tuna in water', 1, 116, 0.5, 384, 0, 26, 9, 1.2, true); 
+(11112, 'Rice', 'Long-grain white rice', 100, 130, 0.3, 0, 28, 2.7, 8, 0.4, true),
+(11113, 'Beans', 'Black beans', 50, 227, 0.9, 1, 41, 15, 39, 2.6, true),
+(11114, 'Chicken', 'Grilled chicken breast', 100, 165, 3.6, 64, 0, 31, 14, 0.6, true),
+(11115, 'Tuna', 'Canned tuna in water', 175, 116, 0.5, 384, 0, 26, 9, 1.2, true); 
 
 -- Recipes
 INSERT INTO Recipe(Id, Name) VALUES (10, 'Gallo Pinto'), (11, 'Rice With Ckicken'), (12, 'Rice With Tuna');

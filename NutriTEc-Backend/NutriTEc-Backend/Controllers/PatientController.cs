@@ -28,7 +28,7 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost("PatientSignUp", Name = "PatientSignUp")]
-        public ActionResult<Result> PatientSignUp([Required] PatientDto patient)
+        public ActionResult<Result> PatientSignUp([Required] PatientNoAgeDto patient)
         {
 
             if (!ModelState.IsValid)

@@ -17,8 +17,6 @@ public partial class Patient
 
     public string? Lastname2 { get; set; }
 
-    public int Age { get; set; }
-
     public DateOnly Birthdate { get; set; }
 
     public string Password { get; set; } = null!;

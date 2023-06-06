@@ -41,7 +41,7 @@ namespace NutriTEc_Backend.Repository.Interface
         /// </summary>
         /// <param name="nutri"></param>
         /// <returns>Result</returns>
-        Result NutriSignUp(NutriDto nutri);
+        Result NutriSignUp(NutriNoAgeDto nutri);
 
         /// <summary>
         /// Get all the patients asociated to a nutriId
@@ -80,7 +80,7 @@ namespace NutriTEc_Backend.Repository.Interface
         /// </summary>
         /// <param name="patient"></param>
         /// <returns>Result</returns>
-        Result PatientSignUp(PatientDto patient);
+        Result PatientSignUp(PatientNoAgeDto patient);
 
         /// <summary>
         /// Asign patient to nutritionist

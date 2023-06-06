@@ -148,7 +148,6 @@ public partial class NutriTecContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Adminid).HasColumnName("adminid");
-            entity.Property(e => e.Age).HasColumnName("age");
             entity.Property(e => e.Birthdate).HasColumnName("birthdate");
             entity.Property(e => e.Canton)
                 .HasMaxLength(100)
@@ -203,7 +202,6 @@ public partial class NutriTecContext : DbContext
             entity.HasIndex(e => e.Email, "patient_email_key").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Age).HasColumnName("age");
             entity.Property(e => e.Birthdate).HasColumnName("birthdate");
             entity.Property(e => e.Caloriesintake).HasColumnName("caloriesintake");
             entity.Property(e => e.Country)
