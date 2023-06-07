@@ -20,7 +20,7 @@ namespace NutriTEc_Backend.Controllers
         }
 
         /// <summary>
-        /// Admin sign up
+        /// GetAdmin
         /// </summary>
         /// <param name="admin"></param>
         /// <returns>Result</returns>
@@ -28,8 +28,8 @@ namespace NutriTEc_Backend.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [HttpPost("AdminSignUp", Name = "AdminSignUp")]
-        public ActionResult<Result> AdminSignUp([Required] AdminDto admin)
+        [HttpGet("GetAdmin", Name = "GetAdmin")]
+        public ActionResult<List<AdminDto>> GetAdmin()
         {
 
             if (!ModelState.IsValid)
@@ -37,14 +37,14 @@ namespace NutriTEc_Backend.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = _repository.AdminSignUp(admin);
+            var result = _repository.GetAdmin();
 
-            if(result == Result.Error)
+            if(result.IsNullOrEmpty())
             {
                 return Unauthorized();
             }
 
-            return Ok();
+            return Ok(result);
         }
 
         /// <summary>

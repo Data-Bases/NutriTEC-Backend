@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Nest;
+using NutriTEc_Backend.DataModel;
 using NutriTEc_Backend.Dtos;
 using NutriTEc_Backend.Helpers;
 using NutriTEc_Backend.Repository.Interface;
@@ -163,65 +164,6 @@ namespace NutriTEc_Backend.Controllers
 
         }
 
-        /// <summary>
-        /// Deleting a product from a patient
-        /// </summary>
-        /// <param name="patientId"></param>
-        /// <param name="productId"></param>
-        /// <returns>Result</returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [HttpPost("DeleteProductFromPatient", Name = "DeleteProductFromPatient")]
-        public ActionResult<Result> DeleteProductFromPatient([Required] int patientId, [Required] int productId)
-        {
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var result = _repository.DeleteProductFromPatient(patientId, productId);
-
-            if (result == Result.Error)
-            {
-                return Unauthorized();
-            }
-
-            return Ok();
-
-        }
-
-        /// <summary>
-        /// Deleting a recipe from a patient
-        /// </summary>
-        /// <param name="patientId"></param>
-        /// <param name="recipeId"></param>
-        /// <returns>Result</returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [HttpPost("DeleteRecipeFromPatient", Name = "DeleteRecipeFromPatient")]
-        public ActionResult<Result> DeleteRecipeFromPatient([Required] int patientId, [Required] int recipeId)
-        {
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var result = _repository.DeleteRecipeFromPatient(patientId, recipeId);
-
-            if (result == Result.Error)
-            {
-                return Unauthorized();
-            }
-
-            return Ok();
-
-        }
 
         /// <summary>
         /// Getting a patients nutricionist id and name
@@ -241,9 +183,14 @@ namespace NutriTEc_Backend.Controllers
                 return BadRequest(ModelState);
             }
                 
-            var products = _repository.GetPatientsNutritionist(id);
+            var nutri = _repository.GetPatientsNutritionist(id);
 
-            return Ok(products);
+            if (nutri.Name == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(nutri);
         }
 
         /// <summary>

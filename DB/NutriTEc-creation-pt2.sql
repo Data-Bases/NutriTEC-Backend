@@ -213,7 +213,7 @@ CREATE OR REPLACE FUNCTION payroll(admin_id int)
 		ChargeType int,
 		NutriEmail varchar(100), 
 		FullName text,
-		CardNumber int,
+		CardNumber varchar(20),
 		TotalAmount int,
 		Discount float,
         ChargeAmount float
@@ -647,6 +647,21 @@ SELECT PR.PatientId, R.Id, R.Name, PR.Servings, (SELECT TotalEnergy * PR.Serving
 
 -- Stored Procedures
 
+CREATE PROCEDURE delete_product(product_id int)
+
+LANGUAGE SQL
+
+AS $$
+
+DELETE FROM planproduct as PP WHERE PP.ProductBarcode = product_id; 
+DELETE FROM patientproduct as PP WHERE PP.ProductBarcode = product_id;
+DELETE FROM productrecipe as PP WHERE PP.ProductBarcode = product_id;
+DELETE FROM productvitamin as PP WHERE PP.ProductBarcode = product_id;
+DELETE FROM Product WHERE Product.Barcode = product_id;
+
+$$;
+
+
 CREATE PROCEDURE delete_recipe(recipe_id int)
 
 LANGUAGE SQL
@@ -701,6 +716,7 @@ END;
 $$;
 
 CREATE OR REPLACE PROCEDURE insert_nutri(
+    p_nutriId int,
     p_email VARCHAR(100),
     p_password VARCHAR(100),
     p_name VARCHAR(100),
@@ -710,7 +726,7 @@ CREATE OR REPLACE PROCEDURE insert_nutri(
     p_weight INT,
     p_imc INT,
     p_nutritionistCode INT,
-    p_cardNumber INT,
+    p_cardNumber VARCHAR(20),
     p_province VARCHAR(100),
     p_canton VARCHAR(100),
     p_district VARCHAR(100),
@@ -722,6 +738,7 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     INSERT INTO Nutritionist (
+        Id,
         Email,
         Password,
         Name,
@@ -739,6 +756,7 @@ BEGIN
         AdminId,
         ChargeTypeId
     ) VALUES (
+        p_nutriId,
         p_email,
         p_password,
         p_name,
@@ -748,7 +766,7 @@ BEGIN
         COALESCE(p_weight, 0),
         COALESCE(p_imc, 0),
         p_nutritionistCode,
-        COALESCE(p_cardNumber, 0),
+        COALESCE(p_cardNumber, ''),
         p_province,
         p_canton,
         p_district,

@@ -17,6 +17,7 @@ using System.Collections;
 using Elasticsearch.Net;
 using System.ComponentModel.DataAnnotations;
 using NutriTEc_Backend.DataModel;
+using SharpCompress.Common;
 
 namespace NutriTEc_Backend.Repository
 {
@@ -92,28 +93,29 @@ namespace NutriTEc_Backend.Repository
          */
 
 
-        public Result AdminSignUp(AdminDto admin)
+        public List<AdminDto> GetAdmin()
         {
-            admin.Password = PassowordHelper.EncodePasswordMD5(admin.Password).ToLower();
-
-            var adminUserToInsert = new Administrator()
-            {
-                Email = admin.Email,
-                Password = admin.Password,
-            };
+            var admins = new List<AdminDto>();
 
             try
             {
-                _context.Administrators.Add(adminUserToInsert);
+                var result = _context.Administrators.ToList();
+
+                result.ForEach(x => admins.Add(new AdminDto
+                {
+                    Id = x.Id,
+                    Email = x.Email,
+                    Password = x.Password,
+                }));
 
                 _context.SaveChanges();
-                return Result.Created;
+                return admins;
 
 
             }
             catch (Exception ex)
             {
-                return Result.Error;
+                return new List<AdminDto>();
             }
         }
 
@@ -191,9 +193,9 @@ namespace NutriTEc_Backend.Repository
 
             try
             {
-                _context.Database.ExecuteSqlRaw($"CALL insert_nutri('{nutriToInsert.Email}', '{nutriToInsert.Password}', '{nutriToInsert.Name}', '{nutriToInsert.Lastname1}'," +
+                _context.Database.ExecuteSqlRaw($"CALL insert_nutri({nutriToInsert.Id}, '{nutriToInsert.Email}', '{nutriToInsert.Password}', '{nutriToInsert.Name}', '{nutriToInsert.Lastname1}'," +
                                                                         $"'{nutriToInsert.Lastname2}', '{nutriToInsert.Birthdate}', {nutriToInsert.Weight}, {nutriToInsert.Imc}," +
-                                                                        $" {nutriToInsert.Nutritionistcode}, {nutriToInsert.Cardnumber}, '{nutriToInsert.Province}', '{nutriToInsert.Canton}', " +
+                                                                        $" {nutriToInsert.Nutritionistcode}, '{nutriToInsert.Cardnumber}', '{nutriToInsert.Province}', '{nutriToInsert.Canton}', " +
                                                                         $"'{nutriToInsert.District}', '{nutriToInsert.Picture}', {nutriToInsert.Adminid}, {nutriToInsert.Chargetypeid});");
 
                 _context.SaveChanges();
@@ -515,34 +517,6 @@ namespace NutriTEc_Backend.Repository
             }
         }
 
-        public Result DeleteProductFromPatient(int patientId, int productId)
-        {
-            try
-            {
-                var product = _context.Patientproducts.FirstOrDefault(p => p.Productbarcode == productId && p.Patientid == patientId);
-                _context.Patientproducts.Remove(product);
-                _context.SaveChanges();
-                return Result.Deleted;
-            }
-            catch
-            {
-                return Result.Error;
-            }
-        }
-        public Result DeleteRecipeFromPatient(int patientId, int recipeId)
-        {
-            try
-            {
-                var recipe = _context.Patientrecipes.FirstOrDefault(r => r.Recipeid == recipeId && r.Patientid == patientId);
-                _context.Patientrecipes.Remove(recipe);
-                _context.SaveChanges();
-                return Result.Deleted;
-            }
-            catch
-            {
-                return Result.Error;
-            }
-        }
         public Result AddPlanToPatient(PlanPatientDto planPatientDto)
         {
             try
@@ -577,6 +551,16 @@ namespace NutriTEc_Backend.Repository
         {
             var patient = _context.Patients.FirstOrDefault(p => p.Id == patientId);
             var nutritionist = _context.Nutritionists.FirstOrDefault(n => n.Id == patient.Nutriid);
+
+            if (patient == null)
+            {
+                return new NutriIdDto();
+            }
+
+            if (nutritionist == null)
+            {
+                return new NutriIdDto();
+            }
 
             var nutriIdDto = new NutriIdDto
             {
@@ -695,6 +679,35 @@ namespace NutriTEc_Backend.Repository
             }
         }
 
+        public Result EditProduct(ProductInformationDto productInformationDto)
+        {
+            try
+            {
+
+                var result = _context.Products.Where(p => p.Barcode == productInformationDto.Id).FirstOrDefault();
+
+                result.Name = productInformationDto.Name;
+                result.Descripcion = productInformationDto.Description;
+                result.Portionsize = productInformationDto.PortionSize;
+                result.Energy = productInformationDto.Energy;
+                result.Fat = productInformationDto.Fat;
+                result.Sodium = productInformationDto.Sodium;
+                result.Carbs = productInformationDto.Carbs;
+                result.Protein = productInformationDto.Protein;
+                result.Calcium = productInformationDto.Calcium;
+                result.Iron = productInformationDto.Iron;
+                result.Isapproved = false;
+
+                _context.SaveChanges();
+
+                return Result.Created;
+            }
+            catch (Exception ex)
+            {
+                return Result.Error;
+            }
+        }
+
         public List<ProductDto> GetUnapprovedProducts()
         {
             var unapprovedProductsDto = _context.Products
@@ -710,6 +723,22 @@ namespace NutriTEc_Backend.Repository
         }
 
 
+        public Result DeleteProduct(int productId)
+        {
+            try
+            {
+                _context.Database.ExecuteSqlRaw($"CALL delete_product({productId});");
+
+                _context.SaveChanges();
+
+                return Result.Created;
+
+            }
+            catch (Exception ex)
+            {
+                return Result.Error;
+            }
+        }
         /*
          * Recipe
          */
@@ -883,65 +912,11 @@ namespace NutriTEc_Backend.Repository
 
         public Result CreatePlan(PlanDto plan)
         {
-            var productsToInsert = new List<Planproduct>();
-            var recipeToInsert = new List<Planrecipe>();
             try
             {
-                if (plan.Products.IsNullOrEmpty() && plan.Recipes.IsNullOrEmpty())
-                {
-                    return Result.Error;
-                }
-
                 var planId = _context.PlanIds.FromSqlRaw($"select create_plan from create_plan('{plan.PlanName}', {plan.NutriId})").FirstOrDefault();
 
                 _context.SaveChanges();
-
-                if (!plan.Products.IsNullOrEmpty())
-                {
-                    foreach (var product in plan.Products)
-                    {
-                        if (!Enum.IsDefined(typeof(DayOfWeek), product.ConsumeWeekDay) || !Enum.IsDefined(typeof(Mealtime), product.Mealtime))
-                        {
-                            return Result.Error;
-                        }
-                        productsToInsert.Add(new Planproduct
-                        {
-                            Productbarcode = product.ProductId,
-                            Planid = planId.create_plan,
-                            Consumeweekday = product.ConsumeWeekDay,
-                            Mealtime = product.Mealtime,
-                            Servings = product.Servings,
-                        });
-                    }
-
-                    _context.Planproducts.AddRange(productsToInsert);
-
-                    _context.SaveChanges();
-                }
-
-                if (!plan.Recipes.IsNullOrEmpty())
-                {
-                    foreach (var recipe in plan.Recipes)
-                    {
-                        if (!Enum.IsDefined(typeof(DayOfWeek), recipe.ConsumeWeekDay) || !Enum.IsDefined(typeof(Mealtime), recipe.Mealtime))
-                        {
-                            return Result.Error;
-                        }
-                        recipeToInsert.Add(new Planrecipe
-                        {
-                            Recipeid = recipe.RecipeId,
-                            Planid = planId.create_plan,
-                            Consumeweekday = recipe.ConsumeWeekDay,
-                            Mealtime = recipe.Mealtime,
-                            Servings = recipe.Servings,
-                        });
-                    }
-
-                    _context.Planrecipes.AddRange(recipeToInsert);
-
-                    _context.SaveChanges();
-                }
-
 
                 return Result.Created;
 

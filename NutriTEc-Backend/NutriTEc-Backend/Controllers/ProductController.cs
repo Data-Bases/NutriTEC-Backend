@@ -144,5 +144,64 @@ namespace NutriTEc_Backend.Controllers
 
             return Ok(products);
         }
+
+        /// <summary>
+        /// Deleting a product from a patient
+        /// </summary>
+        /// <param name="patientId"></param>
+        /// <param name="productId"></param>
+        /// <returns>Result</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpDelete("DeleteProduct", Name = "DeleteProduct")]
+        public ActionResult<Result> DeleteProduct([Required] int productId)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = _repository.DeleteProduct(productId);
+
+            if (result == Result.Error)
+            {
+                return Unauthorized();
+            }
+
+            return Ok();
+
+        }
+
+        /// <summary>
+        /// Create a New Product Not Approved
+        /// </summary>
+        /// <param name="productInformationDto"></param>
+        /// <returns>Result</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpPut("EditProduct", Name = "EditProduct")]
+        public ActionResult<Result> EditProduct([Required] ProductInformationDto productInformationDto)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = _repository.EditProduct(productInformationDto);
+
+            if (result == Result.Error)
+            {
+                return Unauthorized();
+            }
+
+            return Ok();
+
+        }
     }
 }

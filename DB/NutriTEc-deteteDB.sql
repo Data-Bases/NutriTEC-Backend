@@ -57,6 +57,7 @@ DROP PROCEDURE insert_nutri;
 DROP PROCEDURE insert_plan_patient;
 DROP PROCEDURE delete_recipe;
 DROP PROCEDURE delete_plan;
+DROP PROCEDURE delete_product;
 
 
 DROP TABLE Nutritionist;

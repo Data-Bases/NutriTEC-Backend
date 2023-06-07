@@ -1,4 +1,5 @@
 -- DateTime : 2023-06-03T22:45:26.650Z
+-- yyyy-MM-dd'T'HH:mm:ss
 
 -- Administrator
 INSERT INTO Administrator (Email, Password) VALUES
@@ -11,12 +12,12 @@ INSERT INTO ChargeType (Nombre) VALUES
 ('Anual');
 
 -- Nutritionist
-INSERT INTO Nutritionist (Id, Email, Password, Name, LastName1, LastName2, Age, BirthDate, Weight, IMC, NutritionistCode, CardNumber, Province, Canton, District, Picture, AdminId, ChargeTypeId) VALUES
-(208200172,'diana@example.com', md5('pepe'), 'Diana', 'Mejias', 'Hernandez', 21, '2001-08-08', 60, 23, 12345, 123456, 'Puntarenas', 'Buenos Aires', 'Buenos Aires', 'picture.jpg', 1, 1),
-(601230456,'geo@example.com', md5('pepe'), 'Geovanny', 'Garcia', 'Downing', 21, '2001-12-07', 60, 25, 67890, 321654, 'Guanacaste', 'Liberia', 'Liberia', 'avatar.jpg', 1, 2),
-(305320066,'vale@example.com',md5('pepe'), 'Valesska', 'Blanco', 'Montoya', 22, '2001-05-22', 60, 20, 54321, 147258, 'Cartago', 'Cartago', 'Oriental', 'photo.jpg', 1, 3),
-(118720985,'ram@example.com', md5('pepe'), 'Ramses', 'Gutierrez', null, 20, '2003-04-08', 60, 20, 98765, 963852, 'San Jose', 'Perez Zeledon', 'Centro', 'headshot.jpg', 1, 2),
-(306580636,'martinez@example.com', md5('pepe'), 'Andres', 'Martinez', null, 22, '2001-04-25', 60, 21, 24680, 987654, 'Cartago', 'Cartago', 'Cartago', 'profile.jpg', 1, 1);
+INSERT INTO Nutritionist (Id, Email, Password, Name, LastName1, LastName2, BirthDate, Weight, IMC, NutritionistCode, CardNumber, Province, Canton, District, Picture, AdminId, ChargeTypeId) VALUES
+(208200172,'diana@example.com', md5('pepe'), 'Diana', 'Mejias', 'Hernandez', '2001-08-08', 60, 23, 12345, 123456, 'Puntarenas', 'Buenos Aires', 'Buenos Aires', 'picture.jpg', 1, 1),
+(601230456,'geo@example.com', md5('pepe'), 'Geovanny', 'Garcia', 'Downing',  '2001-12-07', 60, 25, 67890, 321654, 'Guanacaste', 'Liberia', 'Liberia', 'avatar.jpg', 1, 2),
+(305320066,'vale@example.com',md5('pepe'), 'Valesska', 'Blanco', 'Montoya', '2001-05-22', 60, 20, 54321, 147258, 'Cartago', 'Cartago', 'Oriental', 'photo.jpg', 1, 3),
+(118720985,'ram@example.com', md5('pepe'), 'Ramses', 'Gutierrez', null, '2003-04-08', 60, 20, 98765, 963852, 'San Jose', 'Perez Zeledon', 'Centro', 'headshot.jpg', 1, 2),
+(306580636,'martinez@example.com', md5('pepe'), 'Andres', 'Martinez', null, '2001-04-25', 60, 21, 24680, 987654, 'Cartago', 'Cartago', 'Cartago', 'profile.jpg', 1, 1);
 
 -- Patients with nutri
 INSERT INTO Patient (NutriId, Email, Name, LastName1, LastName2, BirthDate, Password, Country, CaloriesIntake) VALUES
@@ -56,14 +57,19 @@ INSERT INTO Vitamin (Name, Amount) VALUES
 -- Product
 INSERT INTO Product (Barcode, Name, Descripcion, PortionSize, Energy, Fat, Sodium, Carbs, Protein, Calcium, Iron, IsApproved) VALUES
 (11111, 'Apple', 'Red delicious apple', 100, 52, 0.2, 0, 14, 0.3, 6, 0.2, true),
+(99999, 'Mondongo', 'Delicioso manjar costarricense', 50, 250,40,8,1,9,7,1, true),
 (22222, 'Milk', 'Low-fat milk', 250, 103, 2.4, 105, 12, 8, 276, 0.1, false),
 (33333, 'Chicken', 'Fried chicken', 100, 100, 165, 3.6, 66, 0, 31, 0.01, false),
 (44444, 'Yogurt', 'Low-fat strawberry yogurt', 150, 120, 1.5, 95, 20, 5, 200, 0.1, false),
-(55555, 'Salmon', 'Grilled salmon fillet', 150, 150, 275, 15, 55, 0, 30, 0.6, false);
-
+(55555, 'Salmon', 'Grilled salmon fillet', 150, 150, 275, 15, 55, 0, 30, 0.6, false),
+(123456789, 'Chocolate Bar', 'Delicious milk chocolate bar', 30, 180, 12, 20, 15, 2, 30, 1, true),
+(987654321, 'Banana', 'Fresh ripe banana', 50, 105, 0.4, 1, 27, 1.3, 6, 0.4, true),
+(789123456, 'Greek Yogurt', 'Creamy Greek yogurt', 150, 150, 10, 75, 6, 15, 150, 1, true),
+(654987321, 'Whole Wheat Bread', 'Nutritious whole wheat bread', 100, 80, 1.5, 150, 14, 3, 20, 1, true);
 
 -- Recipe
-INSERT INTO Recipe(Id, Name) VALUES (1, 'Chicken with apple'), (2, 'Salmon with apple'), (3, 'Yogurt with apple');
+INSERT INTO Recipe(Name) VALUES ('Chicken with apple'), ('Salmon with apple'), ('Yogurt with apple'),
+                                    ('Gallo Pinto'), ('Rice With Ckicken'), ('Rice With Tuna');
 
 -- ProductRecipe 
 INSERT INTO ProductRecipe(ProductBarcode, RecipeId, Servings) VALUES (33333, 1, 2.5), 
@@ -149,48 +155,46 @@ INSERT INTO Product (Barcode, Name, Descripcion, PortionSize, Energy, Fat, Sodiu
 (11114, 'Chicken', 'Grilled chicken breast', 100, 165, 3.6, 64, 0, 31, 14, 0.6, true),
 (11115, 'Tuna', 'Canned tuna in water', 175, 116, 0.5, 384, 0, 26, 9, 1.2, true); 
 
--- Recipes
-INSERT INTO Recipe(Id, Name) VALUES (10, 'Gallo Pinto'), (11, 'Rice With Ckicken'), (12, 'Rice With Tuna');
-
 --ProductRecipes
   -- Gallo Pinto
 INSERT INTO ProductRecipe(ProductBarcode, RecipeId, Servings) VALUES
-(11112, 10, 1),
-(11113, 10, 1);
+(11112, 4, 1),
+(11113, 4, 1);
 
   -- Rice With Ckicken
 INSERT INTO ProductRecipe(ProductBarcode, RecipeId, Servings) VALUES
-(11112, 11, 1),
-(11114, 11, 1);
+(11112, 5, 1),
+(11114, 5, 1);
 
   -- Rice With Tuna
 INSERT INTO ProductRecipe(ProductBarcode, RecipeId, Servings) VALUES
-(11112, 12, 1),
-(11115, 12, 1);
+(11112, 6, 1),
+(11115, 6, 1);
 
 -- PlanRecipe and PlanProduct
 INSERT INTO PlanRecipe(RecipeId, PlanId, Servings, MealTime, ConsumeWeekDay) VALUES
-(10, 4, 1, 'Breakfast', 'Monday'),
-(11, 4, 1, 'Lunch', 'Monday'),
-(12, 4, 1, 'Dinner', 'Monday'),
-(10, 4, 1, 'Breakfast', 'Tuesday'),
-(11, 4, 1, 'Lunch', 'Tuesday'),
-(12, 4, 1, 'Dinner', 'Tuesday'),
-(10, 4, 1, 'Breakfast', 'Wednesday'),
-(11, 4, 1, 'Lunch', 'Wednesday'),
-(12, 4, 1, 'Dinner', 'Wednesday'),
-(10, 4, 1, 'Breakfast', 'Thursday'),
-(11, 4, 1, 'Lunch', 'Thursday'),
-(12, 4, 1, 'Dinner', 'Thursday'),
-(10, 4, 1, 'Breakfast', 'Friday'),
-(11, 4, 1, 'Lunch', 'Friday'),
-(12, 4, 1, 'Dinner', 'Friday'),
-(10, 4, 1, 'Breakfast', 'Saturday'),
-(11, 4, 1, 'Lunch', 'Saturday'),
-(12, 4, 1, 'Dinner', 'Saturday'),
-(10, 4, 1, 'Breakfast', 'Sunday'),
-(11, 4, 1, 'Lunch', 'Sunday'),
-(12, 4, 1, 'Dinner', 'Sunday');
+(4, 4, 1, 'Breakfast', 'Monday'),
+(5, 4, 1, 'Lunch', 'Monday'),
+(6, 4, 1, 'Dinner', 'Monday'),
+(4, 4, 1, 'Breakfast', 'Tuesday'),
+(5, 4, 1, 'Lunch', 'Tuesday'),
+(6, 4, 1, 'Dinner', 'Tuesday'),
+(4, 4, 1, 'Breakfast', 'Wednesday'),
+(5, 4, 1, 'Lunch', 'Wednesday'),
+(6, 4, 1, 'Dinner', 'Wednesday'),
+(4, 4, 1, 'Breakfast', 'Thursday'),
+(5, 4, 1, 'Lunch', 'Thursday'),
+(6, 4, 1, 'Dinner', 'Thursday'),
+(4, 4, 1, 'Breakfast', 'Friday'),
+(5, 4, 1, 'Lunch', 'Friday'),
+(6, 4, 1, 'Dinner', 'Friday'),
+(4, 4, 1, 'Breakfast', 'Saturday'),
+(5, 4, 1, 'Lunch', 'Saturday'),
+(6, 4, 1, 'Dinner', 'Saturday'),
+(4, 4, 1, 'Breakfast', 'Sunday'),
+(5, 4, 1, 'Lunch', 'Sunday'),
+(6, 4, 1, 'Dinner', 'Sunday');
+
 INSERT INTO PlanProduct(ProductBarcode, PlanId, Servings, MealTime, ConsumeWeekDay) VALUES
 (11111, 4, 1, 'Snack', 'Monday'),
 (11111, 4, 1, 'Snack', 'Tuesday'),
