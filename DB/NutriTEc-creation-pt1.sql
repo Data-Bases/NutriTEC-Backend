@@ -1,7 +1,7 @@
 -- Nutritionist
 CREATE TABLE Nutritionist
 (
-	Id SERIAL NOT NULL,
+	Id INT NOT NULL,
 	Email VARCHAR(100) UNIQUE NOT NULL,
 	Password VARCHAR(100) NOT NULL,
 	Name VARCHAR(100) NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE Nutritionist
 	Weight INT,
 	IMC INT,
 	NutritionistCode INT NOT NULL,
-	CardNumber INT,
+	CardNumber VARCHAR(20),
 	Province VARCHAR(100) NOT NULL,
 	Canton VARCHAR(100) NOT NULL,
 	District VARCHAR(100) NOT NULL,

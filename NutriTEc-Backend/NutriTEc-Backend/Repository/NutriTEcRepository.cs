@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Nest;
 using NutriTEc_Backend.Dtos;
 using NutriTEc_Backend.Helpers;
-using NutriTEc_Backend.DataModel;
 using NutriTEc_Backend.Repository.Interface;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
@@ -17,6 +16,7 @@ using static Nest.JoinField;
 using System.Collections;
 using Elasticsearch.Net;
 using System.ComponentModel.DataAnnotations;
+using NutriTEc_Backend.DataModel;
 
 namespace NutriTEc_Backend.Repository
 {
@@ -68,7 +68,8 @@ namespace NutriTEc_Backend.Repository
             {
                 userName = _context.Patients.FirstOrDefault(p => p.Id == user.Id).Name;
 
-            } else if (user.Usertype.Equals("N"))
+            }
+            else if (user.Usertype.Equals("N"))
             {
                 userName = _context.Nutritionists.FirstOrDefault(p => p.Id == user.Id).Name;
             }
@@ -109,7 +110,8 @@ namespace NutriTEc_Backend.Repository
                 return Result.Created;
 
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return Result.Error;
             }
@@ -168,16 +170,17 @@ namespace NutriTEc_Backend.Repository
 
             var nutriToInsert = new Nutritionist()
             {
+                Id = nutri.Id,
                 Email = nutri.Email,
                 Password = nutri.Password,
                 Name = nutri.Name,
                 Lastname1 = nutri.Lastname1,
-                Lastname2 = (string.IsNullOrEmpty(nutri.Lastname2)) ? "" : nutri.Lastname2,
+                Lastname2 = string.IsNullOrEmpty(nutri.Lastname2) ? "" : nutri.Lastname2,
                 Birthdate = DateOnly.FromDateTime(nutri.Birthdate),
-                Weight = (nutri.Weight == null) ? 0 : nutri.Weight,
-                Imc = (nutri.Imc == null) ? 0 : nutri.Imc,
+                Weight = nutri.Weight == null ? 0 : nutri.Weight,
+                Imc = nutri.Imc == null ? 0 : nutri.Imc,
                 Nutritionistcode = nutri.Nutritionistcode,
-                Cardnumber = (nutri.Cardnumber == null) ? 0 : nutri.Cardnumber,
+                Cardnumber = nutri.Cardnumber == null ? "" : nutri.Cardnumber,
                 Province = nutri.Province,
                 Canton = nutri.Canton,
                 District = nutri.District,
@@ -211,23 +214,23 @@ namespace NutriTEc_Backend.Repository
             try
             {
                 var nutri = _context.Nutritionists.Where(n => n.Id == nutriId).FirstOrDefault();
-                
+
                 if (nutri == null)
                 {
                     return new NutriDto();
                 }
 
-                var nutriToReturn =  new NutriDto
+                var nutriToReturn = new NutriDto
                 {
                     Email = nutri.Email,
                     Password = nutri.Password,
                     Name = nutri.Name,
                     Lastname1 = nutri.Lastname1,
-                    Lastname2 = (string.IsNullOrEmpty(nutri.Lastname2)) ? "" : nutri.Lastname2,
-                    Weight = (nutri.Weight == null) ? 0 : nutri.Weight,
-                    Imc = (nutri.Imc == null) ? 0 : nutri.Imc,
+                    Lastname2 = string.IsNullOrEmpty(nutri.Lastname2) ? "" : nutri.Lastname2,
+                    Weight = nutri.Weight == null ? 0 : nutri.Weight,
+                    Imc = nutri.Imc == null ? 0 : nutri.Imc,
                     Nutritionistcode = nutri.Nutritionistcode,
-                    Cardnumber = ( nutri.Cardnumber == null) ? 0 : nutri.Cardnumber,
+                    Cardnumber = nutri.Cardnumber == null ? "" : nutri.Cardnumber,
                     Birthdate = new DateTime(nutri.Birthdate.Year, nutri.Birthdate.Month, nutri.Birthdate.Day),
                     Province = nutri.Province,
                     Canton = nutri.Canton,
@@ -310,8 +313,8 @@ namespace NutriTEc_Backend.Repository
                 Birthdate = DateOnly.FromDateTime(patient.Birthdate),
                 Password = patient.Password,
                 Country = patient.Country,
-                Caloriesintake = (patient.Caloriesintake == null) ? null : patient.Caloriesintake,
-                Nutriid = (patient.Nutriid == null) ? null : patient.Nutriid,
+                Caloriesintake = patient.Caloriesintake == null ? null : patient.Caloriesintake,
+                Nutriid = patient.Nutriid == null ? null : patient.Nutriid,
             };
 
             try
@@ -378,8 +381,8 @@ namespace NutriTEc_Backend.Repository
                     Birthdate = new DateTime(patient.Birthdate.Year, patient.Birthdate.Month, patient.Birthdate.Day),
                     Password = patient.Password,
                     Country = patient.Country,
-                    Caloriesintake = (patient.Caloriesintake == null) ? null : patient.Caloriesintake,
-                    Nutriid = (patient.Nutriid == null) ? null : patient.Nutriid,
+                    Caloriesintake = patient.Caloriesintake == null ? null : patient.Caloriesintake,
+                    Nutriid = patient.Nutriid == null ? null : patient.Nutriid,
                 };
 
                 patientToReturn.Age = getAge(patientToReturn.Birthdate);
@@ -441,7 +444,7 @@ namespace NutriTEc_Backend.Repository
                 return Result.Error;
             }
         }
-        
+
 
         public DailyConsumptionDto GetDailyConsumptionByPatient(int patientId, DateTime dateConsumed)
         {
@@ -513,7 +516,7 @@ namespace NutriTEc_Backend.Repository
         }
 
         public Result DeleteProductFromPatient(int patientId, int productId)
-        {    
+        {
             try
             {
                 var product = _context.Patientproducts.FirstOrDefault(p => p.Productbarcode == productId && p.Patientid == patientId);
@@ -965,7 +968,7 @@ namespace NutriTEc_Backend.Repository
                     Mealtime = product.Mealtime,
                     Servings = product.Servings,
                 });
-                
+
                 _context.SaveChanges();
 
                 return Result.Created;
@@ -1215,7 +1218,7 @@ namespace NutriTEc_Backend.Repository
          * Private Methods
          */
 
-        private RecipeInfoDto ParseTotalNutrients(RecipeNutrients recipe,  List<ProductRecipeNutrients> productRecipes, double recipeServings)
+        private RecipeInfoDto ParseTotalNutrients(RecipeNutrients recipe, List<ProductRecipeNutrients> productRecipes, double recipeServings)
         {
             var productsInRecipeToReturn = new List<ProductTotalInfo>();
 
@@ -1236,7 +1239,7 @@ namespace NutriTEc_Backend.Repository
                 };
 
                 productsInRecipeToReturn.Add(productToReturn);
-                    
+
             }
 
             var recipeToReturn = new RecipeInfoDto
@@ -1317,7 +1320,7 @@ namespace NutriTEc_Backend.Repository
                     });
                     totalCaloresSnack += consumed.Energy;
                 }
-                
+
                 totalCalores += consumed.Energy;
             }
 
@@ -1493,7 +1496,7 @@ namespace NutriTEc_Backend.Repository
                 age--;
             }
 
-             return age;
+            return age;
         }
     }
 }

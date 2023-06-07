@@ -25,7 +25,7 @@ public partial class Nutritionist
 
     public int Nutritionistcode { get; set; }
 
-    public int? Cardnumber { get; set; }
+    public string? Cardnumber { get; set; }
 
     public string Province { get; set; } = null!;
 

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using NutriTEc_Backend.Models;
-using NutriTEc_Backend.DataModel;
 
 namespace NutriTEc_Backend.DataModel;
 
@@ -146,13 +145,17 @@ public partial class NutriTecContext : DbContext
 
             entity.HasIndex(e => e.Email, "nutritionist_email_key").IsUnique();
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
             entity.Property(e => e.Adminid).HasColumnName("adminid");
             entity.Property(e => e.Birthdate).HasColumnName("birthdate");
             entity.Property(e => e.Canton)
                 .HasMaxLength(100)
                 .HasColumnName("canton");
-            entity.Property(e => e.Cardnumber).HasColumnName("cardnumber");
+            entity.Property(e => e.Cardnumber)
+                .HasMaxLength(20)
+                .HasColumnName("cardnumber");
             entity.Property(e => e.Chargetypeid).HasColumnName("chargetypeid");
             entity.Property(e => e.District)
                 .HasMaxLength(100)
@@ -291,7 +294,7 @@ public partial class NutriTecContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Name)
-                .HasMaxLength(100)
+                .HasMaxLength(250)
                 .HasColumnName("name");
             entity.Property(e => e.Nutriid).HasColumnName("nutriid");
 
@@ -306,6 +309,8 @@ public partial class NutriTecContext : DbContext
             entity.HasKey(e => e.Id).HasName("planpatient_pkey");
 
             entity.ToTable("planpatient");
+
+            entity.HasIndex(e => new { e.Patientid, e.Initialdate }, "unique_plan_patient").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Enddate).HasColumnName("enddate");

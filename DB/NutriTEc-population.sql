@@ -11,23 +11,23 @@ INSERT INTO ChargeType (Nombre) VALUES
 ('Anual');
 
 -- Nutritionist
-INSERT INTO Nutritionist (Email, Password, Name, LastName1, LastName2, BirthDate, Weight, IMC, NutritionistCode, CardNumber, Province, Canton, District, Picture, AdminId, ChargeTypeId) VALUES
-('diana@example.com', md5('pepe'), 'Diana', 'Mejias', 'Hernandez', '2001-08-08', 60, 23, 12345, 123456, 'Puntarenas', 'Buenos Aires', 'Buenos Aires', 'picture.jpg', 1, 1),
-('geo@example.com', md5('pepe'), 'Geovanny', 'Garcia', 'Downing', '2001-12-07', 60, 25, 67890, 321654, 'Guanacaste', 'Liberia', 'Liberia', 'avatar.jpg', 1, 2),
-('vale@example.com',md5('pepe'), 'Valesska', 'Blanco', 'Montoya', '2001-05-22', 60, 20, 54321, 147258, 'Cartago', 'Cartago', 'Oriental', 'photo.jpg', 1, 3),
-('ram@example.com', md5('pepe'), 'Ramses', 'Gutierrez', null, '2003-04-08', 60, 20, 98765, 963852, 'San Jose', 'Perez Zeledon', 'Centro', 'headshot.jpg', 1, 2),
-('martinez@example.com', md5('pepe'), 'Andres', 'Martinez', null, '2001-04-25', 60, 21, 24680, 987654, 'Cartago', 'Cartago', 'Cartago', 'profile.jpg', 1, 1);
+INSERT INTO Nutritionist (Id, Email, Password, Name, LastName1, LastName2, Age, BirthDate, Weight, IMC, NutritionistCode, CardNumber, Province, Canton, District, Picture, AdminId, ChargeTypeId) VALUES
+(208200172,'diana@example.com', md5('pepe'), 'Diana', 'Mejias', 'Hernandez', 21, '2001-08-08', 60, 23, 12345, 123456, 'Puntarenas', 'Buenos Aires', 'Buenos Aires', 'picture.jpg', 1, 1),
+(601230456,'geo@example.com', md5('pepe'), 'Geovanny', 'Garcia', 'Downing', 21, '2001-12-07', 60, 25, 67890, 321654, 'Guanacaste', 'Liberia', 'Liberia', 'avatar.jpg', 1, 2),
+(305320066,'vale@example.com',md5('pepe'), 'Valesska', 'Blanco', 'Montoya', 22, '2001-05-22', 60, 20, 54321, 147258, 'Cartago', 'Cartago', 'Oriental', 'photo.jpg', 1, 3),
+(118720985,'ram@example.com', md5('pepe'), 'Ramses', 'Gutierrez', null, 20, '2003-04-08', 60, 20, 98765, 963852, 'San Jose', 'Perez Zeledon', 'Centro', 'headshot.jpg', 1, 2),
+(306580636,'martinez@example.com', md5('pepe'), 'Andres', 'Martinez', null, 22, '2001-04-25', 60, 21, 24680, 987654, 'Cartago', 'Cartago', 'Cartago', 'profile.jpg', 1, 1);
 
 -- Patients with nutri
 INSERT INTO Patient (NutriId, Email, Name, LastName1, LastName2, BirthDate, Password, Country, CaloriesIntake) VALUES
-(1, 'juan@example.com', 'Juan', 'Navarro', 'Navarro', '2001-08-02',md5('pepe'), 'Canada', 1800),
-(2, 'reii@example.com', 'Rashell', 'Aguilar', 'Caballero', '2001-07-10', md5('pepe'), 'United States', 2000),
-(3, 'bobby@example.com', 'Bobby', 'Mejias', 'Hernandez', '2006-12-28', md5('pepe'), 'Mexico', 1600),
-(4, 'chloe@example.com', 'Chloe', 'Mejias', 'Hernandez', '2011-11-20', md5('pepe'), 'Canada', 1800),
-(5, 'pepe@example.com', 'Pepe', 'Blanco', 'Montoya', '2013-04-12', md5('pepe'), 'Canada', 1500),
-(1, 'will@example.com', 'Wilberth', 'Mejias', 'Cruz', '1972-12-31', md5('pepe'), 'Costa Rica', 1800),
-(2, 'anna@example.com', 'Anna', 'Barrrantes', 'Leiva', '1995-01-20', md5('pepe'), 'Costa Rica', 1800),
-(3, 'katia@example.com', 'Katia', 'Navarro', 'Hernandez', '1970-10-23', md5('pepe'), 'Costa Rica', 1800); 
+(208200172, 'juan@example.com', 'Juan', 'Navarro', 'Navarro', '2001-08-02',md5('pepe'), 'Canada', 1800),
+(601230456, 'reii@example.com', 'Rashell', 'Aguilar', 'Caballero', '2001-07-10', md5('pepe'), 'United States', 2000),
+(305320066, 'bobby@example.com', 'Bobby', 'Mejias', 'Hernandez', '2006-12-28', md5('pepe'), 'Mexico', 1600),
+(118720985, 'chloe@example.com', 'Chloe', 'Mejias', 'Hernandez', '2011-11-20', md5('pepe'), 'Canada', 1800),
+(306580636, 'pepe@example.com', 'Pepe', 'Blanco', 'Montoya', '2013-04-12', md5('pepe'), 'Canada', 1500),
+(208200172, 'will@example.com', 'Wilberth', 'Mejias', 'Cruz', '1972-12-31', md5('pepe'), 'Costa Rica', 1800),
+(601230456, 'anna@example.com', 'Anna', 'Barrrantes', 'Leiva', '1995-01-20', md5('pepe'), 'Costa Rica', 1800),
+(305320066, 'katia@example.com', 'Katia', 'Navarro', 'Hernandez', '1970-10-23', md5('pepe'), 'Costa Rica', 1800); 
 
 -- Patient without nutri
 INSERT INTO Patient (Email, Name, LastName1, LastName2, BirthDate, Password, Country, CaloriesIntake) VALUES
@@ -96,10 +96,10 @@ VALUES (3, 1, 'Breakfast', '2023-06-03', 2.5),
 
 -- Plans
 INSERT INTO Plan (NutriId, Name)
-VALUES (1, 'Plan Atleta Ciclismo'),
-       (1, 'Plan Adelgazar'),
-       (1, 'Plan Aumento Peso'),
-       (3, 'Plan Aumento Muscular');
+VALUES (208200172, 'Plan Atleta Ciclismo'),
+       (208200172, 'Plan Adelgazar'),
+       (208200172, 'Plan Aumento Peso'),
+       (305320066, 'Plan Aumento Muscular');
 
 -- Insert values into the PlanProduct table
 INSERT INTO PlanProduct (ProductBarcode, PlanId, Servings, MealTime, ConsumeWeekDay)
@@ -136,7 +136,7 @@ INSERT INTO ProductVitamin (ProductBarcode, VitaminId) VALUES
 
 --Patient
 INSERT INTO Patient (NutriId, Email, Name, LastName1, LastName2, BirthDate, Password, Country, CaloriesIntake) VALUES
-(1, 'marco_rivera@example.com', 'Marco', 'Rivera', 'Meneses', '2005-05-07',md5('basesdedatos'), 'CostaRica', 2500);
+(208200172, 'marco_rivera@example.com', 'Marco', 'Rivera', 'Meneses', '2005-05-07',md5('basesdedatos'), 'CostaRica', 2500);
 
 --PlanPatient
 INSERT INTO PlanPatient(PlanId, PatientId, InitialDate, EndDate)

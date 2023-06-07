@@ -2,6 +2,7 @@
 {
     public class NutriNoAgeDto
     {
+        public int Id { get; set; }
         public string Email { get; set; } = null!;
 
         public string Password { get; set; } = null!;
@@ -20,7 +21,7 @@
 
         public int Nutritionistcode { get; set; }
 
-        public int? Cardnumber { get; set; }
+        public string? Cardnumber { get; set; }
 
         public string Province { get; set; } = null!;
 
