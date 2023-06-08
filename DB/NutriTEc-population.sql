@@ -59,7 +59,7 @@ INSERT INTO Product (Barcode, Name, Descripcion, PortionSize, Energy, Fat, Sodiu
 (11111, 'Apple', 'Red delicious apple', 100, 52, 0.2, 0, 14, 0.3, 6, 0.2, true),
 (99999, 'Mondongo', 'Delicioso manjar costarricense', 50, 250,40,8,1,9,7,1, true),
 (22222, 'Milk', 'Low-fat milk', 250, 103, 2.4, 105, 12, 8, 276, 0.1, false),
-(33333, 'Chicken', 'Fried chicken', 100, 100, 165, 3.6, 66, 0, 31, 0.01, false),
+(33333, 'Steak', 'Steak', 100, 100, 165, 3.6, 66, 0, 31, 0.01, false),
 (44444, 'Yogurt', 'Low-fat strawberry yogurt', 150, 120, 1.5, 95, 20, 5, 200, 0.1, false),
 (55555, 'Salmon', 'Grilled salmon fillet', 150, 150, 275, 15, 55, 0, 30, 0.6, false),
 (123456789, 'Chocolate Bar', 'Delicious milk chocolate bar', 30, 180, 12, 20, 15, 2, 30, 1, true),
@@ -68,7 +68,7 @@ INSERT INTO Product (Barcode, Name, Descripcion, PortionSize, Energy, Fat, Sodiu
 (654987321, 'Whole Wheat Bread', 'Nutritious whole wheat bread', 100, 80, 1.5, 150, 14, 3, 20, 1, true);
 
 -- Recipe
-INSERT INTO Recipe(Name) VALUES ('Chicken with apple'), ('Salmon with apple'), ('Yogurt with apple'),
+INSERT INTO Recipe(Name) VALUES ('Steak with apple'), ('Salmon with apple'), ('Yogurt with apple'),
                                     ('Gallo Pinto'), ('Rice With Ckicken'), ('Rice With Tuna');
 
 -- ProductRecipe 

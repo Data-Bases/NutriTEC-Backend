@@ -609,7 +609,7 @@ It includes details calculated based on the servings and the corresponding produ
 It is used by calculate_recipe_nutrients() function
 */
 CREATE OR REPLACE VIEW products_in_recipe AS
-SELECT R.name as recipename, R.Id as recipeid, P.name as productname, 
+SELECT R.name as recipename, R.Id as recipeid, P.name as productname, P.Barcode as ProductId,
 P.portionsize as portionsize, PR.servings as servings, P.energy * PR.servings as energy, 
 P.Fat * PR.servings as fat, P.Sodium * PR.servings as sodium, 
 P.Carbs* PR.servings as carbs, P.Protein * PR.servings as protein, 

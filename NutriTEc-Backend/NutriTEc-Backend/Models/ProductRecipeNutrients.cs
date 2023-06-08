@@ -2,6 +2,7 @@
 {
     public class ProductRecipeNutrients
     {
+        public int ProductId { get; set; }
         public int RecipeId { get; set; }
 
         public string RecipeName { get; set; }

@@ -806,7 +806,7 @@ namespace NutriTEc_Backend.Repository
             {
                 var recipeNutrients = _context.RecipeNutrients.FromSqlRaw($"SELECT totalenergy, totalsodium, totalcarbs, totalprotein, totalcalcium, totalfat, totaliron  FROM calculate_recipe_nutrients({id});").AsEnumerable().FirstOrDefault();
 
-                var productsInRecipe = _context.ProductRecipeNutrients.FromSqlRaw($"SELECT recipename, recipeid, productname, portionsize, servings, energy, fat, sodium, carbs, protein, calcium, iron FROM products_in_recipe WHERE recipeid = {id};").ToList();
+                var productsInRecipe = _context.ProductRecipeNutrients.FromSqlRaw($"SELECT ProductId, recipename, recipeid, productname, portionsize, servings, energy, fat, sodium, carbs, protein, calcium, iron FROM products_in_recipe WHERE recipeid = {id};").ToList();
 
                 return ParseTotalNutrients(recipeNutrients, productsInRecipe, recipeServings);
             }
@@ -1201,6 +1201,7 @@ namespace NutriTEc_Backend.Repository
             {
                 var productToReturn = new ProductTotalInfo()
                 {
+                    Id = product.ProductId,
                     Name = product.ProductName,
                     Portionsize = recipeServings * product.PortionSize,
                     Servings = recipeServings * product.Servings,
@@ -1219,6 +1220,7 @@ namespace NutriTEc_Backend.Repository
 
             var recipeToReturn = new RecipeInfoDto
             {
+                Id = productRecipes[0].RecipeId,
                 RecipeName = productRecipes[0].RecipeName,
                 Energy = recipeServings * recipe.Totalenergy,
                 Fat = recipeServings * recipe.Totalfat,

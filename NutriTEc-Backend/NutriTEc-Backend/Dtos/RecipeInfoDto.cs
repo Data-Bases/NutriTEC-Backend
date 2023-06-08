@@ -4,6 +4,7 @@ namespace NutriTEc_Backend.Dtos
 {
     public class RecipeInfoDto
     {
+        public int Id { get; set; }
         public string? RecipeName { get; set; }
 
         public double Energy { get; set; }

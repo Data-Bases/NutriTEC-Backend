@@ -4,6 +4,7 @@ namespace NutriTEc_Backend.Models
 {
     public class ProductTotalInfo
     {
+        public int Id { get; set; }
         public string Name { get; set; }
 
         public double Portionsize { get; set; }
