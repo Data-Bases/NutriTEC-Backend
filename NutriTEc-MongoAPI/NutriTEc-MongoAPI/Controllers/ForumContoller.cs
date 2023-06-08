@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 namespace NutriTEc_Backend.Controllers
 {
     [ApiController]
-    [Route("nutritec/mongo/forum")]
+    [Route("nutritec/forum")]
     public class ForumController : ControllerBase
     {
         private readonly IForumRepository _repository;
