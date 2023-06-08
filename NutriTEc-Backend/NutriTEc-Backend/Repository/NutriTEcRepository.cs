@@ -639,7 +639,7 @@ namespace NutriTEc_Backend.Repository
 
         public ProductTotalInfo GetProductByIdAndServings(int id, double servings)
         {
-            var product = _context.ProductTotalInfo.FromSqlRaw($"SELECT Name, PortionSize, Servings, Energy, Fat, Sodium, Carbs, Protein, Calcium, Iron FROM calculate_product_servings({id}, {servings})").AsEnumerable().FirstOrDefault();
+            var product = _context.ProductTotalInfo.FromSqlRaw($"SELECT Id, Name, PortionSize, Servings, Energy, Fat, Sodium, Carbs, Protein, Calcium, Iron FROM calculate_product_servings({id}, {servings})").AsEnumerable().FirstOrDefault();
 
             if (product == null)
             {

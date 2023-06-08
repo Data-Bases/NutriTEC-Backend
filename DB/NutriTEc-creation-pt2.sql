@@ -286,6 +286,7 @@ for the specified product and servings.
 */
 CREATE OR REPLACE FUNCTION calculate_product_servings(product_id int, servings_value float)
     RETURNS TABLE (
+        Id int,
 		Name varchar(100),
 		PortionSize float,
 		Servings float,
@@ -303,6 +304,7 @@ DECLARE
 BEGIN
 	product_servings := servings_value;
     RETURN QUERY SELECT
+            P.Barcode,
 			P.name,
 			P.portionsize,
 			product_servings,
