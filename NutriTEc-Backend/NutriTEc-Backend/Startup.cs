@@ -44,7 +44,7 @@ namespace NutriTEc_Backend
         {
             app.UseCors(options =>
             {
-                options.WithOrigins("http://localhost:4200");
+                options.WithOrigins("https://mango-sky-02f714210.3.azurestaticapps.net");
                 options.AllowAnyMethod();
                 options.AllowAnyHeader();
             });
